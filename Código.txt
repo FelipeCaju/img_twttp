@@ -1,0 +1,742 @@
+//Ultima atualizacao 21/03/2025
+
+var url = "11CPqhiCcqNoUsFZgDMOmYWrmsnaF-tyiKMBZGlgmsvI";
+
+function doGet(e) {
+
+  var tmp = HtmlService.createTemplateFromFile("Telas/index");
+  //var tmp = HtmlService.createTemplateFromFile("Email/email_reprovado");
+  var htmlOutput = tmp.evaluate();
+
+  htmlOutput.setTitle("FORMULARIO TWTTP")
+            .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+
+  return htmlOutput;
+}
+
+function include(formName) {
+   return HtmlService.createTemplateFromFile(formName).evaluate().getContent();
+}
+
+
+function getOption(funcao,range)
+{
+  var ss = SpreadsheetApp.openById(url);
+  var sheet = ss.getSheetByName("BD");
+  var data = sheet.getRange(range).getValues().filter(d=> d[0] !== "");
+
+  var newArr = data.map(d => d[0]);
+  var uniqueList = [];
+  newArr.map(r => {
+    if(uniqueList.indexOf(r)===-1)
+    {
+      uniqueList.push(r);
+    }
+  });
+  return uniqueList.sort();
+}
+
+function getOptionsFromSheet() {
+  var ss = SpreadsheetApp.openById(url);
+  var sheet = ss.getSheetByName("BD");
+  var range = sheet.getRange("G2:G4");  // Intervalo da coluna
+  var values = range.getValues();
+  
+  // Flatten the array and remove empty values
+  var flattenedValues = values.flat().filter(value => value.trim() !== "");
+  return flattenedValues;
+}
+
+// Definindo os intervalos para cada pilar
+const intervalos = {
+  "Todos": { ini: "2", fim: "14" },
+  "QC": { ini: "16", fim: "24" },
+  "SAF": { ini: "26", fim: "34" },
+  "ENV": { ini: "36", fim: "44" }
+};
+
+//  FORMULÁRIO INTERATIVO - PARTE 1 ----------
+let emailUsuario = JSON.stringify(Session.getActiveUser().getEmail());
+let optionsUnidade = getOption("optionsUnidade", "A2:A10").map(d=> "<option>"+ d + "</option>").join("");
+let optionsTurno = getOption("optionsTurno","B2:B10").map(d=> "<option>"+ d + "</option>").join("");
+let optionsPilarImpactado = getOption("optionsPilarImpactado","C2:C10").map(d=> "<option>"+ d + "</option>").join("");
+let optionsIndicador = getOption("optionsIndicador","D2:D11").map(d=> "<option>"+ d + "</option>").join("");
+let optionsHora = getOption("optionsHora","E2:E").map(d=> "<option>"+ d + "</option>").join("");
+let optionsFuncao = getOption("optionsFuncao","F2:F").map(d=> "<option>"+ d + "</option>").join("");
+
+//DESCRICAO DAS AREAS OU LINHAS
+let optionsAreasRioClaro = JSON.stringify(getOption("optionsAreasRioClaro","AD2:AD").map(d => "<option>" + d + "</option>").join(""));
+let optionsAreasJoinville = JSON.stringify(getOption("optionsAreasJoinville","AE2:AE").map(d => "<option>" + d + "</option>").join(""));
+let optionsAreasManaus = JSON.stringify(getOption("optionsAreasManaus","AF2:AF").map(d => "<option>" + d + "</option>").join(""));
+
+let optionsEmailPD_Controla = verificarEmail();
+
+//LISTA OS CODIGOS DAS TWTTP QUE ESTAO PENDENTES PARA FILTRAR E O USUARIO FECHAR
+let listaTWTTPpendentes = JSON.stringify(obterCodigoTWTTPpendentes())
+let listaTWTTPreprovadas = JSON.stringify(obterCodigoTWTTPreprovadas())
+
+var unidadeEmailLogado
+var pilarEmailLogado
+
+function verificarEmail() {
+  // Obtém o email do usuário logado
+  var emailLogado = Session.getActiveUser().getEmail();
+  
+  // Define o intervalo de linhas e colunas a serem verificadas
+  var ss = SpreadsheetApp.openById(url);
+  var sheet = ss.getSheetByName("BD");
+  var range = sheet.getRange(11, 1, 50, 3); // Da linha 11 até a 20, coluna A
+  
+  // Obtém os valores da coluna A nesse intervalo
+  var valores = range.getValues();
+  
+  // Percorre as linhas e verifica se o email logado está presente
+  for (var i = 0; i < valores.length; i++) {
+    if (valores[i][0] === emailLogado) {
+      unidadeEmailLogado = valores[i][1]
+      pilarEmailLogado = valores[i][2]
+
+      return true; // Retorna true se o email foi encontrado
+    }
+  }
+  return false; // Retorna false se o email não foi encontrado
+}
+
+
+function getPilaresEIndicadores() {
+  var ss = SpreadsheetApp.openById(url);
+  var sheet = ss.getSheetByName("BD");
+  var colPilar = sheet.getRange("AG2:AG").getValues().flat();
+  var colIndicador = sheet.getRange("AH2:AH").getValues().flat();
+  var colApprouch = sheet.getRange("AI2:AI").getValues().flat();
+
+  // Criar um array de objetos com Pilar e Indicador
+  var dados = colPilar.map((pilar, index) => {
+    return { pilar: pilar, indicador: colIndicador[index], approuch: colApprouch[index] };
+  }).filter(item => item.pilar !== "" && item.indicador !== "" && item.approuch !== ""); // Remover valores em branco
+
+  return dados; // Retornar como array de objetos
+}
+
+
+function obterCodigoTWTTPpendentes() {
+
+  var ss = SpreadsheetApp.openById(url);
+  var sheet = ss.getSheetByName("CONTROLE");
+  var range = sheet.getRange("B2:FZ"); // Ajuste o intervalo de acordo com seus dados
+  var data = range.getValues();
+
+  var listaPendentes = []; // Lista para armazenar os valores da coluna C
+
+  // Percorrer os dados e adicionar à lista quando a coluna FR for "PENDENTE"
+  data.forEach(function(row) {
+
+    if (row[172] === "PENDENTE" || row[172] === "REPROVADO") { 
+      listaPendentes.push({
+        emailCriador: row[0],  
+        codigoTwttp: row[1],
+        planoAcao: row[171],
+        comentarioReprova: row[180]   
+      });
+    }
+  });
+  
+  return listaPendentes
+}
+
+function obterCodigoTWTTPreprovadas() {
+  var ss = SpreadsheetApp.openById(url);
+  var sheet = ss.getSheetByName("CONTROLE");
+  var range = sheet.getRange("B2:FZ"); // Ajuste conforme necessário
+  var data = range.getValues();
+  
+  var linhaCabecalho = sheet.getRange(2, 40, 1, 44).getValues()[0]; // Colunas AN a CE (40 a 83)
+  
+  var grupos = {
+    "FRAQUEZA_PROCESSO": 3,
+    "FRAQUEZA_PROCESSO_CONTRA_MEDIDA1": 3,
+    "FRAQUEZA_PROCEDIMENTO": 5,
+    "FRAQUEZA_PROCEDIMENTO_CONTRA_MEDIDA": 5,
+    "FERRAMENTAS": 8,
+    "FERRAMENTAS_CONTRA_MEDIDA": 8,
+    "AMBIENTE_TRABALHO": 12,
+    "AMBIENTE_TRABALHO_CONTRA_MEDIDA": 12,
+    "ATITUDE_ENVOLVIMENTO": 16,
+    "ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA": 16,
+    "DESATENCAO": 19,
+    "DESATENCAO_CONTRA_MEDIDA": 19
+  };
+
+  var listaReprovadas = [];
+
+  data.forEach(function(row) {
+    if (row[179] === "REPROVADO") {
+      let colunasSim = 0;
+
+      // Verifica as colunas entre AN (índice 38) e CE (índice 80) em busca de "SIM"
+      for (let i = 38; i <= 80; i++) {
+        if (row[i] === "SIM") {
+          let valorLinha2 = linhaCabecalho[i - 38]; // Pega o cabeçalho correspondente da linha 2
+          
+          if (valorLinha2) {
+            let partes = valorLinha2.split("_"); 
+            let nomeBase = valorLinha2.replace(/\d+$/, ""); // Remove o número no final
+            let numero1 = partes[partes.length - 1]; // Última parte da string (número)
+            let numero = numero1.match(/\d+/);
+       
+            if (grupos[nomeBase] && !isNaN(numero)) {
+              colunasSim = grupos[nomeBase];
+            }
+          }
+        }
+      }
+
+      var select = gerarHtmlListaContraMedida_Herca(colunasSim, row[14]) 
+
+      listaReprovadas.push({
+        emailCriador: row[0],  
+        codigoTwttp: row[1],
+        planoAcao: row[171],
+        comentarioReprova: row[180],
+        pilarImpactado: row[14],
+        evidencia: row[175],
+        status: row[172],
+        contramedida: row[169],
+        colunasSim: select // Adiciona os valores formatados
+      });
+    }
+  });
+  
+
+  return listaReprovadas;
+}
+
+
+
+
+function obterPerguntas(pilar, fase) {
+
+  var ss = SpreadsheetApp.openById(url);
+  var sheet = ss.getSheetByName("BD_PERGUNTAS");
+  var data = sheet.getDataRange().getValues();
+  
+  var perguntasFiltradas = data.filter(function(row) {
+   // return row[0] === pilar;
+    return row[0] === pilar && row[1] === fase;
+  }).map(function(row) {
+    return row[2]; // A coluna "PERGUNTA" está na posição 2 (índice 2)
+  });
+
+  return perguntasFiltradas;
+}
+
+// Função para definir o intervalo com base no pilar
+function definirIntervalo(pilar) {
+  return intervalos[pilar] || { ini: "0", fim: "0" }; // Padrão para pilar não encontrado
+}
+
+
+function gerarPerguntasdeAcordocomPilar(pilar){
+
+  const nomesEspecificos = ["QC", "SAF", "ENV"];
+    if (!nomesEspecificos.includes(pilar)) {
+      pilar = "Todos";
+    }
+   return pilar
+}
+
+
+function gerarHtmlPerguntas_FaltaConhecimento() {
+
+  var pilar = "Todos"
+  var fase = "form3_falta_conhecimento"
+  const intervalo = definirIntervalo(pilar);
+  const varIni = intervalo.ini;
+  const varFim = intervalo.fim;
+
+  var perguntas = obterPerguntas(pilar, fase);
+  var optionsFaltadeConhecimento = getOption("optionsFaltadeConhecimento","H"+varIni+":H"+varFim)
+    .map(d => "<option>" + d + "</option>")
+    .join("");
+
+  // Construa o HTML dinamicamente
+  var html = '';
+  perguntas.forEach(function(pergunta, index) {
+    html += 
+      '<div class="row" style="margin-bottom: 10px;">' +
+        '<div class="col-md-12">' +
+          '<b><label for="perg_falta_conhecimento_' + (index + 1) + '" id="perg_falta_conhecimento_' + (index + 1) + '" >' + (index + 1) + ' - ' + pergunta + '</label></b>' +
+          '<select class="form-control"  onchange="verificarSelecionadoFaltaConhecimento(this)" id="contra_medida_falta_conhecimento' + (index + 1) + '" >' +
+            '<option value="NÃO">NÃO</option>' +
+            optionsFaltadeConhecimento + 
+          '</select>' +   
+       
+       
+          '<input type="text" class="form-control" value="NÃO" id="perg_falta_conhecimento' + (index + 1) + '" placeholder="Descreva o motivo" autocomplete="off" oninput="habilitarSelect(\'perg_falta_conhecimento' + (index + 1) + '\', \'contra_medida_falta_conhecimento' + (index + 1) + '\')" hidden>' +
+      //  '</div>' +  
+     //   '<div class="col-md-3">' +
+    //      '<b><label for="contra_medida_falta_conhecimento' + (index + 1) + '">Contra Medida:</label></b>' +
+    //      '<select class="form-control" id="contra_medida_falta_conhecimento' + (index + 1) + '" disabled>' +
+    //        '<option disabled selected value="NÃO">Selecione</option>' +
+    //        optionsFaltadeConhecimento + 
+   //       '</select>' +              
+        '</div>' + 
+      '</div>';
+  });
+
+  return html;
+}
+
+function gerarHtmlPerguntas_Herca() {
+
+ // var pilar = gerarPerguntasdeAcordocomPilar()
+
+  var fase = "form4_herca1"
+  var pilar = "Todos"
+
+  var perguntas = obterPerguntas(pilar, fase);
+  var html = '';
+
+  const letras = ["I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "AA", "AB", "AC"];
+
+  const intervalo = definirIntervalo(pilar);
+  const varIni = intervalo.ini;
+  const varFim = intervalo.fim;
+
+  for (let index = 0; index < perguntas.length; index++) {
+    let pergunta = perguntas[index];
+    let letraAtual = letras[index];
+
+      if (index >= 0 && index <= 3) {
+
+            var optionsHercaI = getOption("optionsHercaI",letraAtual + varIni + ":" + letraAtual + varFim)
+            .map(d => "<option>" + d + "</option>")
+            .join("");
+  
+            if (index == 0) {
+
+                html += 
+                  '<div class="form-group" style="background-color: #f5d3b7; display:none;" id="meuFormulario_fraqueza_processo">' +
+                    '<h6 class="mt-1 text-center" style="background-color: #fff9e8; padding: 6px;border-radius: 5px;" id="h6_meuFormulario_fraqueza_processo"></h6>' +
+                      '<div class="form-group row" style="background-color: #f5d3b7;"> ' +
+                          '<div class="col-md-12">  ';
+            }
+
+                html += 
+                      '<div class="row" style="margin-bottom: 10px;">' +
+                        '<div class="col-md-12">' +
+                          '<b><label for="perg_fraqueza_processo' + (index + 1) + '" id="perg_herca_' + (index + 1) + '">' + (index + 1) + ' - ' + pergunta + '</label></b>' +
+                          '<input type="text" class="form-control" id="perg_fraqueza_processo' + (index + 1) + '" placeholder="Descreva o motivo" autocomplete="off" oninput="habilitarSelect(\'perg_fraqueza_processo' + (index + 1) + '\', \'contra_medida_processo' + (index + 1) + '\', \'processo\')" value="NÃO" hidden >' +
+                            '<select class="form-control" id="contra_medida_processo' + (index + 1) + '" onchange=" verificarSelecoes(this, \'perg_fraqueza_processo' + (index + 1) + '\')" >' +
+
+                        //      '<option selected value="NÃO">Não</option>' +
+                        //       optionsHercaI + 
+                                '<option value="NÃO">Não</option>'+
+                                '<option value="SIM">Sim</option>'+
+
+                            '</select>' + 
+                        '</div>' +  
+            //            '<div class="col-md-3">' +
+             //           '<b><label for="contra_medida_processo' + (index + 1) + '">Contra Medida:</label></b>' +
+            //              '<select class="form-control" id="contra_medida_processo' + (index + 1) + '" onchange=" verificarSelecoes(this, \'perg_fraqueza_processo' + (index + 1) + '\')" disabled>' +
+            //                '<option selected value="NÃO">Não</option>' +
+            //                optionsHercaI + 
+            //              '</select>' +              
+           //             '</div>' + 
+                      '</div>';
+
+            if (index == 3) {
+
+                html += 
+                          '</div>' +
+                        '</div>' +
+                      '</div>';
+            }          
+
+      } else if (index >= 4 && index <= 5) {
+
+            var optionsHercaI = getOption("optionsHercaI",letraAtual + varIni + ":" + letraAtual + varFim)
+            .map(d => "<option>" + d + "</option>")
+            .join("");
+  
+            if (index == 4) {
+
+                html += 
+                  '<div class="form-group" style="background-color: #f5b7b7; display:none;" id="meuFormulario_fraqueza_procedimento">' +
+                    '<h6 class="mt-1 text-center" style="background-color: #ffe8e8; padding: 6px;border-radius: 5px;" id="h6_meuFormulario_fraqueza_procedimento"></h6>' +
+                      '<div class="form-group row" style="background-color: #f5b7b7;"> ' +
+                          '<div class="col-md-12">  ';
+            }
+
+                html += 
+                             '<div class="row" style="margin-bottom: 10px;">' +
+                                  '<div class="col-md-12">' +
+                                    '<b><label for="perg_fraqueza_procedimento' + (index + 1) + '" id="perg_herca_' + (index + 1) + '">' + (index + 1) + ' - ' + pergunta + '</label></b>' +
+                                    '<input type="text" class="form-control" id="perg_fraqueza_procedimento' + (index + 1) + '" placeholder="Descreva o motivo" autocomplete="off" oninput="habilitarSelect(\'perg_fraqueza_procedimento' + (index + 1) + '\', \'contra_medida_procedimento' + (index + 1) + '\', \'procedimento\')" value="NÃO" hidden>' +
+									  '<select class="form-control" id="contra_medida_procedimento' + (index + 1) + '" onchange=" verificarSelecoes(this, \'perg_fraqueza_procedimento' + (index + 1) + '\')" >' +
+
+                        //      '<option selected value="NÃO">Não</option>' +
+                        //       optionsHercaI + 
+                                '<option value="NÃO">Não</option>'+
+                                '<option value="SIM">Sim</option>'+
+
+									  '</select>' +                             
+                                  '</div>' +  
+           //                       '<div class="col-md-3">' +
+           //                       '<b><label for="contra_medida_procedimento' + (index + 1) + '">Contra Medida:</label></b>' +
+						//			  '<select class="form-control" id="contra_medida_procedimento' + (index + 1) + '" onchange=" verificarSelecoes(this, \'perg_fraqueza_procedimento' + (index + 1) + '\')" disabled>' +
+						//			   	'<option selected value="NÃO">Não</option>' +
+						//				   optionsHercaI + 
+					//				  '</select>' +              
+          //                      '</div>' + 
+                            '</div>';
+
+            if (index == 5) {
+
+                html += 
+                          '</div>' +
+                        '</div>' +
+                      '</div>';
+            }
+
+      } else if (index >= 6 && index <= 8) {
+
+            var optionsHercaI = getOption("optionsHercaI",letraAtual + varIni + ":" + letraAtual + varFim)
+            .map(d => "<option>" + d + "</option>")
+            .join("");
+  
+            if (index == 6) {
+
+                html += 
+                  '<div class="form-group" style="background-color: #ccf7cf; display:none;" id="meuFormulario_fraqueza_ferramentas">' +
+                    '<h6 class="mt-1 text-center" style="background-color: #eaffeb; padding: 6px;border-radius: 5px;" id="h6_meuFormulario_fraqueza_ferramentas"></h6>' +
+                      '<div class="form-group row" style="background-color: #ccf7cf;"> ' +
+                          '<div class="col-md-12">  ';
+            }
+
+                html += 
+                             '<div class="row" style="margin-bottom: 10px;">' +
+                                  '<div class="col-md-12">' +
+                                    '<b><label for="perg_ferramenta' + (index + 1) + '" id="perg_herca_' + (index + 1) + '">' + (index + 1) + ' - ' + pergunta + '</label></b>' +
+                                    '<input type="text" class="form-control" id="perg_ferramenta' + (index + 1) + '" placeholder="Descreva o motivo" autocomplete="off" oninput="habilitarSelect(\'perg_ferramenta' + (index + 1) + '\', \'contra_medida_ferramenta' + (index + 1) + '\', \'ferramenta\')" value="NÃO" hidden>' +
+									  '<select class="form-control" id="contra_medida_ferramenta' + (index + 1) + '" onchange=" verificarSelecoes(this, \'perg_ferramenta' + (index + 1) + '\')" >' +
+
+                        //      '<option selected value="NÃO">Não</option>' +
+                        //       optionsHercaI + 
+                                '<option value="NÃO">Não</option>'+
+                                '<option value="SIM">Sim</option>'+
+
+									  '</select>' +                              
+                                  '</div>' +  
+         //                         '<div class="col-md-3">' +
+         //                         '<b><label for="contra_medida_ferramenta' + (index + 1) + '">Contra Medida:</label></b>' +
+				//					  '<select class="form-control" id="contra_medida_ferramenta' + (index + 1) + '" onchange=" verificarSelecoes(this, \'perg_ferramenta' + (index + 1) + '\')" disabled>' +
+					//					'<option selected value="NÃO">Não</option>' +
+					//					optionsHercaI + 
+					//				  '</select>' +              
+          //                      '</div>' + 
+                            '</div>';
+
+            if (index == 8) {
+
+                html += 
+                          '</div>' +
+                        '</div>' +
+                      '</div>';
+            }
+
+      } else if (index >= 9 && index <= 12) {
+        
+            var optionsHercaI = getOption("optionsHercaI",letraAtual + varIni + ":" + letraAtual + varFim)
+            .map(d => "<option>" + d + "</option>")
+            .join("");
+  
+            if (index == 9) {
+
+                html += 
+                  '<div class="form-group" style="background-color: #b7f5ec; display:none;" id="meuFormulario_fraqueza_ambiente">' +
+                    '<h6 class="mt-1 text-center" style="background-color: #e8ffff; padding: 6px;border-radius: 5px;" id="h6_meuFormulario_fraqueza_ambiente"></h6>' +
+                      '<div class="form-group row" style="background-color: #b7f5ec;"> ' +
+                          '<div class="col-md-12">  ';
+            }
+                html += 
+                             '<div class="row" style="margin-bottom: 10px;">' +
+                                  '<div class="col-md-12">' +
+                                    '<b><label for="perg_ambiente' + (index + 1) + '" id="perg_herca_' + (index + 1) + '">' + (index + 1) + ' - ' + pergunta + '</label></b>' +
+                                    '<input type="text" class="form-control" id="perg_ambiente' + (index + 1) + '" placeholder="Descreva o motivo" autocomplete="off" oninput="habilitarSelect(\'perg_ambiente' + (index + 1) + '\', \'contra_medida_ambiente' + (index + 1) + '\', \'ambiente\')" value="NÃO" hidden>' +
+									  '<select class="form-control" id="contra_medida_ambiente' + (index + 1) + '" onchange=" verificarSelecoes(this, \'perg_ambiente' + (index + 1) + '\')" >' +
+
+                        //      '<option selected value="NÃO">Não</option>' +
+                        //       optionsHercaI + 
+                                '<option value="NÃO">Não</option>'+
+                                '<option value="SIM">Sim</option>'+
+
+									  '</select>' +                        
+                                  '</div>' +  
+          //                        '<div class="col-md-3">' +
+           //                       '<b><label for="contra_medida_ambiente' + (index + 1) + '">Contra Medida:</label></b>' +
+						//			  '<select class="form-control" id="contra_medida_ambiente' + (index + 1) + '" onchange=" verificarSelecoes(this, \'perg_ambiente' + (index + 1) + '\')" disabled>' +
+						//				'<option disabled selected value="NÃO">Selecione</option>' +
+						//				optionsHercaI + 
+						//			  '</select>' +              
+            //                    '</div>' + 
+                            '</div>';
+
+            if (index == 12) {
+
+                html += 
+                          '</div>' +
+                        '</div>' +
+                      '</div>';
+            }
+      } else if (index >= 13 && index <= 16) {
+        
+            var optionsHercaI = getOption("optionsHercaI",letraAtual + varIni + ":" + letraAtual + varFim)
+            .map(d => "<option>" + d + "</option>")
+            .join("");
+  
+            if (index == 13) {
+
+                html += 
+                  '<div class="form-group" style="background-color: #b7e2f5; display:none;" id="meuFormulario_fraqueza_atitude">' +
+                    '<h6 class="mt-1 text-center" style="background-color: #e8f8ff; padding: 6px;border-radius: 5px;" id="h6_meuFormulario_fraqueza_atitude"></h6>' +
+                      '<div class="form-group row" style="background-color: #b7e2f5;"> ' +
+                          '<div class="col-md-12">  ';
+            }
+                html += 
+                             '<div class="row" style="margin-bottom: 10px;">' +
+                                  '<div class="col-md-12">' +
+                                    '<b><label for="perg_atitude' + (index + 1) + '" id="perg_herca_' + (index + 1) + '">' + (index + 1) + ' - ' + pergunta + '</label></b>' +
+                                    '<input type="text" class="form-control" id="perg_atitude' + (index + 1) + '" placeholder="Descreva o motivo" autocomplete="off" oninput="habilitarSelect(\'perg_atitude' + (index + 1) + '\', \'contra_medida_atitude' + (index + 1) + '\',\'atitude\')" value="NÃO" hidden>' +
+									  '<select class="form-control" id="contra_medida_atitude' + (index + 1) + '" onchange=" verificarSelecoes(this, \'perg_atitude' + (index + 1) + '\')" >' +
+
+                        //      '<option selected value="NÃO">Não</option>' +
+                        //       optionsHercaI + 
+                                '<option value="NÃO">Não</option>'+
+                                '<option value="SIM">Sim</option>'+
+
+									  '</select>' +                                    
+                                  '</div>' +  
+               //                   '<div class="col-md-3">' +
+               //                   '<b><label for="contra_medida_atitude' + (index + 1) + '">Contra Medida:</label></b>' +
+								//	  '<select class="form-control" id="contra_medida_atitude' + (index + 1) + '" onchange=" verificarSelecoes(this, \'perg_atitude' + (index + 1) + '\')" disabled>' +
+								//		'<option disabled selected value="NÃO">Selecione</option>' +
+								//		optionsHercaI + 
+								//	  '</select>' +              
+                //                '</div>' + 
+                            '</div>';
+
+            if (index == 16) {
+
+                html += 
+                          '</div>' +
+                        '</div>' +
+                      '</div>';
+            }  
+      } else if (index >= 17 && index <= 19) {
+        
+            var optionsHercaI = getOption("optionsHercaI",letraAtual + varIni + ":" + letraAtual + varFim)
+            .map(d => "<option>" + d + "</option>")
+            .join("");
+  
+            if (index == 17) {
+
+                html += 
+                  '<div class="form-group" style="background-color: #b7c2f5;  display:none;" id="meuFormulario_fraqueza_desatencao">' +
+                    '<h6 class="mt-1 text-center" style="background-color: #e9e8ff; padding: 6px;border-radius: 5px;" id="h6_meuFormulario_fraqueza_desatencao"></h6>' +
+                      '<div class="form-group row" style="background-color: #b7c2f5;"> ' +
+                          '<div class="col-md-12">  ';
+            }
+                html += 
+                             '<div class="row" style="margin-bottom: 10px;">' +
+                                  '<div class="col-md-12">' +
+                                    '<b><label for="perg_desatencao' + (index + 1) + '" id="perg_herca_' + (index + 1) + '">' + (index + 1) + ' - ' + pergunta + '</label></b>' +
+                                    '<input type="text" class="form-control" id="perg_desatencao' + (index + 1) + '" placeholder="Descreva o motivo" autocomplete="off" oninput="habilitarSelect(\'perg_desatencao' + (index + 1) + '\', \'contra_medida_desatencao' + (index + 1) + '\', \'processo\')" value="NÃO" hidden>' +
+									  '<select class="form-control" id="contra_medida_desatencao' + (index + 1) + '" onchange=" verificarSelecoes(this, \'perg_desatencao' + (index + 1) + '\')" >' +
+
+                        //      '<option selected value="NÃO">Não</option>' +
+                        //       optionsHercaI + 
+                                '<option value="NÃO">Não</option>'+
+                                '<option value="SIM">Sim</option>'+
+
+									  '</select>' +                               
+                                  '</div>' +  
+                 //                 '<div class="col-md-3">' +
+                 //                 '<b><label for="contra_medida_desatencao' + (index + 1) + '">Contra Medida:</label></b>' +
+								//	  '<select class="form-control" id="contra_medida_desatencao' + (index + 1) + '" onchange=" verificarSelecoes(this, \'perg_desatencao' + (index + 1) + '\')" disabled>' +
+								//		'<option selected value="NÃO">Não</option>' +
+								//		optionsHercaI + 
+								//	  '</select>' +              
+                 //               '</div>' + 
+                            '</div>';
+
+            if (index == 19) {
+
+                html += 
+                          '</div>' +
+                        '</div>' +
+                      '</div>';
+            }          
+      }     
+  }
+
+  return html;
+}
+
+
+
+function gerarHtmlListaContraMedida_Herca(pergunta, pilar) {
+
+  var fase = "form4_herca1"
+  if(pilar==""){
+    pilar = "Todos"
+  }
+  if(pergunta== 0 || pergunta==""){
+    pergunta = 1
+  }
+  //var pilar = "ENV"
+  //var pergunta = "7 - Existem problemas ergonômicos, ambientais (apectos e impactos ambientais) quando a operação é executada?"
+  //var pergunta = 14
+  var html = '';
+
+  const letras = ["I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "AA", "AB", "AC"];
+  const intervalo = definirIntervalo(pilar);
+  const varIni = intervalo.ini;
+  const varFim = intervalo.fim;
+  //var index = pergunta.match(/^\d+/)-1;
+  var index = parseInt(pergunta);
+  var optionsHercaII
+  
+  let letraAtual = letras[index-1];
+
+      if (index >= 0 && index <= 3) {
+            optionsHercaII = getOption("optionsHercaII 1",letraAtual + varIni + ":" + letraAtual + varFim)
+            .map(d => "<option>" + d + "</option>")
+            .join("");
+    
+      } else if (index >= 4 && index <= 5) {
+            optionsHercaII = getOption("optionsHercaII 2",letraAtual + varIni + ":" + letraAtual + varFim)
+            .map(d => "<option>" + d + "</option>")
+            .join("");
+  
+      } else if (index >= 6 && index <= 8) {
+            optionsHercaII = getOption("optionsHercaII 3",letraAtual + varIni + ":" + letraAtual + varFim)
+            .map(d => "<option>" + d + "</option>")
+            .join("");
+
+      } else if (index >= 9 && index <= 12) {
+            optionsHercaII = getOption("optionsHercaII 4",letraAtual + varIni + ":" + letraAtual + varFim)
+            .map(d => "<option>" + d + "</option>")
+            .join("");
+
+      } else if (index >= 13 && index <= 16) {
+            optionsHercaII = getOption("optionsHercaII 5",letraAtual + varIni + ":" + letraAtual + varFim)
+            .map(d => "<option>" + d + "</option>")
+            .join("");
+          
+      } else if (index >= 17 && index <= 19) {
+            optionsHercaII = getOption("optionsHercaII 6",letraAtual + varIni + ":" + letraAtual + varFim)
+            .map(d => "<option>" + d + "</option>")
+            .join("");         
+      }     
+
+  return (optionsHercaII);
+}
+
+
+// PD CONTROLA ----
+function buscarDadosPendentesControlaPD() {
+  var ss = SpreadsheetApp.openById(url);
+  var sheet = ss.getSheetByName("CONTROLE");
+  
+  // Pega os dados do intervalo inteiro da planilha
+  var dataRange = sheet.getDataRange();
+  var data = dataRange.getValues();
+  
+  // Filtra os dados onde a coluna FR (coluna 173) seja igual a "PENDENTE"
+  var resultados = [];
+
+  for (var i = 1; i < data.length; i++) {
+    var status = data[i][180];  // Coluna FY
+    var unidade = data[i][6];   // Coluna G
+    var pilar = data[i][15];    // Coluna P
+
+    // Verifica se o status está vazio ou é "PENDENTE"
+    var statusValido = (status === "" || status === "PENDENTE");
+    
+    // Verifica se a unidade é correspondente
+    var unidadeValida = (unidade === unidadeEmailLogado);
+    
+    // Se `pilarEmailLogado` não estiver vazio, compara. Caso contrário, ignora.
+    var pilarValido = (pilarEmailLogado === "PD" || pilar === pilarEmailLogado);
+
+    if (statusValido && unidadeValida && pilarValido) {
+      resultados.push([
+        data[i][2],  // Coluna C
+        data[i][5],  // Coluna F
+        data[i][9],  // Coluna J
+        data[i][14], // Coluna O
+        data[i][15], // Coluna P
+        data[i][20], // Coluna U
+        data[i][27], // Coluna AB
+        data[i][38], // Coluna AM
+        data[i][81], // Coluna CD
+        data[i][169],// Coluna FN
+        data[i][170],// Coluna FO
+        data[i][171],// Coluna FP
+        data[i][172],// Coluna FQ
+        data[i][174],// Coluna FR
+        data[i][175],// Coluna FS
+        data[i][176],// Coluna FT
+        data[i][173],// Coluna FU
+        data[i][180],// Coluna FY
+        data[i][181],// Coluna FZ
+        data[i][1],  // Coluna B
+        data[i][178], // Coluna FW
+        data[i][7],
+        data[i][8],
+        data[i][10],
+        data[i][11],
+        data[i][12],
+        data[i][13],
+        data[i][14],
+        data[i][15],
+        data[i][16],
+        data[i][17],
+        data[i][18],
+        data[i][19],
+        pilarEmailLogado
+
+      ]);
+    }
+  }
+  // Retorna os dados filtrados
+  return resultados;
+}
+
+
+let dadosControlaPD = JSON.stringify(buscarDadosPendentesControlaPD());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,38 @@
+function salvarImagemNoDrive(dataURL, quadro, idLuti) {
+  try {
+    const pastaRaiz = DriveApp.getFolderById("1PC0e0COR8ZEl0YaB6BIaxOTJMoiO29fW");
+    let emailAtivo = Session.getActiveUser().getEmail();
+
+    // Verifica se já existe uma pasta com o email do usuário
+    let pastas = pastaRaiz.getFoldersByName(emailAtivo);
+    let pastaUsuario;
+    
+    if (pastas.hasNext()) {
+      pastaUsuario = pastas.next();
+    } else {
+      pastaUsuario = pastaRaiz.createFolder(emailAtivo);
+    }
+
+    // Verifica se já existe uma pasta com o código da LUTI
+    let pastasCodLuti = pastaUsuario.getFoldersByName(idLuti);
+    let pastaLuti;
+
+    if (pastasCodLuti.hasNext()) {
+      pastaLuti = pastasCodLuti.next();
+    } else {
+      pastaLuti = pastaUsuario.createFolder(idLuti);
+    }
+    
+    // Processa e salva a imagem
+    const contentType = dataURL.match(/^data:(image\/\w+);base64,/)[1];
+    const base64Data = dataURL.replace(/^data:image\/\w+;base64,/, "");
+    const blob = Utilities.newBlob(Utilities.base64Decode(base64Data), contentType, `${quadro}_${new Date().getTime()}.png`);
+    
+    const arquivo = pastaLuti.createFile(blob);
+    return arquivo.getUrl();
+    
+  } catch (e) {
+    Logger.log("Erro ao salvar imagem: " + e);
+    return null;
+  }
+}

@@ -1,0 +1,1033 @@
+<script>
+
+
+var respostasForm1 = [];
+var respostasForm2 = [];
+var respostasForm3_falta_conhecimento = [];
+var respostasForm4_analise_herca = [];
+var respostasForm5_natureza_humana = [];
+
+function validarRespostasForm1() {
+
+  //var a = 0
+
+ // if (a == 0) {
+  if (verificarCamposPreenchidos()) {
+    
+    respostasForm1 = {
+      EMAIL_CRIADOR: document.getElementById('form1_emailcriador').value,
+      COD_FORMULARIO: document.getElementById('form1_codformulario').value,
+      APROVACAO_PILAR: "APROVADO",
+      APROVACAO_PD: "APROVADO",
+      DESCRICAO_PROBLEMA: document.getElementById('form1_descricaoproblema').value,
+      UNIDADE: document.getElementById('ocorrencia_unidade').value,
+      LINHA: document.getElementById('ocorrencia_linha_area').value,
+      QRCA: document.getElementById('ocorrencia_qrca').value,
+      DATA: document.getElementById('ocorrencia_data').value,
+      POSTO: document.getElementById('ocorrencia_posto').value,
+      SKU_IMPACTADO: document.getElementById('ocorrencia_sku_impactado').value,
+      TURNO: document.getElementById('ocorrencia_turno').value,
+      HORA: document.getElementById('ocorrencia_hora').value,
+      INDICADOR: document.getElementById('ocorrencia_indicador').value,
+      PILAR_IMPACTADO: document.getElementById('ocorrencia_pilar_impactado').value,
+      COLABORADOR_RE: document.getElementById('colaborador_re').value,
+      COLABORADOR_TEMPO_POSTO: document.getElementById('colaborador_tempo_posto').value,
+      COLABORADOR_FUNCAO: document.getElementById('colaborador_funcao').value,
+      ENTREVISTADOR_NOME: document.getElementById('entrevistador_nome').value,
+      ENTREVISTADOR_RE: document.getElementById('entrevistador_re').value,
+      ENTREVISTADOR_FUNCAO:"ENTREVISTADOR"
+    };   
+
+    irProximoFormulario2();
+  
+  } else {
+    Swal.fire({
+      title: 'Por favor, preencha todos os campos',
+      icon: 'warning',
+      timer: 1600,
+      showCloseButton: false,
+      showCancelButton: false,
+      showConfirmButton: false
+    });
+  }
+  
+  
+}
+
+function verificarCamposPreenchidos() {
+
+    var checkbox = document.getElementById('verificaFerramentaRCA');
+    
+    if (!checkbox.checked) {
+        document.getElementById("ocorrencia_qrca").value = 0
+    }
+
+    var campos = [
+      'form1_emailcriador',
+      'form1_codformulario',
+      'form1_descricaoproblema',
+      'ocorrencia_unidade',
+      'ocorrencia_linha_area',
+      'ocorrencia_qrca',
+      'ocorrencia_data',
+      'ocorrencia_posto',
+      'ocorrencia_turno',
+      'ocorrencia_hora',
+      'ocorrencia_indicador',
+      'ocorrencia_pilar_impactado',
+      'colaborador_re',
+      'colaborador_tempo_posto',
+      'colaborador_funcao',
+      'entrevistador_nome',
+      'entrevistador_re'
+      // Adicione mais IDs se necessário
+    ];
+
+  // Verifica se todos os campos estão preenchidos
+  for (var i = 0; i < campos.length; i++) {
+    var elemento = document.getElementById(campos[i]);
+    if (!elemento || elemento.value.trim() === "") {
+      return false; // Retorna false se algum campo estiver vazio
+    }
+  }
+  return true; // Retorna true se todos os campos estiverem preenchidos
+}
+
+
+
+// Função para avançar para a próxima tela
+function validarRespostasForm2() {
+    const caminhoAtual = document.getElementById("caminho_avaliacao").value;
+
+    // Verifica qual será a próxima tela, com base nas respostas do formulário
+    const proximaTela = obterProximaTela();
+
+    // Se as respostas estão incompletas, mostrar uma mensagem de erro
+    if (proximaTela === "incompleta") {
+        Swal.fire({
+            title: "Por favor, selecione uma opção para todas as perguntas.",
+            icon: "warning",
+            confirmButtonText: "OK"
+        });
+        return; // Parar a execução da função até que todas as opções sejam selecionadas
+    }
+
+    // Se é a primeira vez (caminhoAtual está vazio), salvar e seguir
+    if (caminhoAtual === "" || caminhoAtual === "0" ) {
+        document.getElementById("caminho_avaliacao").value = proximaTela ? 'herca' : 'falta_conhecimento';
+        avancarParaTela(proximaTela ? 'herca' : 'falta_conhecimento');
+
+    }
+
+    // Se já tem um caminho e o usuário está tentando seguir um caminho diferente
+    else if (caminhoAtual !== (proximaTela ? 'herca' : 'falta_conhecimento')) {
+
+        Swal.fire({
+            title: "Sua resposta anterior foi diferente, deseja continuar?",
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Continuar",
+            denyButtonText: `Cancelar`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById("caminho_avaliacao").value = proximaTela;
+                limparRespostasForm3_falta_conhecimento();
+                limparRespostasForm4_analise_herca()
+                setarNaoParaTodosItens();
+
+                avancarParaTela(proximaTela ? 'herca' : 'falta_conhecimento');
+            } else if (result.isDenied) {
+                console.log("Usuário decidiu permanecer no caminho atual: " + caminhoAtual);
+            }
+        });
+    } else {
+        avancarParaTela(proximaTela ? 'herca' : 'falta_conhecimento');
+    }
+}
+
+// Função que decide a próxima tela com base nas respostas
+function obterProximaTela() {
+    var todasA = true; // Variável para rastrear se todas as opções selecionadas são 'A'
+
+    // Iterar sobre todas as perguntas
+    for (var i = 1; i <= 4; i++) {
+        // Obter todos os botões de rádio da pergunta atual
+        var radios = document.getElementsByName('form2_pergunta' + i);
+
+        // Verificar se alguma opção foi selecionada para a pergunta atual
+        var selecionada = false;
+
+        // Iterar sobre todos os botões de rádio da pergunta atual
+        for (var j = 0; j < radios.length; j++) {
+            // Verificar se o botão de rádio atual está selecionado
+            if (radios[j].checked) {
+                selecionada = true;
+
+                // Armazenar a resposta
+                var res = {
+                    ENTREVISTA_FORM2: radios[j].value
+                };
+                respostasForm2.push(res);
+
+                // Verificar se a opção selecionada não é 'A'
+                if (radios[j].value !== 'A') {
+                    todasA = false;
+                }
+                break;
+            }
+        }
+
+        // Se nenhuma opção foi selecionada para a pergunta atual, retornar "incompleta"
+        if (!selecionada) {
+            return "incompleta";
+        }
+    }
+
+    // Se todas as respostas forem 'A', retornar true (ir para 'herca'), senão retornar false (ir para 'falta_conhecimento')
+    return todasA;
+}
+
+// Função para simular a navegação para a próxima tela
+function avancarParaTela(tela) {
+
+    if (tela === 'herca') {
+        document.getElementById("caminho_avaliacao").value = "herca";
+        document.getElementById("form2_status_entrevista").value = "HERCA"; 
+        irProximoFormulario4();
+    } else if (tela === 'falta_conhecimento') {
+        document.getElementById("caminho_avaliacao").value = "falta_conhecimento";
+        document.getElementById("form2_status_entrevista").value = "TWTTP";
+        irProximoFormulario3(); 
+    }
+}
+
+
+function validarRespostasForm3_falta_conhecimento(form4){
+
+    if(form4==0){
+
+      var confere = true
+
+        for (var i = 1; i <= 5; i++) {
+            var contraMedidaValor = document.getElementById('contra_medida_falta_conhecimento' + i).value;
+              if (contraMedidaValor == 'NÃO') {
+                  confere = false         
+              }else{
+                  confere = true
+                  break
+              }
+        }
+          if(confere){
+                respostasForm3_falta_conhecimento = {
+                  FALTA_CONHECIMENTO1 : document.getElementById('perg_falta_conhecimento1').value,
+                  CONTRA_MEDIDA1 : document.getElementById('contra_medida_falta_conhecimento1').value,
+                  FALTA_CONHECIMENTO2 : document.getElementById('perg_falta_conhecimento2').value,
+                  CONTRA_MEDIDA2 : document.getElementById('contra_medida_falta_conhecimento2').value,
+                  FALTA_CONHECIMENTO3 : document.getElementById('perg_falta_conhecimento3').value,
+                  CONTRA_MEDIDA3 : document.getElementById('contra_medida_falta_conhecimento3').value,
+                  FALTA_CONHECIMENTO4: document.getElementById('perg_falta_conhecimento4').value,
+                  CONTRA_MEDIDA4: document.getElementById('contra_medida_falta_conhecimento4').value,
+                  FALTA_CONHECIMENTO5: document.getElementById('perg_falta_conhecimento5').value,
+                  CONTRA_MEDIDA5: document.getElementById('contra_medida_falta_conhecimento5').value       
+                }
+
+                var selectedValue = '';
+                var selectedValuePergunta = '';
+
+                for (var i = 1; i <= 5; i++) {
+                    var selectElement = document.getElementById(`contra_medida_falta_conhecimento${i}`);
+                    if (selectElement.selectedIndex !== 0) {
+                        selectedValuePergunta = document.getElementById(`perg_falta_conhecimento_${i}`).textContent
+                        selectedValue = selectElement.value;
+                        break; // Para após encontrar o primeiro select diferente de index 0
+                    }
+                }
+
+                 document.getElementById('form3_pergunta_contra_medida_falta_conhecimento').value = selectedValuePergunta
+                 document.getElementById('form3_status_contra_medida_falta_conhecimento').value = selectedValue  
+
+                    var select = document.getElementById('plano_acao_contramedida');
+                    var valorSelecionado = "Auxílio Visual";
+                    var option = document.createElement("option");
+                    option.value = selectedValue;
+                    option.text = selectedValue;
+                    select.appendChild(option);
+                    select.disabled = true;
+                    select.value = selectedValue;
+
+                 document.getElementById("form4_pergunta_herca").value = "NÃO"
+                 document.getElementById("form4_status_herca").value = "NÃO"
+                 document.getElementById("form4_status_contra_medida_herca").value = "NÃO"
+                 document.getElementById("btnFormProximo").textContent = "Salvar";
+
+                irProximoFormulario6_PlanoAcao()
+          }else{
+              Swal.fire({
+                  title: 'Favor preencher Contra Medida correspondente',
+                  icon: 'warning',
+                  timer: 1700,
+                  showCloseButton: false,
+                  showCancelButton: false,
+                  showConfirmButton: false
+                })
+          }
+    }
+
+    if(form4==1){
+
+        respostasForm3_falta_conhecimento = {
+          FALTA_CONHECIMENTO1 : "NÃO",
+          CONTRA_MEDIDA1 : "NÃO",
+          FALTA_CONHECIMENTO2 : "NÃO",
+          CONTRA_MEDIDA2 : "NÃO",
+          FALTA_CONHECIMENTO3 : "NÃO",
+          CONTRA_MEDIDA3 : "NÃO",
+          FALTA_CONHECIMENTO4: "NÃO",
+          CONTRA_MEDIDA4: "NÃO",
+          FALTA_CONHECIMENTO5: "NÃO",
+          CONTRA_MEDIDA5: "NÃO"        
+      }    
+       document.getElementById('form3_status_contra_medida_falta_conhecimento').value = "NÃO"
+       document.getElementById('form3_pergunta_contra_medida_falta_conhecimento').value = "NÃO"
+
+    }
+}
+
+
+const gruposIntervalos = {
+  processo: { inicio: 1, fim: 4 },
+  procedimento: { inicio: 5, fim: 6 },
+  ferramenta: { inicio: 7, fim: 9 },
+  ambiente: { inicio: 10, fim: 13 },
+  atitude: { inicio: 14, fim: 17 },
+  desatencao: { inicio: 18, fim: 20 }
+};
+
+
+function validarPlanodeAcao(){
+ 
+    var dataPlanodeAcao = document.getElementById("data_planoacao")
+    var planodeAcao = document.getElementById("planodeacao")
+    var plano_acao_contramedida = document.getElementById("plano_acao_contramedida")
+
+    if (!dataPlanodeAcao || dataPlanodeAcao.value.trim() === "" || !planodeAcao || planodeAcao.value.trim() === "" || !plano_acao_contramedida || plano_acao_contramedida.value.trim() === "") {
+    
+              Swal.fire({
+              title: 'Favor preencher a Data e o Plano de ação',
+              icon: 'warning',
+              timer: 1700,
+              showCloseButton: false,
+              showCancelButton: false,
+              showConfirmButton: false
+            })
+    }else{
+
+      if(document.getElementById("form2_status_entrevista").value == "TWTTP"){
+            salvarDadosTWTTP(0)
+      }else{
+            salvarDadosTWTTP(1)
+      } 
+    }
+}
+
+
+function validarRespostasForm4_analise_herca() {
+
+    respostasForm4_analise_herca = {
+        FRAQUEZA_PROCESSO: {
+            FRAQUEZA_PROCESSO_1: document.getElementById("perg_fraqueza_processo1").value,
+            FRAQUEZA_PROCESSO_CONTRA_MEDIDA1: document.getElementById("contra_medida_processo1").value,
+            FRAQUEZA_PROCESSO_2: document.getElementById("perg_fraqueza_processo2").value,
+            FRAQUEZA_PROCESSO_CONTRA_MEDIDA2: document.getElementById("contra_medida_processo2").value,
+            FRAQUEZA_PROCESSO_3: document.getElementById("perg_fraqueza_processo3").value,
+            FRAQUEZA_PROCESSO_CONTRA_MEDIDA3: document.getElementById("contra_medida_processo3").value,
+            FRAQUEZA_PROCESSO_4: document.getElementById("perg_fraqueza_processo4").value,
+            FRAQUEZA_PROCESSO_CONTRA_MEDIDA4: document.getElementById("contra_medida_processo4").value
+        },
+        FRAQUEZA_PROCEDIMENTO: {
+            FRAQUEZA_PROCEDIMENTO_1: document.getElementById("perg_fraqueza_procedimento5").value,
+            FRAQUEZA_PROCEDIMENTO_CONTRA_MEDIDA1: document.getElementById("contra_medida_procedimento5").value,
+            FRAQUEZA_PROCEDIMENTO_2: document.getElementById("perg_fraqueza_procedimento6").value,
+            FRAQUEZA_PROCEDIMENTO_CONTRA_MEDIDA2: document.getElementById("contra_medida_procedimento6").value
+        },
+        FERRAMENTAS: {
+            FERRAMENTAS_1: document.getElementById("perg_ferramenta7").value,
+            FERRAMENTAS_CONTRA_MEDIDA1: document.getElementById("contra_medida_ferramenta7").value,
+            FERRAMENTAS_2: document.getElementById("perg_ferramenta8").value,
+            FERRAMENTAS_CONTRA_MEDIDA2: document.getElementById("contra_medida_ferramenta8").value,
+            FERRAMENTAS_3: document.getElementById("perg_ferramenta9").value,
+            FERRAMENTAS_CONTRA_MEDIDA3: document.getElementById("contra_medida_ferramenta9").value
+        },
+        AMBIENTE_TRABALHO: {
+            AMBIENTE_TRABALHO_1: document.getElementById("perg_ambiente10").value,
+            AMBIENTE_TRABALHO_CONTRA_MEDIDA1: document.getElementById("contra_medida_ambiente10").value,
+            AMBIENTE_TRABALHO_2: document.getElementById("perg_ambiente11").value,
+            AMBIENTE_TRABALHO_CONTRA_MEDIDA2: document.getElementById("contra_medida_ambiente11").value,
+            AMBIENTE_TRABALHO_3: document.getElementById("perg_ambiente12").value,
+            AMBIENTE_TRABALHO_CONTRA_MEDIDA3: document.getElementById("contra_medida_ambiente12").value,
+            AMBIENTE_TRABALHO_4: document.getElementById("perg_ambiente13").value,
+            AMBIENTE_TRABALHO_CONTRA_MEDIDA4: document.getElementById("contra_medida_ambiente13").value
+        },
+        ATITUDE_ENVOLVIMENTO: {
+            ATITUDE_ENVOLVIMENTO_1: document.getElementById("perg_atitude14").value,
+            ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA1: document.getElementById("contra_medida_atitude14").value,
+            ATITUDE_ENVOLVIMENTO_2: document.getElementById("perg_atitude15").value,
+            ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA2: document.getElementById("contra_medida_atitude15").value,
+            ATITUDE_ENVOLVIMENTO_3: document.getElementById("perg_atitude16").value,
+            ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA3: document.getElementById("contra_medida_atitude16").value,
+            ATITUDE_ENVOLVIMENTO_4: document.getElementById("perg_atitude17").value,
+            ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA4: document.getElementById("contra_medida_atitude17").value
+        //    ATITUDE_ENVOLVIMENTO_5: document.getElementById("perg_atitude5").value,
+        //    ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA5: document.getElementById("contra_medida_atitude5").value 
+        },
+        DESATENCAO: {
+            DESATENCAO_1: document.getElementById("perg_desatencao18").value,
+            DESATENCAO_CONTRA_MEDIDA1: document.getElementById("contra_medida_desatencao18").value,
+            DESATENCAO_2: document.getElementById("perg_desatencao19").value,
+            DESATENCAO_CONTRA_MEDIDA2: document.getElementById("contra_medida_desatencao19").value,
+            DESATENCAO_3: document.getElementById("perg_desatencao20").value,
+            DESATENCAO_CONTRA_MEDIDA3: document.getElementById("contra_medida_desatencao20").value
+        }
+    };
+
+
+    if(grupoSelecionado == "" || grupoSelecionado== null){
+      Swal.fire({
+          title: 'Favor preencher uma das opções',
+          icon: 'warning',
+          timer: 1700,
+          showCloseButton: false,
+          showCancelButton: false,
+          showConfirmButton: false
+        })
+    }else{
+
+        var grupoLoopIni
+        var grupoLoopFim     
+        var selectedValue = '';
+        var selectedValuePergunta = '';
+        const intervalo = gruposIntervalos[grupoSelecionado];
+
+        if (intervalo) {
+          grupoLoopIni = intervalo.inicio;
+          grupoLoopFim = intervalo.fim;
+        }
+
+          for (var i = grupoLoopIni; i <= grupoLoopFim; i++) {
+
+              var selectElement = document.getElementById(`contra_medida_${grupoSelecionado}${i}`);
+              if (selectElement.selectedIndex !== 0) {
+                  selectedValuePergunta = document.getElementById(`perg_herca_${i}`).textContent
+                  selectedValue = selectElement.value;                
+                  break; // Para após encontrar o primeiro select diferente de index 0
+              }
+          } 
+
+        document.getElementById("form4_pergunta_herca").value = selectedValuePergunta
+        document.getElementById("form4_status_herca").value = grupoSelecionado
+        document.getElementById("form4_status_contra_medida_herca").value = selectedValue
+
+        var selectedValuePergunta_numero = selectedValuePergunta.match(/^\d{1,2}/);
+        var pilarImpactado = document.getElementById('ocorrencia_pilar_impactado');
+
+        var select = document.getElementById('plano_acao_contramedida');      
+        select.innerHTML = '<option disabled selected value="">Selecione</option>';
+
+      // preenche o select de contramedidas do plano de acao de acordo com a pergunta respondida na analise herca
+        google.script.run.withSuccessHandler(function(optionsString) {
+          
+          select.innerHTML += optionsString;
+        }).gerarHtmlListaContraMedida_Herca(selectedValuePergunta_numero, pilarImpactado.value);
+        setTimeout(irProximoFormulario5() , 2000);
+             
+    }
+}
+
+
+
+function validarRespostasForm5_natureza_humana() {
+
+    respostasForm5_natureza_humana = {
+        SELECAO: {
+            SELECAO_1: document.getElementById("perg_selecao1").value,
+            SELECAO_CONTRA_MEDIDA1: document.getElementById("contra_medida_selecao1").value,
+            SELECAO_2: document.getElementById("perg_selecao2").value,
+            SELECAO_CONTRA_MEDIDA2: document.getElementById("contra_medida_selecao2").value,
+            SELECAO_3: document.getElementById("perg_selecao3").value,
+            SELECAO_CONTRA_MEDIDA3: document.getElementById("contra_medida_selecao3").value,
+            SELECAO_4: document.getElementById("perg_selecao4").value,
+            SELECAO_CONTRA_MEDIDA4: document.getElementById("contra_medida_selecao4").value
+        },
+        CONSCIENCIA: {
+            CONSCIENCIA_1: document.getElementById("perg_consciencia1").value,
+            CONSCIENCIA_CONTRA_MEDIDA1: document.getElementById("contra_medida_consciencia1").value,
+            CONSCIENCIA_2: document.getElementById("perg_consciencia2").value,
+            CONSCIENCIA_CONTRA_MEDIDA2: document.getElementById("contra_medida_consciencia2").value,
+            CONSCIENCIA_3: document.getElementById("perg_consciencia3").value,
+            CONSCIENCIA_CONTRA_MEDIDA3: document.getElementById("contra_medida_consciencia3").value,
+            CONSCIENCIA_4: document.getElementById("perg_consciencia4").value,
+            CONSCIENCIA_CONTRA_MEDIDA4: document.getElementById("contra_medida_consciencia4").value       
+        },
+        ATENCAO: {
+            ATENCAO_1: document.getElementById("perg_atencao1").value,
+            ATENCAO_CONTRA_MEDIDA1: document.getElementById("contra_medida_atencao1").value,
+            ATENCAO_2: document.getElementById("perg_atencao2").value,
+            ATENCAO_CONTRA_MEDIDA2: document.getElementById("contra_medida_atencao2").value,
+            ATENCAO_3: document.getElementById("perg_atencao3").value,
+            ATENCAO_CONTRA_MEDIDA3: document.getElementById("contra_medida_atencao3").value,
+            ATENCAO_4: document.getElementById("perg_atencao4").value,
+            ATENCAO_CONTRA_MEDIDA4: document.getElementById("contra_medida_atencao4").value           
+        },
+        ILUSAO: {
+            ILUSAO_1: document.getElementById("perg_ilusao1").value,
+            ILUSAO_CONTRA_MEDIDA1: document.getElementById("contra_medida_ilusao1").value,
+            ILUSAO_2: document.getElementById("perg_ilusao2").value,
+            ILUSAO_CONTRA_MEDIDA2: document.getElementById("contra_medida_ilusao2").value,
+            ILUSAO_3: document.getElementById("perg_ilusao3").value,
+            ILUSAO_CONTRA_MEDIDA3: document.getElementById("contra_medida_ilusao3").value,
+            ILUSAO_4: document.getElementById("perg_ilusao4").value,
+            ILUSAO_CONTRA_MEDIDA4: document.getElementById("contra_medida_ilusao4").value,
+            ILUSAO_5: document.getElementById("perg_ilusao5").value,
+            ILUSAO_CONTRA_MEDIDA5: document.getElementById("contra_medida_ilusao5").value           
+        },
+        RJA: {
+            RJA_1: document.getElementById("perg_rja1").value,
+            RJA_CONTRA_MEDIDA1: document.getElementById("contra_medida_rja1").value,
+            RJA_2: document.getElementById("perg_rja2").value,
+            RJA_CONTRA_MEDIDA2: document.getElementById("contra_medida_rja2").value,
+            RJA_3: document.getElementById("perg_rja3").value,
+            RJA_CONTRA_MEDIDA3: document.getElementById("contra_medida_rja3").value,
+            RJA_4: document.getElementById("perg_rja4").value,
+            RJA_CONTRA_MEDIDA4: document.getElementById("contra_medida_rja4").value,
+            RJA_5: document.getElementById("perg_rja5").value,
+            RJA_CONTRA_MEDIDA5: document.getElementById("contra_medida_rja5").value,
+            RJA_6: document.getElementById("perg_rja6").value,
+            RJA_CONTRA_MEDIDA6: document.getElementById("contra_medida_rja6").value,
+            RJA_7: document.getElementById("perg_rja7").value,
+            RJA_CONTRA_MEDIDA7: document.getElementById("contra_medida_rja7").value       
+        },
+        PARALISADO: {
+            PARALISADO_1: document.getElementById("perg_paralisado1").value,
+            PARALISADO_CONTRA_MEDIDA1: document.getElementById("contra_medida_paralisado1").value
+        },
+        ESQUECIMENTO: {
+            ESQUECIMENTO_1: document.getElementById("perg_esquecimento1").value,
+            ESQUECIMENTO_CONTRA_MEDIDA1: document.getElementById("contra_medida_esquecimento1").value,
+            ESQUECIMENTO_2: document.getElementById("perg_esquecimento2").value,
+            ESQUECIMENTO_CONTRA_MEDIDA2: document.getElementById("contra_medida_esquecimento2").value,
+            ESQUECIMENTO_3: document.getElementById("perg_esquecimento3").value,
+            ESQUECIMENTO_CONTRA_MEDIDA3: document.getElementById("contra_medida_esquecimento3").value,
+            ESQUECIMENTO_4: document.getElementById("perg_esquecimento4").value,
+            ESQUECIMENTO_CONTRA_MEDIDA4: document.getElementById("contra_medida_esquecimento4").value           
+        },
+        ATALHOS: {
+            ATALHOS_1: document.getElementById("perg_atalhos1").value,
+            ATALHOS_CONTRA_MEDIDA1: document.getElementById("contra_medida_atalhos1").value,
+            ATALHOS_2: document.getElementById("perg_atalhos2").value,
+            ATALHOS_CONTRA_MEDIDA2: document.getElementById("contra_medida_atalhos2").value
+        },
+        CONDICOES_FISICAS: {
+            CONDICOES_FISICAS_1: document.getElementById("perg_cond_fisicas1").value,
+            CONDICOES_FISICAS_CONTRA_MEDIDA1: document.getElementById("contra_medida_cond_fisicas1").value,
+            CONDICOES_FISICAS_2: document.getElementById("perg_cond_fisicas2").value,
+            CONDICOES_FISICAS_CONTRA_MEDIDA2: document.getElementById("contra_medida_cond_fisicas2").value
+        },
+        CONDICOES_PSICOLOGICAS : {
+            CONDICOES_PSICOLOGICAS_1: document.getElementById("perg_cond_psicologicas1").value,
+            CONDICOES_PSICOLOGICAS_CONTRA_MEDIDA1: document.getElementById("contra_medida_cond_psicologicas1").value,
+            CONDICOES_PSICOLOGICAS_2: document.getElementById("perg_cond_psicologicas2").value,
+            CONDICOES_PSICOLOGICAS_CONTRA_MEDIDA2: document.getElementById("contra_medida_cond_psicologicas2").value,
+            CONDICOES_PSICOLOGICAS_3: document.getElementById("perg_cond_psicologicas3").value,
+            CONDICOES_PSICOLOGICAS_CONTRA_MEDIDA3: document.getElementById("contra_medida_cond_psicologicas3").value
+        },
+        VISUAL: {
+            VISUAL_1: document.getElementById("perg_visual1").value,
+            VISUAL_CONTRA_MEDIDA1: document.getElementById("contra_medida_visual1").value,
+            VISUAL_2: document.getElementById("perg_visual2").value,
+            VISUAL_CONTRA_MEDIDA2: document.getElementById("contra_medida_visual2").value,
+            VISUAL_3: document.getElementById("perg_visual3").value,
+            VISUAL_CONTRA_MEDIDA3: document.getElementById("contra_medida_visual3").value,
+            VISUAL_4: document.getElementById("perg_visual4").value,
+            VISUAL_CONTRA_MEDIDA4: document.getElementById("contra_medida_visual4").value         
+        },
+        ADIVINHACAO: {
+            ADIVINHACAO_1: document.getElementById("perg_adivinhacao1").value,
+            ADIVINHACAO_CONTRA_MEDIDA1: document.getElementById("contra_medida_adivinhacao1").value,
+            ADIVINHACAO_2: document.getElementById("perg_adivinhacao2").value,
+            ADIVINHACAO_CONTRA_MEDIDA2: document.getElementById("contra_medida_adivinhacao2").value,
+            ADIVINHACAO_3: document.getElementById("perg_adivinhacao3").value,
+            ADIVINHACAO_CONTRA_MEDIDA3: document.getElementById("contra_medida_adivinhacao3").value
+        }
+    };
+
+    if(selectedValuePerguntaNaturezaHumana == "TODOS NÃO"){
+            Swal.fire({
+              title: 'Favor selecionar uma causa raiz principal.',
+              icon: 'warning',
+              timer: 3000,
+              showCloseButton: false,
+              showCancelButton: false,
+              showConfirmButton: false
+            });
+    }else{
+       irProximoFormulario6_PlanoAcao()
+    }
+    
+}
+
+
+function setarNaoParaTodosItens() {
+
+ respostasForm4_analise_herca = {
+    FRAQUEZA_PROCESSO: {
+        FRAQUEZA_PROCESSO_1: "NAO",
+        FRAQUEZA_PROCESSO_CONTRA_MEDIDA1: "NAO",
+        FRAQUEZA_PROCESSO_2: "NAO",
+        FRAQUEZA_PROCESSO_CONTRA_MEDIDA2: "NAO",
+        FRAQUEZA_PROCESSO_3: "NAO",
+        FRAQUEZA_PROCESSO_CONTRA_MEDIDA3: "NAO",
+        FRAQUEZA_PROCESSO_4: "NAO",
+        FRAQUEZA_PROCESSO_CONTRA_MEDIDA4: "NAO"
+    },
+    FRAQUEZA_PROCEDIMENTO: {
+        FRAQUEZA_PROCEDIMENTO_1: "NAO",
+        FRAQUEZA_PROCEDIMENTO_CONTRA_MEDIDA1: "NAO",
+        FRAQUEZA_PROCEDIMENTO_2: "NAO",
+        FRAQUEZA_PROCEDIMENTO_CONTRA_MEDIDA2: "NAO"
+    },
+    FERRAMENTAS: {
+        FERRAMENTAS_1: "NAO",
+        FERRAMENTAS_CONTRA_MEDIDA1: "NAO",
+        FERRAMENTAS_2: "NAO",
+        FERRAMENTAS_CONTRA_MEDIDA2: "NAO",
+        FERRAMENTAS_3: "NAO",
+        FERRAMENTAS_CONTRA_MEDIDA3: "NAO"
+    },
+    AMBIENTE_TRABALHO: {
+        AMBIENTE_TRABALHO_1: "NAO",
+        AMBIENTE_TRABALHO_CONTRA_MEDIDA1: "NAO",
+        AMBIENTE_TRABALHO_2: "NAO",
+        AMBIENTE_TRABALHO_CONTRA_MEDIDA2: "NAO",
+        AMBIENTE_TRABALHO_3: "NAO",
+        AMBIENTE_TRABALHO_CONTRA_MEDIDA3: "NAO",
+        AMBIENTE_TRABALHO_4: "NAO",
+        AMBIENTE_TRABALHO_CONTRA_MEDIDA4: "NAO"
+    },
+    ATITUDE_ENVOLVIMENTO: {
+        ATITUDE_ENVOLVIMENTO_1: "NAO",
+        ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA1: "NAO",
+        ATITUDE_ENVOLVIMENTO_2: "NAO",
+        ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA2: "NAO",
+        ATITUDE_ENVOLVIMENTO_3: "NAO",
+        ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA3: "NAO",
+        ATITUDE_ENVOLVIMENTO_4: "NAO",
+        ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA4: "NAO",
+        ATITUDE_ENVOLVIMENTO_5: "NAO",
+        ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA5: "NAO"
+    },
+    DESATENCAO: {
+        DESATENCAO_1: "NAO",
+        DESATENCAO_CONTRA_MEDIDA1: "NAO",
+        DESATENCAO_2: "NAO",
+        DESATENCAO_CONTRA_MEDIDA2: "NAO",
+        DESATENCAO_3: "NAO",
+        DESATENCAO_CONTRA_MEDIDA3: "NAO"
+    }
+  };
+
+  respostasForm5_natureza_humana = {
+    SELECAO: {
+        SELECAO_1: "NAO",
+        SELECAO_CONTRA_MEDIDA1: "NAO",
+        SELECAO_2: "NAO",
+        SELECAO_CONTRA_MEDIDA2: "NAO",
+        SELECAO_3: "NAO",
+        SELECAO_CONTRA_MEDIDA3: "NAO",
+        SELECAO_4: "NAO",
+        SELECAO_CONTRA_MEDIDA4: "NAO"
+    },
+    CONSCIENCIA: {
+        CONSCIENCIA_1: "NAO",
+        CONSCIENCIA_CONTRA_MEDIDA1: "NAO",
+        CONSCIENCIA_2: "NAO",
+        CONSCIENCIA_CONTRA_MEDIDA2: "NAO",
+        CONSCIENCIA_3: "NAO",
+        CONSCIENCIA_CONTRA_MEDIDA3: "NAO",
+        CONSCIENCIA_4: "NAO",
+        CONSCIENCIA_CONTRA_MEDIDA4: "NAO"       
+    },
+    ATENCAO: {
+        ATENCAO_1: "NAO",
+        ATENCAO_CONTRA_MEDIDA1: "NAO",
+        ATENCAO_2: "NAO",
+        ATENCAO_CONTRA_MEDIDA2: "NAO",
+        ATENCAO_3: "NAO",
+        ATENCAO_CONTRA_MEDIDA3: "NAO",
+        ATENCAO_4: "NAO",
+        ATENCAO_CONTRA_MEDIDA4: "NAO"           
+    },
+    ILUSAO: {
+        ILUSAO_1: "NAO",
+        ILUSAO_CONTRA_MEDIDA1: "NAO",
+        ILUSAO_2: "NAO",
+        ILUSAO_CONTRA_MEDIDA2: "NAO",
+        ILUSAO_3: "NAO",
+        ILUSAO_CONTRA_MEDIDA3: "NAO",
+        ILUSAO_4: "NAO",
+        ILUSAO_CONTRA_MEDIDA4: "NAO",
+        ILUSAO_5: "NAO",
+        ILUSAO_CONTRA_MEDIDA5: "NAO"           
+    },
+    RJA: {
+        RJA_1: "NAO",
+        RJA_CONTRA_MEDIDA1: "NAO",
+        RJA_2: "NAO",
+        RJA_CONTRA_MEDIDA2: "NAO",
+        RJA_3: "NAO",
+        RJA_CONTRA_MEDIDA3: "NAO",
+        RJA_4: "NAO",
+        RJA_CONTRA_MEDIDA4: "NAO",
+        RJA_5: "NAO",
+        RJA_CONTRA_MEDIDA5: "NAO",
+        RJA_6: "NAO",
+        RJA_CONTRA_MEDIDA6: "NAO",
+        RJA_7: "NAO",
+        RJA_CONTRA_MEDIDA7: "NAO"       
+    },
+    PARALISADO: {
+        PARALISADO_1: "NAO",
+        PARALISADO_CONTRA_MEDIDA1: "NAO"
+    },
+    ESQUECIMENTO: {
+        ESQUECIMENTO_1: "NAO",
+        ESQUECIMENTO_CONTRA_MEDIDA1: "NAO",
+        ESQUECIMENTO_2: "NAO",
+        ESQUECIMENTO_CONTRA_MEDIDA2: "NAO",
+        ESQUECIMENTO_3: "NAO",
+        ESQUECIMENTO_CONTRA_MEDIDA3: "NAO",
+        ESQUECIMENTO_4: "NAO",
+        ESQUECIMENTO_CONTRA_MEDIDA4: "NAO"           
+    },
+    ATALHOS: {
+        ATALHOS_1: "NAO",
+        ATALHOS_CONTRA_MEDIDA1: "NAO",
+        ATALHOS_2: "NAO",
+        ATALHOS_CONTRA_MEDIDA2: "NAO"
+    },
+    CONDICOES_FISICAS: {
+        CONDICOES_FISICAS_1: "NAO",
+        CONDICOES_FISICAS_CONTRA_MEDIDA1: "NAO",
+        CONDICOES_FISICAS_2: "NAO",
+        CONDICOES_FISICAS_CONTRA_MEDIDA2: "NAO"
+    },
+    CONDICOES_PSICOLOGICAS : {
+        CONDICOES_PSICOLOGICAS_1: "NAO",
+        CONDICOES_PSICOLOGICAS_CONTRA_MEDIDA1: "NAO",
+        CONDICOES_PSICOLOGICAS_2: "NAO",
+        CONDICOES_PSICOLOGICAS_CONTRA_MEDIDA2: "NAO",
+        CONDICOES_PSICOLOGICAS_3: "NAO",
+        CONDICOES_PSICOLOGICAS_CONTRA_MEDIDA3: "NAO"
+    },
+    VISUAL: {
+        VISUAL_1: "NAO",
+        VISUAL_CONTRA_MEDIDA1: "NAO",
+        VISUAL_2: "NAO",
+        VISUAL_CONTRA_MEDIDA2: "NAO",
+        VISUAL_3: "NAO",
+        VISUAL_CONTRA_MEDIDA3: "NAO",
+        VISUAL_4: "NAO",
+        VISUAL_CONTRA_MEDIDA4: "NAO"         
+    },
+    ADIVINHACAO: {
+        ADIVINHACAO_1: "NAO",
+        ADIVINHACAO_CONTRA_MEDIDA1: "NAO",
+        ADIVINHACAO_2: "NAO",
+        ADIVINHACAO_CONTRA_MEDIDA2: "NAO",
+        ADIVINHACAO_3: "NAO",
+        ADIVINHACAO_CONTRA_MEDIDA3: "NAO"
+    }
+  };
+  document.getElementById("form5_status_natureza").value = "NÃO"
+  document.getElementById("form5_pergunta_natureza").value = "NÃO"
+}
+
+
+function limparRespostasForm1(){
+
+  document.getElementById('form1_emailcriador').value = ""
+  document.getElementById('form1_codformulario').value = ""
+  document.getElementById('form1_aprovacaopilar').value = ""
+  document.getElementById('form1_aprovacaopd').value = ""
+
+  document.getElementById('form1_descricaoproblema').value = ""
+
+  document.getElementById('ocorrencia_unidade').value = ""
+  document.getElementById('ocorrencia_linha_area').value = ""
+  document.getElementById('ocorrencia_qrca').value = ""
+  document.getElementById('ocorrencia_data').value = ""
+  document.getElementById('ocorrencia_posto').value = ""
+  document.getElementById('ocorrencia_sku_impactado').value = ""
+  document.getElementById('ocorrencia_turno').value = ""
+  document.getElementById('ocorrencia_hora').value = ""
+  document.getElementById('ocorrencia_indicador').value = ""
+  document.getElementById('ocorrencia_pilar_impactado').value = ""
+
+  //document.getElementById('colaborador_nome').value = ""
+  document.getElementById('colaborador_re').value = ""
+  document.getElementById('colaborador_tempo_posto').value = ""
+  document.getElementById('colaborador_funcao').value = ""
+
+  document.getElementById('entrevistador_nome').value = ""
+  document.getElementById('entrevistador_re').value = ""
+//  document.getElementById('entrevistador_funcao').value = ""
+
+}
+
+// Função para desmarcar os checkboxes dos grupos form2_pergunta 1, 2, 3 e 4
+function limparRespostasForm2() {
+    // Obtenha todos os elementos de checkbox dos grupos form2_pergunta 1, 2, 3 e 4
+    var checkboxes = document.querySelectorAll('input[type="checkbox"][name^="form2_pergunta"]');
+
+    // Itere sobre todos os checkboxes e desmarque-os
+    checkboxes.forEach(function(checkbox) {
+        checkbox.checked = false;
+    });
+}
+
+function limparRespostasForm3_falta_conhecimento(){
+
+    document.getElementById('perg_falta_conhecimento1').value = "NÃO"
+    document.getElementById('perg_falta_conhecimento2').value = "NÃO"
+    document.getElementById('perg_falta_conhecimento3').value = "NÃO"
+    document.getElementById('perg_falta_conhecimento4').value = "NÃO"
+    document.getElementById('perg_falta_conhecimento5').value = "NÃO"
+
+    respostasForm3_falta_conhecimento = {
+        FALTA_CONHECIMENTO1 : "NÃO",
+        CONTRA_MEDIDA1 : "NÃO",
+        FALTA_CONHECIMENTO2 : "NÃO",
+        CONTRA_MEDIDA2 : "NÃO",
+        FALTA_CONHECIMENTO3 : "NÃO",
+        CONTRA_MEDIDA3 : "NÃO",
+        FALTA_CONHECIMENTO4: "NÃO",
+        CONTRA_MEDIDA4: "NÃO",
+        FALTA_CONHECIMENTO5: "NÃO",
+        CONTRA_MEDIDA5: "NÃO"        
+      } 
+
+    document.getElementById('form3_status_contra_medida_falta_conhecimento').value = "NÃO"
+    document.getElementById('form3_pergunta_contra_medida_falta_conhecimento').value = "NÃO"
+    grupoSelecionado = ""
+
+      for (var i = 1; i <= 5; i++) {
+          var selectElement = document.getElementById(`contra_medida_falta_conhecimento${i}`);
+          selectElement.selectedIndex = 0
+      }
+}
+
+function limparRespostasForm4_analise_herca(){
+
+    document.getElementById("perg_fraqueza_processo1").value = "NÃO"
+    document.getElementById("contra_medida_processo1").value = "NÃO"
+    document.getElementById("perg_fraqueza_processo2").value = "NÃO"
+    document.getElementById("contra_medida_processo2").value = "NÃO"
+    document.getElementById("perg_fraqueza_processo3").value = "NÃO"
+    document.getElementById("contra_medida_processo3").value = "NÃO"
+    document.getElementById("perg_fraqueza_processo4").value = "NÃO"
+    document.getElementById("contra_medida_processo4").value = "NÃO"
+
+    document.getElementById("perg_fraqueza_procedimento5").value = "NÃO"
+    document.getElementById("contra_medida_procedimento5").value = "NÃO"
+    document.getElementById("perg_fraqueza_procedimento6").value = "NÃO"
+    document.getElementById("contra_medida_procedimento6").value = "NÃO"
+
+    document.getElementById("perg_ferramenta7").value = "NÃO"
+    document.getElementById("contra_medida_ferramenta7").value = "NÃO"
+    document.getElementById("perg_ferramenta8").value = "NÃO"
+    document.getElementById("contra_medida_ferramenta8").value = "NÃO"
+    document.getElementById("perg_ferramenta9").value = "NÃO"
+    document.getElementById("contra_medida_ferramenta9").value = "NÃO"
+
+    document.getElementById("perg_ambiente10").value = "NÃO"
+    document.getElementById("contra_medida_ambiente10").value = "NÃO"
+    document.getElementById("perg_ambiente11").value = "NÃO"
+    document.getElementById("contra_medida_ambiente11").value = "NÃO"
+    document.getElementById("perg_ambiente12").value = "NÃO"
+    document.getElementById("contra_medida_ambiente12").value = "NÃO"
+    document.getElementById("perg_ambiente13").value = "NÃO"
+    document.getElementById("contra_medida_ambiente13").value = "NÃO"
+
+    document.getElementById("perg_atitude14").value = "NÃO"
+    document.getElementById("contra_medida_atitude14").value = "NÃO"
+    document.getElementById("perg_atitude15").value = "NÃO"
+    document.getElementById("contra_medida_atitude15").value = "NÃO"
+    document.getElementById("perg_atitude16").value = "NÃO"
+    document.getElementById("contra_medida_atitude16").value = "NÃO"
+    document.getElementById("perg_atitude17").value = "NÃO"
+    document.getElementById("contra_medida_atitude17").value = "NÃO"
+    //document.getElementById("perg_atitude5").value = "NÃO"
+    //document.getElementById("contra_medida_atitude5").value = "NÃO"
+
+    document.getElementById("perg_desatencao18").value = "NÃO"
+    document.getElementById("contra_medida_desatencao18").value = "NÃO"
+    document.getElementById("perg_desatencao19").value = "NÃO"
+    document.getElementById("contra_medida_desatencao19").value = "NÃO"
+    document.getElementById("perg_desatencao20").value = "NÃO"
+    document.getElementById("contra_medida_desatencao20").value = "NÃO"
+
+
+    document.getElementById("form4_pergunta_herca").value = "NÃO"
+    document.getElementById("form4_status_herca").value = "NÃO"
+    document.getElementById("form4_status_contra_medida_herca").value = "NÃO"
+
+
+    // IDs das divs e dos h6
+    const divs = [
+        "meuFormulario_fraqueza_processo",
+        "meuFormulario_fraqueza_procedimento",
+        "meuFormulario_fraqueza_ferramentas",
+        "meuFormulario_fraqueza_ambiente",
+        "meuFormulario_fraqueza_atitude",
+        "meuFormulario_fraqueza_desatencao"
+    ];
+    const headers = [
+        "h6_fraqueza_processo",
+        "h6_fraqueza_procedimento",
+        "h6_fraqueza_ferramentas",
+        "h6_fraqueza_ambiente",
+        "h6_fraqueza_atitude",
+        "h6_fraqueza_desatencao"
+    ];
+
+    const defaultBackground = '#ffe8e8';
+    const defaultBackgroundFundo = '#b97d7d';
+
+        // Ocultar todas as divs e mostrar todos os h6
+        divs.forEach(id => {
+            document.getElementById(id).style.display = 'none';
+        });
+        headers.forEach(id => {
+            document.getElementById(id).style.display = 'block';
+            document.getElementById(id).style.backgroundColor = defaultBackground;
+            document.getElementById("h6_fundo").style.backgroundColor = defaultBackgroundFundo;
+        });
+}
+
+function limparRespostasForm5_natureza_humana() {
+  // Itera sobre os números das seções
+  for (var i = 1; i <= 12; i++) {
+    // Gera o id da seção atual
+    var idSecao = "natureza_humana_secao_" + i;
+
+    // Seleciona o contêiner da seção específica
+    var secao = document.getElementById(idSecao);
+    
+    // Verifica se a seção está visível
+   // if (secao && secao.style.display !== "none") {
+      // Limpa os inputs e define os selects para "NÃO"
+      var inputs = secao.querySelectorAll('input[type="text"]');
+      var selects = secao.querySelectorAll('select');
+      
+      // Limpa o valor dos inputs
+      inputs.forEach(function(input) {
+        input.value = "";
+      });
+      
+      // Define o valor dos selects para "NÃO"
+      selects.forEach(function(select) {
+        select.value = "NÃO";
+      });
+ //   }
+  }
+  document.getElementById("form5_pergunta_natureza").value = "NÃO"
+  document.getElementById("form5_status_natureza").value = "NÃO"
+
+  
+  
+}
+
+
+let lastClickedId = null; // Variável para rastrear o último cabeçalho clicado
+
+function telaCategoriaHerca(categoria) {
+
+    // IDs das divs e dos h6
+    const divs = [
+        "meuFormulario_fraqueza_processo",
+        "meuFormulario_fraqueza_procedimento",
+        "meuFormulario_fraqueza_ferramentas",
+        "meuFormulario_fraqueza_ambiente",
+        "meuFormulario_fraqueza_atitude",
+        "meuFormulario_fraqueza_desatencao"
+    ];
+
+    const headers = [
+        "h6_fraqueza_processo",
+        "h6_fraqueza_procedimento",
+        "h6_fraqueza_ferramentas",
+        "h6_fraqueza_ambiente",
+        "h6_fraqueza_atitude",
+        "h6_fraqueza_desatencao"
+    ];
+
+    const defaultBackground = '#ffe8e8';
+    const defaultBackgroundFundo = '#b97d7d';
+
+    // Se o cabeçalho clicado é o mesmo do último clique
+    if (lastClickedId === categoria) {
+        // Ocultar todas as divs e mostrar todos os h6
+        divs.forEach(id => {
+            document.getElementById(id).style.display = 'none';
+        });
+        headers.forEach(id => {
+            document.getElementById(id).style.display = 'block';
+            document.getElementById(id).style.backgroundColor = defaultBackground;
+            document.getElementById("h6_fundo").style.backgroundColor = defaultBackgroundFundo;
+        });
+        lastClickedId = null; // Resetar a variável de rastreamento       
+    } else {
+        // Ocultar todos os h6 e todas as divs
+        headers.forEach(id => {
+            if (id !== "h6_" + categoria) {
+                document.getElementById(id).style.display = 'none';
+                document.getElementById(id).style.backgroundColor = defaultBackground;
+                document.getElementById("h6_fundo").style.backgroundColor = defaultBackgroundFundo;
+            }
+        });
+        divs.forEach(id => {
+            document.getElementById(id).style.display = 'none';
+        });       
+
+        // Mostrar a div correspondente ao cabeçalho clicado
+        const divId = "meuFormulario_" + categoria;
+        const divIdFundo = "h6_meuFormulario_" + categoria;
+        const div = document.getElementById(divId);
+        const divFundo = document.getElementById(divIdFundo);
+        if (div) {
+            div.style.display = 'block';
+
+            // Pegar o background da div e aplicar ao h6 correspondente
+            const divBackground = window.getComputedStyle(div).backgroundColor; // Pega a cor de fundo da div
+            const divBackgroundFundo = window.getComputedStyle(divFundo).backgroundColor; // Pega a cor de fundo da div
+            const h6Id = "h6_" + categoria;
+            const h6 = document.getElementById(h6Id);
+            if (h6) {
+                h6.style.display = 'block'; // Mostrar o h6 selecionado
+                h6.style.backgroundColor = divBackgroundFundo; // Aplicar a mesma cor de fundo da div ao h6
+                document.getElementById("h6_fundo").style.backgroundColor = divBackground;
+            }
+
+        } else {
+            console.error("Div com ID " + divId + " não encontrada.");
+        }
+
+        // Atualizar a variável de rastreamento
+        lastClickedId = categoria;
+    }
+}
+
+
+
+
+
+</script>

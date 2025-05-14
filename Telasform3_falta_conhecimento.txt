@@ -1,0 +1,12 @@
+<div style="display:none" id="meuFormulario_falta_conhecimento">
+  <h3 class="mt-1 text-center" >ANÁLISE CAUSA RAÍZ DE FALTA DE CONHECIMENTO</h3>
+    <h6 class="mt-1 text-center" >FALTA DE CONHECIMENTO</h6>
+      <div class="form-group row" style="background-color: #f5b7b7;"> 
+            <div class="col-md-12">
+              <div id="div_faltaConhecimento_perguntas"></div>
+          </div>
+            <input type="text" class="form-control" id="form3_pergunta_contra_medida_falta_conhecimento" hidden>
+            <input type="text" class="form-control" id="form3_status_contra_medida_falta_conhecimento" hidden>
+    </div>
+</div>
+

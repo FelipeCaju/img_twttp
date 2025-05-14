@@ -1,0 +1,20 @@
+<div style="display:block" id="meuFormulario_inico">
+  <h3 class="mt-1 text-center" style="padding:5px">FORMULARIO TWTTP</h3>
+      <div class="form-group row" style="background-color: #acedf3;">
+            <div class="col-md-12">
+                  <div class="form-group" style="margin-bottom: 0px;">
+                    <div class="form-group row" style="margin-bottom: 0px;">
+                        <h5 class="mt-1 text-center" style="padding:5px">ESCOLHA ENTRE CRIAR UMA TWTTP NOVA OU FECHAR O PLANO DE AÇÃO DE OUTRA TWTTP</h5>    
+                          <div class="d-flex justify-content-center" style="margin-top: 15px;margin-bottom: 15px;">
+                            <div class="d-flex align-items-center">
+                              <button class="btn btn-info" id="btnFormNovaTwttp" onclick="proximaPagina()" style="margin-bottom:2%;width:160px;height:100px;font-size:20px; background-color:#186467; margin-right: 20px;" >NOVA TWTTP</button>
+                              <button class="btn btn-info" id="btnFormConcluirTwttp" onclick="fecharPlanoAcao()" style="margin-bottom:2%;width:160px;height:100px;font-size:20px; background-color:#186467; margin-right: 20px;" >CONCLUIR TWTTP</button> 
+                              <button class="btn btn-info" id="btnFormPDcontrola" onclick="pdcontrola()" style="margin-bottom:2%;width:160px;height:100px;font-size:20px; background-color:#186467; display:none" >PD CONTROLL</button>              
+                            </div>
+                          </div>
+                    </div>
+                  </div>
+            </div>
+      </div> 
+</div>
+

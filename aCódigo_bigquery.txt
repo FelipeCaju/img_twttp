@@ -1,0 +1,290 @@
+function salvarDadosNoBigQuery(respostasForm1, respostasForm2, statusEntrevista, statusContraMedidaFaltaConhecimento, perguntaFaltaConhecimento, perguntaHerca, statusHerca, statusContraMedidaHerca, perguntaNatureza, statusNatureza, dataPlanodeAcao, planodeAcao, planoAcaoContramedida, approuchPilarIndicador) {
+    var projectId = "whr-lar-scm-mfg-data-lake";  // ID do projeto correto
+    var datasetId = "rio_claro";  // Nome do dataset correto
+    var tableId = "base_twttp";  // Nome da tabela correta
+
+    var row = {
+        DATA_ATUAL: new Date().toISOString().split("T")[0],  // Data de inserção
+        EMAIL_CRIADOR: respostasForm1.EMAIL_CRIADOR,
+        COD_FORMULARIO: respostasForm1.COD_FORMULARIO,
+        APROVACAO_PILAR: respostasForm1.APROVACAO_PILAR,
+        APROVACAO_PD: respostasForm1.APROVACAO_PD,
+        DESCRICAO_PROBLEMA: respostasForm1.DESCRICAO_PROBLEMA,
+        UNIDADE: respostasForm1.UNIDADE,
+        LINHA: respostasForm1.LINHA,
+        RCA: respostasForm1.QRCA,  // Ajuste do nome do campo
+        DATA: formatarData(respostasForm1.DATA),
+        POSTO: respostasForm1.POSTO,
+        SKU_IMPACTADO: respostasForm1.SKU_IMPACTADO,
+        TURNO: respostasForm1.TURNO,
+        HORA: respostasForm1.HORA,
+        INDICADOR: respostasForm1.INDICADOR,
+        PILAR_IMPACTADO: respostasForm1.PILAR_IMPACTADO,
+        COLABORADOR_RE: respostasForm1.COLABORADOR_RE,
+        COLABORADOR_TEMPO_POSTO: respostasForm1.COLABORADOR_TEMPO_POSTO,
+        COLABORADOR_FUNCAO: respostasForm1.COLABORADOR_FUNCAO,
+        ENTREVISTADOR_NOME: respostasForm1.ENTREVISTADOR_NOME,
+        ENTREVISTADOR_RE: respostasForm1.ENTREVISTADOR_RE,
+        ENTREVISTADOR_FUNCAO: respostasForm1.ENTREVISTADOR_FUNCAO,
+        STATUS_ENTREVISTA: statusEntrevista,
+        PERGUNTA_FALTA_CONHECIMENTO: perguntaFaltaConhecimento,
+        CONTRAMEDIDA_FALTA_CONHECIMENTO: statusContraMedidaFaltaConhecimento,
+        PERGUNTA_HERCA: perguntaHerca,
+        CAUSA_RAIZ_HERCA: statusHerca,
+        CONTRAMEDIDA_HERCA: statusContraMedidaHerca,
+        PERGUNTA_NATUREZA: perguntaNatureza,
+        STATUS_NATUREZA: statusNatureza,
+        DATA_PLANO_ACAO: formatarData(dataPlanodeAcao),
+        PLANO_DE_ACAO: planodeAcao,
+        CONTRA_MEDIDA_TWTTP: planoAcaoContramedida,
+        APPROACH: approuchPilarIndicador
+    };
+
+
+    // Adicionando respostas do Form2 dinamicamente
+    respostasForm2.forEach(function(resposta) {
+        row["entrevista_form2_" + (0)] = resposta.O_OPERADOR_ENTENDE_AS_ATIVIDADES_QUE_ESTA_FAZENDO;
+        row["entrevista_form2_" + (1)] = resposta.COMO_O_OPERADOR_SABE_QUE_ESTA_TRABALHANDO_CORRETAMENTE;
+        row["entrevista_form2_" + (2)] = resposta.COMO_O_OPERADOR_SABE_QUE_EXECUTOU_A_OPERACAO_SEM_NENHUM_DEFEITO_ERRO;
+        row["entrevista_form2_" + (3)] = resposta.O_QUE_O_OPERADOR_FAZ_CASO_ENCONTRE_ALGUM_PROBLEMA;
+    });
+
+   var rows = [{ json: row }];
+   Logger.log(rows)
+   
+   var request = {
+      rows: rows
+    };
+
+    try {
+        var result = BigQuery.Tabledata.insertAll(request, projectId, datasetId, tableId);
+        Logger.log("Dados inseridos com sucesso!");
+    } catch (e) {
+        Logger.log("Erro ao inserir no BigQuery: " + e.message);
+    }
+}
+
+function formatarData(data) {
+    if (!data) return null;
+    try {
+        return new Date(data).toISOString().split("T")[0];
+    } catch (e) {
+        Logger.log("Erro ao formatar data: " + data);
+        return null;
+    }
+}
+
+
+function testarSalvarDadosNoBigQuery() {
+
+
+var jsonTeste  =
+{
+  "respostasForm1": {
+    "EMAIL_CRIADOR": "felipe@email.com",
+    "COD_FORMULARIO": "123456789",
+    "APROVACAO_PILAR": "Sim",
+    "APROVACAO_PD": "Não",
+    "DESCRICAO_PROBLEMA": "Má qualidade no produto final",
+    "UNIDADE": "Rio Claro",
+    "LINHA": "Linha 1",
+    "QRCA": "12345",
+    "DATA": "2025-02-20",
+    "POSTO": "Posto 1",
+    "SKU_IMPACTADO": "ABC123",
+    "TURNO": "Manhã",
+    "HORA": "08:30",
+    "INDICADOR": "Qualidade",
+    "PILAR_IMPACTADO": "Manutenção",
+    "COLABORADOR_RE": "987654",
+    "COLABORADOR_TEMPO_POSTO": "2 anos",
+    "COLABORADOR_FUNCAO": "Operador",
+    "ENTREVISTADOR_NOME": "Carlos Silva",
+    "ENTREVISTADOR_RE": "456789",
+    "ENTREVISTADOR_FUNCAO": "Supervisor"
+  },
+  "respostasForm2": [
+    { "ENTREVISTA_FORM2": "Resposta 1" },
+    { "ENTREVISTA_FORM2": "Resposta 2" },
+    { "ENTREVISTA_FORM2": "Resposta 3" },
+    { "ENTREVISTA_FORM2": "Resposta 4" }
+  ],
+
+  "statusEntrevista": "Concluído",
+  "statusContraMedidaFaltaConhecimento": "Implementada",
+  "perguntaFaltaConhecimento": "O problema foi identificado corretamente?",
+  "perguntaHerca": "Quais fatores influenciaram?",
+  "statusHerca": "Em análise",
+  "statusContraMedidaHerca": "Aprovada",
+  "perguntaNatureza": "O comportamento humano influenciou?",
+  "statusNatureza": "Sim",
+  "dataPlanodeAcao": "2025-03-01",
+  "planodeAcao": "Implementação de medidas corretivas",
+  "planoAcaoContramedida": "Treinamento obrigatório",
+  "approuchPilarIndicador": "Manutenção preventiva"
+}
+
+  Logger.log(jsonTeste)
+
+
+    salvarDadosNoBigQuery(
+        jsonTeste.respostasForm1,
+        jsonTeste.respostasForm2,
+        jsonTeste.statusEntrevista,
+        jsonTeste.perguntaFaltaConhecimento,
+        jsonTeste.statusContraMedidaFaltaConhecimento,
+        jsonTeste.perguntaHerca,
+        jsonTeste.statusHerca,
+        jsonTeste.statusContraMedidaHerca,
+        jsonTeste.perguntaNatureza,
+        jsonTeste.statusNatureza,
+        jsonTeste.dataPlanodeAcao,
+        jsonTeste.planodeAcao,
+        jsonTeste.planoAcaoContramedida,
+        jsonTeste.approuchPilarIndicador
+    );
+}
+
+
+/*
+
+CREATE TABLE `whr-lar-scm-mfg-data-lake.rio_claro.base_twttp` (
+    timestamp TIMESTAMP,
+    email_criador STRING,
+    cod_formulario STRING,
+    aprovacao_pilar STRING,
+    aprovacao_pd STRING,
+    descricao_problema STRING,
+    unidade STRING,
+    linha STRING,
+    qrca STRING,
+    data DATE,
+    posto STRING,
+    sku_impactado STRING,
+    turno STRING,
+    hora STRING,
+    indicador STRING,
+    pilar_impactado STRING,
+    colaborador_re STRING,
+    colaborador_tempo_posto STRING,
+    colaborador_funcao STRING,
+    entrevistador_nome STRING,
+    entrevistador_re STRING,
+    entrevistador_funcao STRING,
+    status_entrevista STRING,
+    pergunta_falta_conhecimento STRING,
+    status_contramedida_falta_conhecimento STRING,
+    pergunta_herca STRING,
+    status_herca STRING,
+    status_contramedida_herca STRING,
+    pergunta_natureza STRING,
+    status_natureza STRING,
+    data_plano_acao DATE,
+    plano_acao STRING,
+    plano_acao_contramedida STRING,
+    approuch_pilar_indicador STRING,
+    
+    -- Campos dinâmicos do Form2
+    entrevista_form2_1 STRING,
+    entrevista_form2_2 STRING,
+    entrevista_form2_3 STRING,
+    entrevista_form2_4 STRING,
+    entrevista_form2_5 STRING,
+
+    -- Campos do Form3 (Falta de Conhecimento)
+    falta_conhecimento_1 STRING,
+    falta_conhecimento_2 STRING,
+    falta_conhecimento_3 STRING,
+    falta_conhecimento_4 STRING,
+    falta_conhecimento_5 STRING,
+    contra_medida_1 STRING,
+    contra_medida_2 STRING,
+    contra_medida_3 STRING,
+    contra_medida_4 STRING,
+    contra_medida_5 STRING,
+
+    -- Campos do Form4 (HERCA)
+    fraqueza_processo_1 STRING,
+    fraqueza_processo_2 STRING,
+    fraqueza_processo_3 STRING,
+    fraqueza_processo_4 STRING,
+    fraqueza_processo_5 STRING,
+    fraqueza_processo_contramedida_1 STRING,
+    fraqueza_processo_contramedida_2 STRING,
+    fraqueza_processo_contramedida_3 STRING,
+    fraqueza_processo_contramedida_4 STRING,
+    fraqueza_processo_contramedida_5 STRING,
+    
+    fraqueza_procedimento_1 STRING,
+    fraqueza_procedimento_2 STRING,
+    fraqueza_procedimento_3 STRING,
+    fraqueza_procedimento_4 STRING,
+    fraqueza_procedimento_5 STRING,
+    fraqueza_procedimento_contramedida_1 STRING,
+    fraqueza_procedimento_contramedida_2 STRING,
+    fraqueza_procedimento_contramedida_3 STRING,
+    fraqueza_procedimento_contramedida_4 STRING,
+    fraqueza_procedimento_contramedida_5 STRING,
+
+    ferramentas_1 STRING,
+    ferramentas_2 STRING,
+    ferramentas_3 STRING,
+    ferramentas_4 STRING,
+    ferramentas_5 STRING,
+    ferramentas_contramedida_1 STRING,
+    ferramentas_contramedida_2 STRING,
+    ferramentas_contramedida_3 STRING,
+    ferramentas_contramedida_4 STRING,
+    ferramentas_contramedida_5 STRING,
+
+    ambiente_trabalho_1 STRING,
+    ambiente_trabalho_2 STRING,
+    ambiente_trabalho_3 STRING,
+    ambiente_trabalho_4 STRING,
+    ambiente_trabalho_5 STRING,
+    ambiente_trabalho_contramedida_1 STRING,
+    ambiente_trabalho_contramedida_2 STRING,
+    ambiente_trabalho_contramedida_3 STRING,
+    ambiente_trabalho_contramedida_4 STRING,
+    ambiente_trabalho_contramedida_5 STRING,
+
+    atitude_envolvimento_1 STRING,
+    atitude_envolvimento_2 STRING,
+    atitude_envolvimento_3 STRING,
+    atitude_envolvimento_4 STRING,
+    atitude_envolvimento_5 STRING,
+    atitude_envolvimento_contramedida_1 STRING,
+    atitude_envolvimento_contramedida_2 STRING,
+    atitude_envolvimento_contramedida_3 STRING,
+    atitude_envolvimento_contramedida_4 STRING,
+    atitude_envolvimento_contramedida_5 STRING,
+
+    desatencao_1 STRING,
+    desatencao_2 STRING,
+    desatencao_3 STRING,
+    desatencao_4 STRING,
+    desatencao_5 STRING,
+    desatencao_contramedida_1 STRING,
+    desatencao_contramedida_2 STRING,
+    desatencao_contramedida_3 STRING,
+    desatencao_contramedida_4 STRING,
+    desatencao_contramedida_5 STRING,
+
+    -- Campos do Form5 (Natureza Humana)
+    natureza_humana_1 STRING,
+    natureza_humana_2 STRING,
+    natureza_humana_3 STRING,
+    natureza_humana_4 STRING,
+    natureza_humana_5 STRING,
+    natureza_humana_contramedida_1 STRING,
+    natureza_humana_contramedida_2 STRING,
+    natureza_humana_contramedida_3 STRING,
+    natureza_humana_contramedida_4 STRING,
+    natureza_humana_contramedida_5 STRING
+)
+OPTIONS(
+    description="Tabela para armazenar os dados de formulários e entrevistas."
+);
+
+
+*/

@@ -1,0 +1,579 @@
+<style>
+
+    .custom-select {
+      background-color: #ffffff;
+      appearance: none;
+      -webkit-appearance: none; /* Compatibilidade com navegadores baseados no WebKit */
+      -moz-appearance: none; /* Para navegadores Firefox */
+      background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns%3D%22http://www.w3.org/2000/svg%22 width%3D%2210%22 height%3D%2210%22 viewBox%3D%220 0 10 10%22%3E%3Cpolygon points%3D%220,0 10,0 5,7%22 fill%3D%22%23666%22/%3E%3C/svg%3E');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 12px;
+      padding-right: 30px; /* Espaço para o ícone */
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+
+    .linha-selecionada {
+        background-color: #77c9bd !important; /* Cor da linha selecionada */
+    }
+
+    body{
+      background: #eee;
+    }
+
+    #content {
+      overflow-y: auto; /* Habilita o scroll vertical dentro da div */
+    }
+
+    input,select{
+      background-color: #efefef
+    }
+
+    #survey-form2 {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .inputPair {
+      display: flex;
+      flex-direction: column;
+      width:100%;
+      //margin-right: 10px
+    }
+
+   .frame{
+      box-shadow: 10px 10px 15px rgb(193,182,182), -6px -6px 15px #eee;
+      max-width: 100%;
+      margin: 40px auto;
+      margin-top: 20px;
+      border-radius: 7px;
+      border-color: white;
+      background: #ab0c42;
+      color: white;
+   }
+
+   .cabecalho{
+      background: #fff;
+      //max-width: 60%;
+      //position: absolute;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 7px;
+
+   }
+  
+   .info{
+      border-radius: 7px;
+      border-color: white;
+      //display: flex;
+      justify-content: center;
+      align-items: center;
+      width:35%;
+      padding:10px;
+      margin: 2px;      
+   }
+
+    #form1_descricaoproblema, #planodeacao {
+      min-height: 100px; /* Altura desejada */
+      max-height: 100px; /* Altura desejada */
+      width: 100%; /* Largura total */
+      resize: vertical; /* Permite redimensionamento vertical */
+      font-size: 22px;
+      text-transform: uppercase;
+    }
+
+    .custom-div {
+      display: flex; /* Ativa o modo flexbox */
+      justify-content: center; /* Centraliza horizontalmente */
+      align-items: center; /* Centraliza verticalmente */
+      border-radius: 15px;
+    }
+
+   .form-control{
+      border-radius: 5px;
+      border-color: #a5b3b3;
+      background-color: #ffffff;  
+   }
+
+   .form-control-inicio{
+      background-color: #ffa82d;;
+      height: 55px;
+      font-size: 25px;
+      text-align: center;
+      font-weight: bold;
+      border-radius: 5px;
+      border-color: #ffe1ba;
+      width:100%;
+   }
+
+    .form-control-inicio::placeholder {
+      color: #894502; /* Defina a cor do placeholder aqui */
+    }
+
+   .form-check{
+      text-align: left;
+      vertical-align: middle;
+      margin-left: 10px;
+      margin-bottom:1%;
+   }
+   
+   .form-check-input{
+      width: 25px;
+      height: 25px;
+   }
+
+   .form-check-input:checked {
+      background-color: #34a9c1;
+      border-color: #1babad;
+   }
+
+   .form-check-label{
+     text-align: left;
+     margin-left: 1%;
+     margin-bottom:0%;
+     font-size: 20px;
+   }
+   
+   .form-group{
+    color:#021c3d;
+    background:#fff;
+    margin-bottom: 15px;
+    padding:15px;
+    border-radius: 0px;
+    border-color: white;
+    margin:0;
+    
+   }
+
+    button {
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    border-radius: 7px;
+    border-color: white;
+    }
+    
+    button:active {
+      transform: scale(0.95);
+      color: white;  
+    }
+    
+    .btn.focus, .btn:focus {
+    outline: 0;
+    box-shadow: none!important;
+    color: white;
+    }
+
+
+    .btn-info:hover {
+      background-color: #e09400;
+      color: white;
+      border-color: #f0f0f0;      
+    }
+ 
+    .btn-info {
+      background-color: #31a100;
+      color: white;
+      border-color: #f0f0f0;   
+    }
+
+    .box {
+        border: 1px solid rgba(0,0,0,0.2);
+        padding: 1.5rem;
+        margin-left:10px;
+        margin-right:10px;
+        border-radius: 13px;   
+        border-color: white;    
+        background:#006c90; 
+        margin: auto;
+        width: 100%;
+    }
+
+
+    .inp {
+        border:none;
+        border-bottom: 1px solid rgba(0,0,0,0.2);
+        border-radius: 0px;
+        border-color: white;
+        padding: 5px 10px;
+        outline: none;
+    }
+
+
+    [placeholder]:focus::-webkit-input-placeholder {
+        transition: text-indent 0.4s 0.4s ease; 
+        text-indent: -100%;
+        opacity: 1;
+    }
+
+
+     .inp.focus, .inp:focus {
+        outline: 0;
+        box-shadow: none!important;
+        /* color: green; */
+        border-bottom: 1px solid rgba(0,0,0,0.2);
+    }
+
+    .message{
+      width: 100%;
+      heigth: 20%;
+      position: relative;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: center;
+      
+    }
+
+    .message .success{
+      border: 1px solid rgba(0,0,0,0.1);
+      padding: 0.5rem;
+      margin-left:1px;
+      margin-right:1px;
+      border-radius: 1px;   
+      border-color: white;    
+      background: green;
+
+      font-size: 15px;
+      color:white;
+      position:absolute;
+      transition: .3;
+      animation: buttons .3s linear;
+      display: none;
+    }
+
+    .message .danger{
+      border: 1px solid rgba(0,0,0,0.1);
+      padding: 0.5rem;
+      margin-left:1px;
+      margin-right:1px;
+      border-radius: 1px;   
+      border-color: white;    
+      background: red; 
+
+      font-size: 15px;
+      color:white;
+      position:absolute;
+      transition: .3;
+      animation: buttons .3s linear;
+      display: none;
+    }
+
+    @keyframes buttons{
+      0%{
+        transform: scale(0.1);
+      }
+      50%{
+        transform: scale(0.5);
+      }
+      100%{
+        transform: scale(1);
+      }
+    }
+
+
+    .form-control.is-invalid, .was-validated .form-control:invalid {
+        border-color: #ffb2ba;
+        padding-right: calc(1.5em + .75rem);
+        background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e);
+        background-repeat: no-repeat;
+        background-position: right calc(.375em + .1875rem) center;
+        background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+    }  
+
+      /* Estilo para o loading */
+      .loading {
+     //   display: block;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        background-color: rgb(238 238 238); /* Fundo semi-transparente */
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      /* Estilo para o spinner (um simples círculo giratório) */
+      .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-left-color: #333; /* Cor do spinner */
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite; /* Animação para girar */
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+  //------------ Menu lateral
+
+
+    .sidebar {
+        margin-top: 180px;
+        height: 100%;
+        width: 300px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #E0FFFF; /* Cor de fundo azul claro */
+        padding-top: 20px;
+    }
+    .sidebar a {
+        padding: 10px 30px;
+        text-decoration: none;
+        font-size: 20px;
+        color: #008B8B; /* Cor do texto branco */
+        display: block;
+        font-weight: normal;
+    }
+    .sidebar a:hover {
+        background-color: #B0E0E6; /* Cor de fundo ao passar o mouse */
+    }
+    .submenu {
+        display: none;
+    }
+    .submenu.active {
+        display: block;
+    }
+    .submenu a {
+        padding: 10px 40px; /* Espaçamento vertical ajustado */
+        font-weight: normal;
+    }
+    .profile-img {
+        text-align: center;
+        background-color: #88d9d9	
+    }
+
+    .profile-img img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin-bottom: 5px;
+    }
+    .containerFoto {
+        height: 100%;
+        width: 300px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #88d9d9; /* Cor de fundo azul claro */
+        padding-top: 20px;
+    } 
+
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        background-color: #88d9d9;
+        color: #008B8B;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .mb-3, .my-3 {
+        margin-bottom: 0rem!important;
+    }
+
+    .btn-cancel{
+        color: #05615d;
+        background-color: #cdefef;
+        height: 38px;
+        width: 200px;
+        border: 0px;
+    }
+
+    .btn-salvar{
+        color: #714604;
+        background-color: #ffae00;
+        height: 38px;
+        width: 200px;
+        border: 0px;
+    }
+
+    .btn-mais{
+        color: #eeb111;
+        background-color: #eeb111;
+        box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.25);
+    }  
+
+    .d-flex {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #btnFormVoltar, #btnFormProximo, #btnFormInicio, #btnFormSalvarFechamento, #btnFormPDcontrola, #btnFormPDcontrola_voltar, #btnFormPDcontrola_salvar {
+      margin: 0 5px; /* Adiciona um pequeno espaçamento entre os botões */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tbody, td, tfoot, th, thead, tr {
+      border-width: 0px;
+    } 
+
+
+    /* Área de upload */
+    .uploadArea {
+      border: 2px dashed #c7c7c7;
+      padding: 8px;
+      text-align: center;
+      cursor: pointer;
+      background: rgb(233 233 233);
+      border-radius: 5px;
+      margin-top: -5;
+      margin-bottom: 0px;
+      height: 68%;
+      width: 100%;
+    }
+    /* Estilo para imagens com erro */
+    img[alt='Imagem não disponível'],
+    img[alt='Imagem não pode ser carregada'] {
+      width: 100px;
+      height: 100px;
+      background-color: #f8f9fa;
+      border: 1px dashed #dc3545;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #dc3545;
+      font-size: 12px;
+      text-align: center;
+    }
+
+
+
+    /* Preview de imagens */
+    .image-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: left;
+      margin-top: 0px;
+    }
+    
+    .image-container {
+      position: relative;
+      display: inline-block;
+      margin: 5px;
+    }
+
+    .image-container img {
+      max-width: 100px;
+      max-height: 100px;
+      object-fit: contain;
+      border: 1px solid #ddd;
+      transition: all 0.3s;
+    }
+    
+    .image-preview img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border: 1px solid #999;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    .image-preview img:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Botão de deletar */
+    .delete-image {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background-color: rgba(255, 0, 0, 0.7);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 16px;
+      line-height: 18px;
+      text-align: center;
+      cursor: pointer;
+      display: none;
+      z-index: 2;
+    }
+
+    .image-container:hover .delete-image {
+      display: block;
+    }
+
+    .image-container img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .modal-grande {
+      max-width: 1200px;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      position: relative;
+      max-width: 25vw;
+      max-height: 90vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .modal-content img {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 8px;
+      background-color: transparent;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #ccc;
+    } 
+
+
+</style>  

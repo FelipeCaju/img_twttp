@@ -1,0 +1,176 @@
+
+ <div style="display:block" id="meuFormulario1"> 
+     
+      <h3 class="mt-1 text-center" >FORMULARIO DE ERRO HUMANO</h3>
+      <h6 class="mt-1 text-center" >Informações do Colaborador</h6>
+       
+        <div class="form-group">
+
+          <!-- Primeiro conjunto de questões -->
+          <div class="row question-group">
+            <div class="col-md-6 mb-3">
+              <b><label for="form1_emailcriador">Email Criador:</label></b>
+              <input type="text" class="form-control" style="text-align: center;font-size: 16px;font-weight: bold;" id="form1_emailcriador" autocomplete="off" disabled>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <b><label for="form1_codformulario">Cód. do formulário:</label></b>
+              <input type="text" class="form-control" style="text-align: center;font-size: 16px;font-weight: bold;" id="form1_codformulario" autocomplete="off;" disabled>
+            </div>
+          </div>
+
+          <!-- Segundo conjunto de questões 
+          <div class="row question-group">
+            <div class="col-md-6 mb-3">
+              <b><label for="form1_aprovacaopilar">APROVAÇÃO DO PILAR:</label></b>
+              <input type="text" class="form-control-inicio" id="form1_aprovacaopilar" value="PENDENTE"  autocomplete="off" disabled>
+              
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <b><label for="form1_aprovacaopd">APROVAÇÃO DE PD:</label></b>
+              <input type="text" class="form-control-inicio" id="form1_aprovacaopd" value="PENDENTE"  autocomplete="off" disabled>
+            </div>
+          </div>
+          
+          -->
+
+        </div>
+        
+        <h6 class="mt-1 text-center" >DESCRIÇÃO DO PROBLEMA - ERRO HUMANO (5W1H)</h6>
+        
+        <div class="form-group">
+          <div class="form-group row">
+            <textarea type="text" class="form-control" id="form1_descricaoproblema" placeholder="Descreva o problema" autocomplete="off" ></textarea>
+          </div>
+        </div>
+      
+      <h6 class="mt-1 text-center" >DADOS DA OCORRÊNCIA</h6>
+        
+          <div class="form-group row" style="background-color: #ffffff;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-3" style="margin-bottom: 5px;">
+                              <b><label for="ocorrencia_unidade">UNIDADE:</label></b>
+                                <select class="form-control" id="ocorrencia_unidade" style="background-color: #efefef" onchange="gerarIDAleatorio(this.value)" >
+                                  <option disabled selected value="">Selecione</option>
+                                  <?!= optionsUnidade ?>
+                                </select>
+                      </div>  
+                      <div class="col-md-9" style="margin-bottom: 5px;">
+                              <b><label for="ocorrencia_linha_area">LINHA OU AREA:</label></b> 
+                                <select class="form-control" id="ocorrencia_linha_area" style="background-color: #efefef" >
+                                  <option disabled selected value="">Selecione</option>
+                                </select>                                  
+                      </div> 
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;"> 
+                      <div class="col-md-2" style="margin-bottom: 5px;">
+                              <b><label for="ocorrencia_data">DATA:</label></b>
+                              <input type="date" class="form-control" id="ocorrencia_data" autocomplete="off" >
+                      </div> 
+                      <div class="col-md-2" style="margin-bottom: 5px;">
+                              <b><label for="ocorrencia_turno">TURNO:</label></b>
+                                <select class="form-control" id="ocorrencia_turno" style="background-color: #efefef" >
+                                  <option disabled selected value="">Selecione</option>
+                                  <?!= optionsTurno ?>
+                                </select>
+                      </div> 
+                      <div class="col-md-2" style="margin-bottom: 5px;">
+                              <b><label for="ocorrencia_hora">HORA:</label></b>
+                                <select class="form-control" id="ocorrencia_hora" style="background-color: #efefef" >
+                                  <option disabled selected value="">Selecione</option>
+                                  <?!= optionsHora ?>
+                                </select>
+                      </div>                  
+                      <div class="col-md-6" style="margin-bottom: 5px;">
+                              <b><label for="ocorrencia_posto">POSTO:</label></b>
+                              <input type="text" class="form-control" id="ocorrencia_posto" autocomplete="off" >
+                      </div>                   
+                  </div> 
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-6" style="margin-bottom: 5px;">
+                              <b><label for="ocorrencia_pilar_impactado">PILAR IMPACTADO:</label></b>
+                                <select class="form-control" id="ocorrencia_pilar_impactado" style="background-color: #efefef" onchange="carregarQRCAqualidade(this.value)">
+                                  <option disabled selected value="">Selecione</option>
+                                  <?!= optionsPilarImpactado ?>
+                                </select>
+                      </div>    
+                      <div class="col-md-3" style="margin-bottom: 5px;">
+                              <b><label for="ocorrencia_indicador">INDICADOR(LAP/FPY):</label></b>
+                                <select class="form-control" id="ocorrencia_indicador" style="background-color: #efefef" >
+                                  <option disabled selected value="">Selecione</option>
+                                </select>
+                      </div>                         
+                      <div class="col-md-3" style="margin-bottom: 5px;">
+                              <b><label for="ocorrencia_qrca">NUMERO RCA:</label></b>
+                               <input type="checkbox" class="form-check-input ml-2" id="verificaFerramentaRCA" onclick="verificarObrigatoriedadeRCA()" style="margin-top: 0px;" disabled>
+                               <input type="number" class="form-control" id="ocorrencia_qrca" autocomplete="off" disabled>                   
+                      </div>                     
+                  </div>               
+              </div>
+        </div>
+     
+
+      <h6 class="mt-1 text-center" >DADOS DO COLABORADOR</h6>
+        
+
+          <div class="form-group row" style="background-color: #ffffff;"> 
+               <div class="col-md-12" >
+                <!--  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-9">
+                              <b><label for="colaborador_nome">NOME COMPLETO:</label></b>
+                              <input type="text" class="form-control" id="colaborador_nome" autocomplete="off" hidden>
+                      </div>  
+                     
+                  </div> -->
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-3" style="margin-bottom: 5px;">
+                              <b><label for="colaborador_re">RE:</label></b>
+                              <input type="number" class="form-control" id="colaborador_re" autocomplete="off">                
+                      </div>          
+                      <div class="col-md-3" style="margin-bottom: 5px;">
+                              <b><label for="colaborador_tempo_posto">TEMPO NO POSTO:</label></b>
+                                <select class="form-control" id="colaborador_tempo_posto" style="background-color: #efefef">                      
+                                </select>
+                      </div>  
+                      <div class="col-md-6">                    
+                                <b><label for="colaborador_funcao">FUNÇÃO:</label></b>
+                                  <select class="form-control" id="colaborador_funcao" style="background-color: #efefef" >
+                                    <option disabled selected value="">Selecione</option>
+                                    <?!= optionsFuncao ?>
+                                  </select>                             
+                      </div>                 
+                  </div>            
+              </div>
+        </div>
+
+
+      <h6 class="mt-1 text-center" >DADOS DO ENTREVISTADOR</h6>
+        
+
+          <div class="form-group row" style="background-color: #ffffff;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-9" style="margin-bottom: 5px;">
+                              <b><label for="entrevistador_nome">NOME COMPLETO:</label></b>
+                              <input type="text" class="form-control" id="entrevistador_nome" autocomplete="off" style="text-transform: uppercase">
+                      </div>  
+                      <div class="col-md-3">
+                              <b><label for="entrevistador_re">RE:</label></b>
+                              <input type="number" class="form-control" id="entrevistador_re" autocomplete="off">                
+                      </div> 
+                  </div>
+           <!--       <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label for="entrevistador_funcao">FUNÇÃO:</label></b>
+                                <select class="form-control" id="entrevistador_funcao" style="background-color: #efefef" >
+                                  <option disabled selected value="">Selecione</option>
+                                  <?!= optionsFuncao ?>
+                                </select>             
+                      </div>                 
+                  </div>  -->          
+              </div>
+        </div>
+     
+  </div>

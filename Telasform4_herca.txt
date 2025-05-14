@@ -1,0 +1,22 @@
+<div style="display:none" id="meuFormulario_herca2">
+
+      <h3 class="mt-1 text-center" >ANÁLISE HERCA</h3>
+      <h6 class="mt-1 text-center" >Human Error Root Cause Analysis / Análise da Causa Raiz de um Erro Humano</h6>
+
+        <div id="h6_fundo" class="form-group" style="background-color: #b97d7d;">
+            <h6 id="h6_fraqueza_processo" class="mt-1 text-center" style="background-color: #ffe8e8; padding: 12px; border-radius: 5px;" onclick="telaCategoriaHerca('fraqueza_processo')">FRAQUEZA NO PROCESSO</h6>
+            <h6 id="h6_fraqueza_procedimento" class="mt-1 text-center" style="background-color: #ffe8e8; padding: 12px; border-radius: 5px;" onclick="telaCategoriaHerca('fraqueza_procedimento')">FRAQUEZA NO PROCEDIMENTO</h6>
+            <h6 id="h6_fraqueza_ferramentas" class="mt-1 text-center" style="background-color: #ffe8e8; padding: 12px; border-radius: 5px;" onclick="telaCategoriaHerca('fraqueza_ferramentas')">FERRAMENTAS E EQUIPAMENTOS</h6>
+            <h6 id="h6_fraqueza_ambiente" class="mt-1 text-center" style="background-color: #ffe8e8; padding: 12px; border-radius: 5px;" onclick="telaCategoriaHerca('fraqueza_ambiente')">POSTO & AMBIENTE DE TRABALHO</h6>
+            <h6 id="h6_fraqueza_atitude" class="mt-1 text-center" style="background-color: #ffe8e8; padding: 12px; border-radius: 5px;" onclick="telaCategoriaHerca('fraqueza_atitude')">ATITUDE & ENVOLVIMENTO</h6>
+            <h6 id="h6_fraqueza_desatencao" class="mt-1 text-center" style="background-color: #ffe8e8; padding: 12px; border-radius: 5px;" onclick="telaCategoriaHerca('fraqueza_desatencao')">DESATENÇÃO & ESQUECIMENTO</h6>
+        </div>
+      <div id="div_herca_perguntas"></div>
+
+      <input type="text" class="form-control" id="form4_pergunta_herca" hidden>
+      <input type="text" class="form-control" id="form4_status_herca" hidden>
+      <input type="text" class="form-control" id="form4_status_contra_medida_herca" hidden>
+
+</div>
+
+

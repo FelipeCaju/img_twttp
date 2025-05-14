@@ -1,0 +1,169 @@
+<script>
+
+  var emailLogado = document.getElementById("form1_emailcriador").value
+
+  // Configurar eventos de upload
+  document.querySelectorAll(".uploadArea").forEach(area => {
+    // Upload por colagem (Ctrl+V)
+    area.addEventListener("paste", function(event) {
+      const quadro = this.dataset.quadro;
+      const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+      
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf("image") === 0) {
+          const blob = items[i].getAsFile();
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            addImagePreview(quadro, evt.target.result);
+            // Chamada para salvar no Google Drive (se necessário)
+            if (google && google.script && google.script.run) {
+             // google.script.run.salvarImagemNoDrive(evt.target.result, quadro);
+            }
+          };
+          reader.readAsDataURL(blob);
+        }
+      }
+    });
+
+    // Upload por arrastar e soltar
+    area.addEventListener("dragover", function(e) {
+      e.preventDefault();
+      this.style.borderColor = "green";
+    });
+
+    area.addEventListener("dragleave", function(e) {
+      e.preventDefault();
+      this.style.borderColor = "gray";
+    });
+
+    area.addEventListener("drop", function(event) {
+      event.preventDefault();
+      this.style.borderColor = "gray";
+      
+      const quadro = this.dataset.quadro;
+      const files = event.dataTransfer.files;
+      
+      for (let i = 0; i < files.length; i++) {
+        if (files[i].type.startsWith("image")) {
+          const reader = new FileReader();
+          reader.onload = function(evt) {
+            addImagePreview(quadro, evt.target.result);
+            // Chamada para salvar no Google Drive (se necessário)
+            if (google && google.script && google.script.run) {
+            //  google.script.run.salvarImagemNoDrive(evt.target.result, quadro);
+            }
+          };
+          reader.readAsDataURL(files[i]);
+        }
+      }
+    });
+  });
+
+// Estrutura completa dos dados
+var pdcaData = {
+  // Estrutura: { 
+  //   [email]: {
+  //     cabecalho: { ...dados do cabeçalho... },
+  //     pdca: {
+  //       PLAN: { images: [], checklist: [], description: '' }, 
+  //       DO: { images: [], checklist: [], description: '' },
+  //       CHECK: { images: [], checklist: [], description: '' },
+  //       ACT: { images: [], checklist: [], description: '' }
+  //     }
+  //   } 
+  // }
+};
+
+// Inicializa a estrutura para o usuário logado
+if (!pdcaData[emailLogado]) {
+  pdcaData[emailLogado] = {
+    pdca: {
+      PLAN: { images: [] }
+    }
+  };
+}
+
+    // Função para adicionar preview de imagem
+  function addImagePreview(quadro, dataUrl) {
+
+    const container = document.getElementById("preview-" + quadro);
+    if (container.childElementCount < 1) {
+      const imageId = Date.now().toString();
+      // Criar container para a imagem
+      const imageContainer = document.createElement("div");
+      imageContainer.className = "image-container";
+      imageContainer.dataset.imageId = imageId;
+      
+      // Criar imagem
+      const img = document.createElement("img");
+      img.src = dataUrl;
+      
+      // Criar botão de deletar
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-image";
+      deleteBtn.innerHTML = "×";
+      deleteBtn.onclick = function(e) {
+        e.stopPropagation();
+        deleteImage(quadro, imageId);
+        imageContainer.remove();
+      };
+      
+      // Configurar clique na imagem para abrir modal
+      img.onclick = function() {
+        openModal(dataUrl);
+      };
+      
+      // Adicionar elementos ao DOM
+      imageContainer.appendChild(img);
+      imageContainer.appendChild(deleteBtn);
+      container.appendChild(imageContainer);
+
+    // ADICIONAR À LISTA - Modificado para nova estrutura
+    pdcaData[emailLogado].pdca[quadro].images.push({
+      id: imageId,
+      url: dataUrl
+    });
+
+    
+
+    } else {
+     // alert("Limite de 4 imagens atingido para " + quadro + "!");
+      Swal.fire('Atenção', "Limite de 1 imagem atingido!", 'info');
+    }
+  }
+
+function deleteImage(quadro, imageId) {
+  // Encontrar e remover a imagem da estrutura de dados
+  const quadroImages = pdcaData[emailLogado].pdca[quadro].images;
+  const imageIndex = quadroImages.findIndex(img => img.id === imageId);
+  
+  if (imageIndex !== -1) {
+    quadroImages.splice(imageIndex, 1);
+    console.log('Imagem removida:', pdcaData);
+  } else {
+    console.warn('Imagem não encontrada para deletar:', imageId);
+  }
+}
+
+  function openModal(src) {
+
+      const modal = document.getElementById("imageModal");
+      const modalImg = document.getElementById("modalImage");
+
+      modalImg.src = src;
+      modal.style.display = "flex"; // flex para centralizar
+
+  }
+  
+  function closeModal() {
+      const modal = document.getElementById("imageModal");
+      modal.style.display = "none";
+  }
+
+  // Fechar modal ao clicar fora
+  window.addEventListener("click", function(event) {
+    if (event.target === document.getElementById("imageModal")) {
+      closeModal();
+    }
+  });
+</script>

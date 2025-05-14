@@ -1,0 +1,295 @@
+<script>
+
+    function pdcontrola(){
+      window.scrollTo(0, 0);
+      document.getElementById("meuFormulario_inico").style.display = 'none';
+      document.getElementById("meuFormulario_pd_controla").style.display = 'block';
+      document.getElementById("telaAtual").value = "form0_pd_controla"
+    }
+
+    function voltarPdcontrola(){
+      window.scrollTo(0, 0);
+      document.getElementById("meuFormulario_inico").style.display = 'block';
+      document.getElementById("meuFormulario_pd_controla").style.display = 'none';
+      document.getElementById("telaAtual").value = "form0_inicio"
+    }
+
+    var dadosControlaPD = <?!= dadosControlaPD ?>;
+
+    // Função para formatar a data no formato dd/MM/yyyy
+    function formatarData(data) {
+      if (!data) return '-';
+
+      const date = new Date(data);
+      if (isNaN(date.getTime())) return '-'; // Verifica se a data é inválida
+
+      const dia = String(date.getDate()).padStart(2, '0');
+      const mes = String(date.getMonth() + 1).padStart(2, '0');
+      const ano = date.getFullYear();
+
+      return `${dia}/${mes}/${ano}`;
+    }
+
+    // Função para converter a data para o formato yyyy-MM-dd
+    function formatarDataParaInputDate(data) {
+      var date = new Date(data);
+      var ano = date.getFullYear();
+      var mes = String(date.getMonth() + 1).padStart(2, '0'); // Janeiro é 0!
+      var dia = String(date.getDate()).padStart(2, '0');
+      return ano + '-' + mes + '-' + dia;
+    }
+
+    // Função para preencher a tabela com os dados
+    function preencherTabela() {
+      var tabela = document.getElementById('tabelaPendencias');
+      tabela.innerHTML = '';  // Limpa a tabela
+      
+      for (var i = 0; i < dadosControlaPD.length; i++) {
+
+        var linha = '<tr>';
+        
+          // Preenche apenas as colunas que você deseja exibir
+          linha += '<td>' + dadosControlaPD[i][0] + '</td>'; // Coluna C
+          linha += '<td>' + formatarData(dadosControlaPD[i][2]) + '</td>'; // Coluna J (data formatada)
+          linha += '<td>' + dadosControlaPD[i][3] + '</td>'; // Coluna O
+          linha += '<td>' + dadosControlaPD[i][4] + '</td>'; // Coluna P
+          linha += '<td style="text-transform: uppercase;">' + dadosControlaPD[i][5] + '</td>'; // Coluna U
+          linha += '<td>' + dadosControlaPD[i][6] + '</td>'; // Coluna AB
+        
+          // Adiciona o botão de ação na última coluna
+          linha += '<td><button  class="btn" style="width: 100%; background-color: #1bd0ed";  onclick="preencherInputs(this, \'' + dadosControlaPD[i][0] + '\')">Pesquisar</button></td>';
+          
+          var disabled = ""
+          
+          if(dadosControlaPD[i][33]=="PD"){
+              disabled = "enabled"
+          }else{
+              disabled = "disabled"
+          }
+
+          if(dadosControlaPD[i][20]==="NÃO"){
+               linha += '<td> <button class="btn" style="width: 100%; background-color: lightcoral;" onclick="pdTabelaPDcontrola(this, \'' + dadosControlaPD[i][0] + '\')" ' + disabled + '>NÃO</button></td>';
+          }else if(dadosControlaPD[i][20]=="SIM"){
+               linha += '<td> <button class="btn" style="width: 100%; background-color: #5ccd5c;" onclick="pdTabelaPDcontrola(this, \'' + dadosControlaPD[i][0] + '\')" ' + disabled + '>SIM</button></td>';
+          }else{
+               linha += '<td> <button class="btn" style="width: 100%; background-color: #979494;" onclick="pdTabelaPDcontrola(this, \'' + dadosControlaPD[i][0] + '\')" ' + disabled + '>...</button></td>';
+          }
+
+          if(dadosControlaPD[i][17]==="APROVADO"){
+               linha += '<td> <button class="btn" style="width: 100%; background-color: #5ccd5c;" onclick="abrirModal(this, \'' + dadosControlaPD[i][19] + '\')">APROVADO</button></td>';
+          }else if(dadosControlaPD[i][17]=="REPROVADO"){
+               linha += '<td> <button class="btn" style="width: 100%; background-color: lightcoral" onclick="abrirModal(this, \'' + dadosControlaPD[i][19] + '\')">REPROVADO</button></td>';
+          }else{
+               linha += '<td> <button class="btn" style="width: 100%; background-color: #979494;" onclick="abrirModal(this, \'' + dadosControlaPD[i][19] + '\')">...</button></td>';
+          }
+  
+          linha += '</tr>';
+          
+          tabela.innerHTML += linha;  // Adiciona a linha à tabela
+      }
+    }
+
+  // Chama a função para preencher a tabela ao carregar a página
+  preencherTabela();
+
+  function pdTabelaPDcontrola(button, codigo_coluna_twttp) {
+    
+    var statusPdControla
+
+    if (button.textContent === "SIM" || button.textContent === "...") {
+      button.style.backgroundColor = 'lightcoral'; // vermelho claro
+      statusPdControla = "NÃO"
+      button.textContent = "NÃO";
+    } else {
+      button.style.backgroundColor = '#5ccd5c'; // verde claro
+      statusPdControla = "SIM"
+      button.textContent = "SIM";
+    }
+     google.script.run.withSuccessHandler(function() {}).salvarPDcontrolaNaPlanilha(codigo_coluna_twttp, statusPdControla);
+  }
+
+    let ultimaLinhaSelecionada = null;
+
+    // Função que será chamada ao clicar no botão
+    function preencherInputs(botao, valorColunaC) {
+
+      // Pesquisar a linha correspondente na lista
+      var linhaEncontrada = dadosControlaPD.find(function(linha) {
+        return linha[0] === valorColunaC;
+      });
+      // Preencher os inputs com as últimas 5 colunas da linha correspondente
+      if (linhaEncontrada) {     
+          const linha = botao.closest('tr');
+
+          if (ultimaLinhaSelecionada) {
+              ultimaLinhaSelecionada.classList.remove('linha-selecionada');
+          }
+          // Adicionar a classe para a nova linha selecionada
+          linha.classList.add('linha-selecionada');
+
+          // Atualizar a referência para a última linha selecionada
+          ultimaLinhaSelecionada = linha;
+
+          // Aqui você pode adicionar o código de pesquisa
+          const id = linha.cells[0].innerText; // Valor da primeira coluna (ID)
+  
+          document.getElementById('form0_descricao_problema_pdcontrola').value = linhaEncontrada[1];
+          document.getElementById('twttp_pdcontrola').value = linhaEncontrada[7]; 
+          document.getElementById('herca_pdcontrola').value = linhaEncontrada[8]; 
+          document.getElementById('natureza_pdcontrola').value = linhaEncontrada[9]; 
+          document.getElementById('contra_medida_pdcontrola').value = linhaEncontrada[10]; 
+          document.getElementById('ocorrencia_data_pdcontrola').value = formatarData(linhaEncontrada[11]); 
+          document.getElementById('form0_descricaoplanoacao_pdcontrola').value = linhaEncontrada[12]; 
+          document.getElementById('conclusao_data_pdcontrola').value = formatarData(linhaEncontrada[14]); 
+          document.getElementById('link_evidencia_pdcontrola').value = linhaEncontrada[15]; 
+          document.getElementById('status_pdcontrola').value = linhaEncontrada[16]; 
+
+          //----------------
+
+          document.getElementById('linha_pdcontrola').value = linhaEncontrada[21];
+          document.getElementById('posto_pdcontrola').value = linhaEncontrada[23];
+          document.getElementById('sku_impactado_pdcontrola').value = linhaEncontrada[24];
+          document.getElementById('num_rca_pdcontrola').value = linhaEncontrada[22];
+          document.getElementById('input_pdcontrola').value = linhaEncontrada[27];
+
+          document.getElementById('turno_pdcontrola').value = linhaEncontrada[25];
+          document.getElementById('hora_pdcontrola').value = linhaEncontrada[26];
+          document.getElementById('pilar_impactado_pdcontrola').value = linhaEncontrada[28];
+          document.getElementById('tempo_posto_pdcontrola').value = linhaEncontrada[31];
+          document.getElementById('re_pdcontrola').value = linhaEncontrada[30];
+          document.getElementById('nome_pdcontrola').value = linhaEncontrada[29];
+
+
+          if(linhaEncontrada[16]=="CONCLUIDO"){
+            document.getElementById("status_pdcontrola").style.backgroundColor = "#5ccd5c";
+          }else{
+            document.getElementById("status_pdcontrola").style.backgroundColor = "lightcoral";
+          }
+       
+      } else {
+        alert('Nenhuma linha encontrada com o valor correspondente.');
+        document.getElementById("btnFormPDcontrola_salvar").disabled = true;  
+      }
+    }
+
+    var botaoAprovacaoClicado;
+    var email_reprovado
+
+    function abrirModal(button, email) {
+
+      document.getElementById('comentarioAprovacao').value = "";
+      email_reprovado = email    
+      document.getElementById('mensagemErro').style.display = 'none';
+      botaoAprovacaoClicado = button;
+      var linha = button.closest('tr');
+
+      // Extraia os dados da linha
+      var codigo = linha.cells[0].textContent;
+      var data = linha.cells[1].textContent;
+      var input = linha.cells[2].textContent;
+      var pilar = linha.cells[3].textContent;
+      var supervisor = linha.cells[4].textContent;
+      var twttp = linha.cells[5].textContent;
+
+      // Preencha os labels no modal com os valores extraídos
+      document.getElementById('codigoLabel').textContent = codigo;
+      document.getElementById('dataLabel').textContent = data;
+      document.getElementById('inputLabel').textContent = input;
+      document.getElementById('pilarLabel').textContent = pilar;
+      document.getElementById('supervisorLabel').textContent = supervisor;
+      document.getElementById('twttpLabel').textContent = twttp;
+
+      // Exiba o modal
+      $('#aprovarModal').modal('show');
+    }
+
+  function aprovarPendencia() {
+
+    var codigo_coluna_twttp = document.getElementById('codigoLabel').textContent;
+    const comentario = document.getElementById('comentarioAprovacao').value;
+
+    var statusPdControla = "APROVADO"
+    var statusPd = "CONCLUIDO"
+ 
+    botaoAprovacaoClicado.style.backgroundColor = '#5ccd5c'; // verde claro
+    botaoAprovacaoClicado.textContent = "APROVADO";
+
+    document.getElementById('spinners-container_pd_controla').classList.remove("d-none");
+    
+    document.getElementById("btn_aprovar_controla").disabled = true; 
+    document.getElementById("btn_reprovar_controla").disabled = true; 
+    document.getElementById("btn_corrigir_controla").disabled = true; 
+
+      google.script.run.withSuccessHandler(function() {
+          document.getElementById('comentarioAprovacao').value = ""
+          document.getElementById('spinners-container_pd_controla').classList.add("d-none");  
+          $('#aprovarModal').modal('hide'); // Fecha o modal após a aprovação
+
+      }).salvarPDAprovaNaPlanilha(codigo_coluna_twttp, statusPd, comentario, statusPdControla, email_reprovado);
+  }
+
+
+function reprovarPendencia(valor) {
+    Swal.fire({
+        title: "Tem certeza que quer REPROVAR ou CORRIGIR",
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: "Continuar",
+        denyButtonText: `Cancelar`
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var codigo_coluna_twttp = document.getElementById('codigoLabel').textContent;
+            var comentario = document.getElementById('comentarioAprovacao').value;
+
+            if (comentario === "") {
+                document.getElementById('mensagemErro').style.display = 'block';
+            } else {
+                document.getElementById('mensagemErro').style.display = 'none';
+                
+                // Remove foco de qualquer elemento ativo antes de mudar a visibilidade
+                document.activeElement.blur();
+                document.getElementById('comentarioAprovacao').blur();
+                
+               document.getElementById('spinners-container_pd_controla').classList.remove("d-none"); 
+
+                var statusPd = "PENDENTE";
+                var statusPdControla = "REPROVADO";
+
+                if (typeof botaoAprovacaoClicado !== 'undefined' && botaoAprovacaoClicado !== null) {
+                    botaoAprovacaoClicado.style.backgroundColor = 'lightcoral';
+                    botaoAprovacaoClicado.textContent = "REPROVADO";
+                    botaoAprovacaoClicado.disabled = true;
+                }
+
+                google.script.run.withSuccessHandler(function() {
+                    document.getElementById('comentarioAprovacao').value = "";
+
+                    setTimeout(() => {
+                        document.getElementById('spinners-container_pd_controla').classList.add("d-none");
+                    }, 100); // Pequeno delay para evitar que o foco fique preso nos elementos
+
+                    // Remove o foco antes de fechar o modal
+                    setTimeout(() => {
+                        document.activeElement.blur();
+                        $('#aprovarModal').modal('hide');
+                    }, 100);
+
+                    Swal.fire({
+                        title: 'Reprovado com Sucesso',
+                        icon: 'success',
+                        timer: 1500,
+                        showCloseButton: false,
+                        showCancelButton: false,
+                        showConfirmButton: false
+                    });
+                }).salvarPDAprovaNaPlanilha(codigo_coluna_twttp, statusPd, comentario, statusPdControla, email_reprovado, valor);
+            }
+        } else if (result.isDenied) {
+            console.log("Não vai continuar");
+        }
+    });
+}
+
+
+
+</script>

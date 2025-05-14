@@ -1,0 +1,508 @@
+var url_salvar = "11CPqhiCcqNoUsFZgDMOmYWrmsnaF-tyiKMBZGlgmsvI";
+
+
+// Função para salvar uma lista em uma planilha do Google Sheets
+function salvarListaNoSheet(lista, sheet, startColumn) {
+  var sheetData = [];
+  
+  for (var key in lista) {
+    var rowData = [];
+    for (var subKey in lista[key]) {
+      rowData.push(lista[key][subKey]);
+    }
+    sheetData.push(rowData);
+  }
+
+  var range = sheet.getRange(startColumn + '1:' + String.fromCharCode(startColumn.charCodeAt(0) + Object.keys(lista).length - 1) + '1');
+  range.setValues([Object.keys(lista)]);
+  
+  var dataRange = sheet.getRange(startColumn + '2:' + String.fromCharCode(startColumn.charCodeAt(0) + Object.keys(lista).length - 1) + (sheetData.length + 1));
+  dataRange.setValues(sheetData);
+}
+
+// Função para salvar todas as cinco listas em uma planilha do Google Sheets
+function salvarTodasAsListasNoSheet() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  
+  var lista1 = { /* sua primeira lista */ };
+  var lista2 = { /* sua segunda lista */ };
+  var lista3 = { /* sua terceira lista */ };
+  var lista4 = { /* sua quarta lista */ };
+  var lista5 = { /* sua quinta lista */ };
+
+  // Salvar cada lista na planilha, ajustando a coluna de início conforme necessário
+  salvarListaNoSheet(lista1, sheet, 'A');
+  salvarListaNoSheet(lista2, sheet, 'G');
+  salvarListaNoSheet(lista3, sheet, 'M');
+  salvarListaNoSheet(lista4, sheet, 'S');
+  salvarListaNoSheet(lista5, sheet, 'Y');
+}
+
+
+function salvarPDcontrolaNaPlanilha(codigo, pdcontrola) {
+  var planilha = SpreadsheetApp.openById(url_salvar);
+  var sheet = planilha.getSheetByName("CONTROLE");
+  var sheetBasedash= planilha.getSheetByName("BASE_DASH");
+
+  // Define os intervalos
+  var rangeDados = sheet.getRange("C2:C"); // Coluna C a partir da linha 2
+  var valoresC = rangeDados.getValues(); // Obtém os valores da coluna C
+  
+  // Loop para encontrar o código na coluna C
+  for (var i = 0; i < valoresC.length; i++) {
+    if (valoresC[i][0] == codigo) {
+      var linha = i + 2; // Adiciona 2 para compensar o índice (começando em 0) e o cabeçalho (linha 1)
+      
+      // Atualiza as colunas FR e FS na linha correspondente
+      sheet.getRange(linha, 179).setValue(pdcontrola);
+      sheet.getRange(linha, 180).setValue(Session.getActiveUser().getEmail());
+      sheetBasedash.getRange(linha, 43).setValue(pdcontrola);
+      sheetBasedash.getRange(linha, 44).setValue(Session.getActiveUser().getEmail());
+      
+      Logger.log("Código " + codigo + " atualizado na linha " + linha);
+      return; // Encerra após encontrar e atualizar o código
+    }
+  }
+
+  Logger.log("Código " + codigo + " não encontrado.");
+}
+
+function salvarPDAprovaNaPlanilha(codigo, status, comentario, pdcontrola, email_reprovado, valor) {
+  var planilha = SpreadsheetApp.openById(url_salvar);
+  var sheet = planilha.getSheetByName("CONTROLE");
+  var sheetBasedash= planilha.getSheetByName("BASE_DASH");
+  var emailUsuario = Session.getActiveUser().getEmail();
+
+  // Define os intervalos
+  var rangeDados = sheet.getRange("C2:C"); // Coluna C a partir da linha 2
+  var valoresC = rangeDados.getValues(); // Obtém os valores da coluna C
+  
+  // Loop para encontrar o código na coluna C
+  for (var i = 0; i < valoresC.length; i++) {
+    if (valoresC[i][0] == codigo) {
+      var linha = i + 2; // Adiciona 2 para compensar o índice (começando em 0) e o cabeçalho (linha 1)
+
+      sheet.getRange(linha, 174).setValue(status);
+      sheet.getRange(linha, 181).setValue(pdcontrola);
+      sheetBasedash.getRange(linha, 39).setValue(status);
+      sheetBasedash.getRange(linha, 45).setValue(pdcontrola);
+      
+      if(pdcontrola=== "REPROVADO"){
+        sheet.getRange(linha, 182).setValue(comentario);
+        sheetBasedash.getRange(linha, 46).setValue(comentario);
+        Logger.log("Código " + codigo + " comentario " + comentario+ " email_reprovado " + email_reprovado+ " valor " + valor+" emailUsuario "+emailUsuario);
+        enviarEmailReprovados(codigo, comentario, email_reprovado, valor, emailUsuario)  
+      }
+      
+      Logger.log("Código " + codigo + " atualizado na linha " + linha);
+      return; // Encerra após encontrar e atualizar o código
+    }
+  }
+
+  Logger.log("Código " + codigo + " não encontrado.");
+}
+
+function salvarPlanoAcaoFechamentoNaPlanilha(codigo, data, link_evidencia_planoacao, pdcaData) {
+  var planilha = SpreadsheetApp.openById(url_salvar);
+  var sheet = planilha.getSheetByName("CONTROLE");
+  var sheetBasedash= planilha.getSheetByName("BASE_DASH");
+  var sheetImagens = planilha.getSheetByName("IMAGEM");
+
+  
+  Logger.log("pdcaData INI");
+  Logger.log(pdcaData);
+  Logger.log("pdcaData FIM");
+
+  // Define os intervalos
+  var rangeDados = sheet.getRange("C2:C"); // Coluna C a partir da linha 2
+  var valoresC = rangeDados.getValues(); // Obtém os valores da coluna C
+  
+  // Variáveis para colunas FR e FS
+  var colunaFR = 174; // Coluna FR (ajuste de acordo com sua planilha)
+  var colunaFS = 175; // Coluna FS (ajuste de acordo com sua planilha)
+  var colunaFT = 176; // Coluna FS (ajuste de acordo com sua planilha)
+  var colunaFU = 177; // Coluna FS (ajuste de acordo com sua planilha)
+  var colunaFR_dash = 39; // Coluna FR (ajuste de acordo com sua planilha)
+  var colunaFS_dash = 40; // Coluna FS (ajuste de acordo com sua planilha)
+  var colunaFS_dash = 40; // Coluna FS (ajuste de acordo com sua planilha)
+
+  // Loop para encontrar o código na coluna C
+  for (var i = 0; i < valoresC.length; i++) {
+    if (valoresC[i][0] == codigo) {
+      var linha = i + 2; // Adiciona 2 para compensar o índice (começando em 0) e o cabeçalho (linha 1)
+      
+      // Atualiza as colunas FR e FS na linha correspondente
+      sheet.getRange(linha, 174).setValue("CONCLUIDO");
+      sheet.getRange(linha, 176).setValue(data);
+      sheet.getRange(linha, 177).setValue(link_evidencia_planoacao);
+      sheet.getRange(linha, 178).setValue(new Date().toLocaleString());
+      
+      sheetBasedash.getRange(linha, 39).setValue("CONCLUIDO");
+      sheetBasedash.getRange(linha, 41).setValue(data);
+      sheetBasedash.getRange(linha, 42).setValue(link_evidencia_planoacao);
+
+      salvarImagensDrive(pdcaData, codigo)
+      
+      Logger.log("Código " + codigo + " atualizado na linha " + linha);
+      return; // Encerra após encontrar e atualizar o código
+    }
+  }
+
+  Logger.log("Código " + codigo + " não encontrado.");
+}
+
+
+function salvarImagensDrive(pdcaData, codigo){
+
+  var planilha = SpreadsheetApp.openById(url_salvar);
+  var sheetImagens = planilha.getSheetByName("IMAGEM");
+
+  const email = Object.keys(pdcaData)[0];
+  const pdca = pdcaData[email].pdca;
+
+      // Salvar imagens na aba IMAGEM
+    const quadros = ['PLAN'];
+    const colunasImagens = ['P'];
+    
+    let todasImagens = [];
+    
+    quadros.forEach((quadro, index) => {
+      const prefixoColuna = colunasImagens[index];
+      const imagens = pdca[quadro].images;
+      
+      if (imagens.length > 0) {
+        imagens.forEach(img => {
+          // Salvar cada imagem no Drive e obter URL
+          const imageUrl = salvarImagemNoDrive(img.url, quadro, codigo);
+          
+          if (imageUrl) {
+            todasImagens.push([
+              codigo,
+              prefixoColuna,
+              img.id,
+              imageUrl  // URL da imagem no Drive
+            ]);
+          }
+        });
+      }
+    });
+    
+    // Adicionar todas as imagens de uma vez (mais eficiente)
+    if (todasImagens.length > 0) {
+      sheetImagens.getRange(
+        sheetImagens.getLastRow() + 1, 
+        1, 
+        todasImagens.length, 
+        4
+      ).setValues(todasImagens);
+    }
+
+}
+
+function editarTWTTPreprovada(codigo_pesquisa_twttp, plano_acao_contramedida_editar, link_evidencia_planoacao_editar, descricaoplanoacao_editar){
+
+  var planilha = SpreadsheetApp.openById(url_salvar);
+  var sheet = planilha.getSheetByName("CONTROLE");
+  var sheetBasedash= planilha.getSheetByName("BASE_DASH");
+
+  // Define os intervalos
+  var rangeDados = sheet.getRange("C2:C"); // Coluna C a partir da linha 2
+  var valoresC = rangeDados.getValues(); // Obtém os valores da coluna C
+  
+  // Loop para encontrar o código na coluna C
+  for (var i = 0; i < valoresC.length; i++) {
+    if (valoresC[i][0] == codigo_pesquisa_twttp) {
+ //Logger.log("Editar TWTTP Código " + codigo_pesquisa_twttp + " valoresC[i][0] " + valoresC[i][0]);
+
+      var linha = i + 2; // Adiciona 2 para compensar o índice (começando em 0) e o cabeçalho (linha 1)
+      
+      // Atualiza as colunas FR e FS na linha correspondente
+      sheet.getRange(linha, 171).setValue(plano_acao_contramedida_editar);
+      sheet.getRange(linha, 173).setValue(descricaoplanoacao_editar);
+      sheet.getRange(linha, 174).setValue("PENDENTE");
+      sheet.getRange(linha, 177).setValue(link_evidencia_planoacao_editar);
+      sheet.getRange(linha, 181).setValue("");
+      sheet.getRange(linha, 183).setValue("TWTTP alterada");
+      
+      sheetBasedash.getRange(linha, 36).setValue(plano_acao_contramedida_editar);
+      sheetBasedash.getRange(linha, 38).setValue(descricaoplanoacao_editar);
+      sheetBasedash.getRange(linha, 39).setValue("PENDENTE");
+      sheetBasedash.getRange(linha, 42).setValue(link_evidencia_planoacao_editar);
+      sheetBasedash.getRange(linha, 45).setValue("");
+      
+    //  Logger.log("Editar TWTTP Código " + codigo_pesquisa_twttp + " atualizado na linha " + linha);
+      return; // Encerra após encontrar e atualizar o código
+    }
+  }
+
+  Logger.log("Editar TWTTP Código " + codigo_pesquisa_twttp + " não encontrado.");
+
+}
+
+function salvarDadosNaPlanilha(respostasForm1, respostasForm2, statusEntrevista, respostasForm3_falta_conhecimento, statusContraMedidaFaltaConhecimento, perguntaFaltaConhecimento, respostasForm4_analise_herca, perguntaHerca, statusHerca, statusContraMedidaHerca,  respostasForm5_natureza_humana, perguntaNatureza, statusNatureza, dataPlanodeAcao, planodeAcao, planoAcaoContramedida, approuchPilarIndicador) {
+
+    Logger.log(respostasForm2)
+    Logger.log(respostasForm3_falta_conhecimento)
+    Logger.log(respostasForm4_analise_herca)
+    Logger.log(respostasForm5_natureza_humana)
+
+  var planilha = SpreadsheetApp.openById(url_salvar);
+  var sheet = planilha.getSheetByName("CONTROLE");
+  var sheetBasedash= planilha.getSheetByName("BASE_DASH");
+  
+  // Encontrar a última linha vazia na coluna A
+  var lastRow = sheet.getLastRow() + 1; // Adicionar 1 para ir para a próxima linha vazia
+  var lastRowBasedash = sheetBasedash.getLastRow() + 1; // Adicionar 1 para ir para a próxima linha vazia
+  
+      // Extrair os valores do objeto respostasForm1 e colocá-los na planilha
+      var row = [
+        new Date().toLocaleString(),
+        respostasForm1.EMAIL_CRIADOR,
+        respostasForm1.COD_FORMULARIO,
+        respostasForm1.APROVACAO_PILAR,
+        respostasForm1.APROVACAO_PD,
+        respostasForm1.DESCRICAO_PROBLEMA,
+        respostasForm1.UNIDADE,
+        respostasForm1.LINHA,
+        respostasForm1.QRCA,
+        respostasForm1.DATA,
+        respostasForm1.POSTO,
+        respostasForm1.SKU_IMPACTADO,
+        respostasForm1.TURNO,
+        respostasForm1.HORA,
+        respostasForm1.INDICADOR,
+        respostasForm1.PILAR_IMPACTADO,
+        '=IFERROR(VLOOKUP(R' + lastRowBasedash + ';BASE_FUNCIONARIOS!B:C;2;0))',
+        respostasForm1.COLABORADOR_RE,
+        respostasForm1.COLABORADOR_TEMPO_POSTO,
+        respostasForm1.COLABORADOR_FUNCAO,
+        respostasForm1.ENTREVISTADOR_NOME,
+        respostasForm1.ENTREVISTADOR_RE,
+        respostasForm1.ENTREVISTADOR_FUNCAO
+      ];
+
+      var rowBasedash = [
+        new Date().toLocaleString(),
+        respostasForm1.EMAIL_CRIADOR,
+        respostasForm1.COD_FORMULARIO,
+        respostasForm1.APROVACAO_PILAR,
+        respostasForm1.APROVACAO_PD,
+        respostasForm1.DESCRICAO_PROBLEMA,
+        respostasForm1.UNIDADE,
+        respostasForm1.LINHA,
+        respostasForm1.QRCA,
+        respostasForm1.DATA,
+        respostasForm1.POSTO,
+        respostasForm1.SKU_IMPACTADO,
+        respostasForm1.TURNO,
+        respostasForm1.HORA,
+        respostasForm1.INDICADOR,
+        respostasForm1.PILAR_IMPACTADO,
+        '=IFERROR(VLOOKUP(R' + lastRowBasedash + ';BASE_FUNCIONARIOS!B:C;2;0))',
+        respostasForm1.COLABORADOR_RE,
+        respostasForm1.COLABORADOR_TEMPO_POSTO,
+        respostasForm1.COLABORADOR_FUNCAO,
+        respostasForm1.ENTREVISTADOR_NOME,
+        respostasForm1.ENTREVISTADOR_RE,
+        respostasForm1.ENTREVISTADOR_FUNCAO
+      ];
+
+      for (var i = 0; i < 4; i++) {
+        row.push(respostasForm2[i].ENTREVISTA_FORM2);
+        rowBasedash.push(respostasForm2[i].ENTREVISTA_FORM2);
+      }
+
+      row.push(statusEntrevista);
+      rowBasedash.push(statusEntrevista)
+      rowBasedash.push(perguntaFaltaConhecimento)
+
+
+      // Adicionar os valores de respostasForm3_falta_conhecimento na mesma linha, nas colunas de AA até AH
+      row.push(
+        respostasForm3_falta_conhecimento.FALTA_CONHECIMENTO1,
+        respostasForm3_falta_conhecimento.CONTRA_MEDIDA1,
+        respostasForm3_falta_conhecimento.FALTA_CONHECIMENTO2,
+        respostasForm3_falta_conhecimento.CONTRA_MEDIDA2,
+        respostasForm3_falta_conhecimento.FALTA_CONHECIMENTO3,
+        respostasForm3_falta_conhecimento.CONTRA_MEDIDA3,
+        respostasForm3_falta_conhecimento.FALTA_CONHECIMENTO4,
+        respostasForm3_falta_conhecimento.CONTRA_MEDIDA4,
+        respostasForm3_falta_conhecimento.FALTA_CONHECIMENTO5,
+        respostasForm3_falta_conhecimento.CONTRA_MEDIDA5    
+      );
+
+      row.push(statusContraMedidaFaltaConhecimento);
+      rowBasedash.push(statusContraMedidaFaltaConhecimento)
+
+    // Adicionar os valores de respostasForm4_analise_herca na mesma linha, nas colunas de AI até AT
+      row.push(
+        respostasForm4_analise_herca.FRAQUEZA_PROCESSO.FRAQUEZA_PROCESSO_1,
+        respostasForm4_analise_herca.FRAQUEZA_PROCESSO.FRAQUEZA_PROCESSO_CONTRA_MEDIDA1,
+        respostasForm4_analise_herca.FRAQUEZA_PROCESSO.FRAQUEZA_PROCESSO_2,
+        respostasForm4_analise_herca.FRAQUEZA_PROCESSO.FRAQUEZA_PROCESSO_CONTRA_MEDIDA2,
+        respostasForm4_analise_herca.FRAQUEZA_PROCESSO.FRAQUEZA_PROCESSO_3,
+        respostasForm4_analise_herca.FRAQUEZA_PROCESSO.FRAQUEZA_PROCESSO_CONTRA_MEDIDA3,
+        respostasForm4_analise_herca.FRAQUEZA_PROCESSO.FRAQUEZA_PROCESSO_4,
+        respostasForm4_analise_herca.FRAQUEZA_PROCESSO.FRAQUEZA_PROCESSO_CONTRA_MEDIDA4,
+        respostasForm4_analise_herca.FRAQUEZA_PROCEDIMENTO.FRAQUEZA_PROCEDIMENTO_1,
+        respostasForm4_analise_herca.FRAQUEZA_PROCEDIMENTO.FRAQUEZA_PROCEDIMENTO_CONTRA_MEDIDA1,
+        respostasForm4_analise_herca.FRAQUEZA_PROCEDIMENTO.FRAQUEZA_PROCEDIMENTO_2,
+        respostasForm4_analise_herca.FRAQUEZA_PROCEDIMENTO.FRAQUEZA_PROCEDIMENTO_CONTRA_MEDIDA2,
+        respostasForm4_analise_herca.FERRAMENTAS.FERRAMENTAS_1,
+        respostasForm4_analise_herca.FERRAMENTAS.FERRAMENTAS_CONTRA_MEDIDA1,
+        respostasForm4_analise_herca.FERRAMENTAS.FERRAMENTAS_2,
+        respostasForm4_analise_herca.FERRAMENTAS.FERRAMENTAS_CONTRA_MEDIDA2,
+        respostasForm4_analise_herca.FERRAMENTAS.FERRAMENTAS_3,
+        respostasForm4_analise_herca.FERRAMENTAS.FERRAMENTAS_CONTRA_MEDIDA3,
+        respostasForm4_analise_herca.AMBIENTE_TRABALHO.AMBIENTE_TRABALHO_1,
+        respostasForm4_analise_herca.AMBIENTE_TRABALHO.AMBIENTE_TRABALHO_CONTRA_MEDIDA1,
+        respostasForm4_analise_herca.AMBIENTE_TRABALHO.AMBIENTE_TRABALHO_2,
+        respostasForm4_analise_herca.AMBIENTE_TRABALHO.AMBIENTE_TRABALHO_CONTRA_MEDIDA2,
+        respostasForm4_analise_herca.AMBIENTE_TRABALHO.AMBIENTE_TRABALHO_3,
+        respostasForm4_analise_herca.AMBIENTE_TRABALHO.AMBIENTE_TRABALHO_CONTRA_MEDIDA3,
+        respostasForm4_analise_herca.AMBIENTE_TRABALHO.AMBIENTE_TRABALHO_4,
+        respostasForm4_analise_herca.AMBIENTE_TRABALHO.AMBIENTE_TRABALHO_CONTRA_MEDIDA4,
+        respostasForm4_analise_herca.ATITUDE_ENVOLVIMENTO.ATITUDE_ENVOLVIMENTO_1,
+        respostasForm4_analise_herca.ATITUDE_ENVOLVIMENTO.ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA1,
+        respostasForm4_analise_herca.ATITUDE_ENVOLVIMENTO.ATITUDE_ENVOLVIMENTO_2,
+        respostasForm4_analise_herca.ATITUDE_ENVOLVIMENTO.ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA2,
+        respostasForm4_analise_herca.ATITUDE_ENVOLVIMENTO.ATITUDE_ENVOLVIMENTO_3,
+        respostasForm4_analise_herca.ATITUDE_ENVOLVIMENTO.ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA3,
+        respostasForm4_analise_herca.ATITUDE_ENVOLVIMENTO.ATITUDE_ENVOLVIMENTO_4,
+        respostasForm4_analise_herca.ATITUDE_ENVOLVIMENTO.ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA4,
+        respostasForm4_analise_herca.ATITUDE_ENVOLVIMENTO.ATITUDE_ENVOLVIMENTO_5,
+        respostasForm4_analise_herca.ATITUDE_ENVOLVIMENTO.ATITUDE_ENVOLVIMENTO_CONTRA_MEDIDA5,
+        respostasForm4_analise_herca.DESATENCAO.DESATENCAO_1,
+        respostasForm4_analise_herca.DESATENCAO.DESATENCAO_CONTRA_MEDIDA1,
+        respostasForm4_analise_herca.DESATENCAO.DESATENCAO_2,
+        respostasForm4_analise_herca.DESATENCAO.DESATENCAO_CONTRA_MEDIDA2,
+        respostasForm4_analise_herca.DESATENCAO.DESATENCAO_3,
+        respostasForm4_analise_herca.DESATENCAO.DESATENCAO_CONTRA_MEDIDA3
+      );
+
+      row.push(statusHerca);
+      row.push(statusContraMedidaHerca);
+      rowBasedash.push(perguntaHerca)
+      rowBasedash.push(statusHerca)
+      rowBasedash.push(statusContraMedidaHerca)
+
+      // Adicionar os valores de respostasForm5_natureza_humana na mesma linha, nas colunas de AU até BI
+      row.push(
+        respostasForm5_natureza_humana.SELECAO.SELECAO_1,
+        respostasForm5_natureza_humana.SELECAO.SELECAO_CONTRA_MEDIDA1,
+        respostasForm5_natureza_humana.SELECAO.SELECAO_2,
+        respostasForm5_natureza_humana.SELECAO.SELECAO_CONTRA_MEDIDA2,
+        respostasForm5_natureza_humana.SELECAO.SELECAO_3,
+        respostasForm5_natureza_humana.SELECAO.SELECAO_CONTRA_MEDIDA3,
+        respostasForm5_natureza_humana.SELECAO.SELECAO_4,
+        respostasForm5_natureza_humana.SELECAO.SELECAO_CONTRA_MEDIDA4,
+        respostasForm5_natureza_humana.CONSCIENCIA.CONSCIENCIA_1,
+        respostasForm5_natureza_humana.CONSCIENCIA.CONSCIENCIA_CONTRA_MEDIDA1,
+        respostasForm5_natureza_humana.CONSCIENCIA.CONSCIENCIA_2,
+        respostasForm5_natureza_humana.CONSCIENCIA.CONSCIENCIA_CONTRA_MEDIDA2,
+        respostasForm5_natureza_humana.CONSCIENCIA.CONSCIENCIA_3,
+        respostasForm5_natureza_humana.CONSCIENCIA.CONSCIENCIA_CONTRA_MEDIDA3,
+        respostasForm5_natureza_humana.CONSCIENCIA.CONSCIENCIA_4,
+        respostasForm5_natureza_humana.CONSCIENCIA.CONSCIENCIA_CONTRA_MEDIDA4,
+        respostasForm5_natureza_humana.ATENCAO.ATENCAO_1,
+        respostasForm5_natureza_humana.ATENCAO.ATENCAO_CONTRA_MEDIDA1,
+        respostasForm5_natureza_humana.ATENCAO.ATENCAO_2,
+        respostasForm5_natureza_humana.ATENCAO.ATENCAO_CONTRA_MEDIDA2,
+        respostasForm5_natureza_humana.ATENCAO.ATENCAO_3,
+        respostasForm5_natureza_humana.ATENCAO.ATENCAO_CONTRA_MEDIDA3,
+        respostasForm5_natureza_humana.ATENCAO.ATENCAO_4,
+        respostasForm5_natureza_humana.ATENCAO.ATENCAO_CONTRA_MEDIDA4,
+        respostasForm5_natureza_humana.ILUSAO.ILUSAO_1,
+        respostasForm5_natureza_humana.ILUSAO.ILUSAO_CONTRA_MEDIDA1,
+        respostasForm5_natureza_humana.ILUSAO.ILUSAO_2,
+        respostasForm5_natureza_humana.ILUSAO.ILUSAO_CONTRA_MEDIDA2,
+        respostasForm5_natureza_humana.ILUSAO.ILUSAO_3,
+        respostasForm5_natureza_humana.ILUSAO.ILUSAO_CONTRA_MEDIDA3,
+        respostasForm5_natureza_humana.ILUSAO.ILUSAO_4,
+        respostasForm5_natureza_humana.ILUSAO.ILUSAO_CONTRA_MEDIDA4,
+        respostasForm5_natureza_humana.ILUSAO.ILUSAO_5,
+        respostasForm5_natureza_humana.ILUSAO.ILUSAO_CONTRA_MEDIDA5,
+        respostasForm5_natureza_humana.RJA.RJA_1,
+        respostasForm5_natureza_humana.RJA.RJA_CONTRA_MEDIDA1,
+        respostasForm5_natureza_humana.RJA.RJA_2,
+        respostasForm5_natureza_humana.RJA.RJA_CONTRA_MEDIDA2,
+        respostasForm5_natureza_humana.RJA.RJA_3,
+        respostasForm5_natureza_humana.RJA.RJA_CONTRA_MEDIDA3,
+        respostasForm5_natureza_humana.RJA.RJA_4,
+        respostasForm5_natureza_humana.RJA.RJA_CONTRA_MEDIDA4,
+        respostasForm5_natureza_humana.RJA.RJA_5,
+        respostasForm5_natureza_humana.RJA.RJA_CONTRA_MEDIDA5,
+        respostasForm5_natureza_humana.RJA.RJA_6,
+        respostasForm5_natureza_humana.RJA.RJA_CONTRA_MEDIDA6,
+        respostasForm5_natureza_humana.RJA.RJA_7,
+        respostasForm5_natureza_humana.RJA.RJA_CONTRA_MEDIDA7,
+        respostasForm5_natureza_humana.PARALISADO.PARALISADO_1,
+        respostasForm5_natureza_humana.PARALISADO.PARALISADO_CONTRA_MEDIDA1,
+        respostasForm5_natureza_humana.ESQUECIMENTO.ESQUECIMENTO_1,
+        respostasForm5_natureza_humana.ESQUECIMENTO.ESQUECIMENTO_CONTRA_MEDIDA1,
+        respostasForm5_natureza_humana.ESQUECIMENTO.ESQUECIMENTO_2,
+        respostasForm5_natureza_humana.ESQUECIMENTO.ESQUECIMENTO_CONTRA_MEDIDA2,
+        respostasForm5_natureza_humana.ESQUECIMENTO.ESQUECIMENTO_3,
+        respostasForm5_natureza_humana.ESQUECIMENTO.ESQUECIMENTO_CONTRA_MEDIDA3,
+        respostasForm5_natureza_humana.ESQUECIMENTO.ESQUECIMENTO_4,
+        respostasForm5_natureza_humana.ESQUECIMENTO.ESQUECIMENTO_CONTRA_MEDIDA4,
+        respostasForm5_natureza_humana.ATALHOS.ATALHOS_1,
+        respostasForm5_natureza_humana.ATALHOS.ATALHOS_CONTRA_MEDIDA1,
+        respostasForm5_natureza_humana.ATALHOS.ATALHOS_2,
+        respostasForm5_natureza_humana.ATALHOS.ATALHOS_CONTRA_MEDIDA2,
+        respostasForm5_natureza_humana.CONDICOES_FISICAS.CONDICOES_FISICAS_1,
+        respostasForm5_natureza_humana.CONDICOES_FISICAS.CONDICOES_FISICAS_CONTRA_MEDIDA1,
+        respostasForm5_natureza_humana.CONDICOES_FISICAS.CONDICOES_FISICAS_2,
+        respostasForm5_natureza_humana.CONDICOES_FISICAS.CONDICOES_FISICAS_CONTRA_MEDIDA2,
+        respostasForm5_natureza_humana.CONDICOES_PSICOLOGICAS.CONDICOES_PSICOLOGICAS_1,
+        respostasForm5_natureza_humana.CONDICOES_PSICOLOGICAS.CONDICOES_PSICOLOGICAS_CONTRA_MEDIDA1,
+        respostasForm5_natureza_humana.CONDICOES_PSICOLOGICAS.CONDICOES_PSICOLOGICAS_2,
+        respostasForm5_natureza_humana.CONDICOES_PSICOLOGICAS.CONDICOES_PSICOLOGICAS_CONTRA_MEDIDA2,
+        respostasForm5_natureza_humana.CONDICOES_PSICOLOGICAS.CONDICOES_PSICOLOGICAS_3,
+        respostasForm5_natureza_humana.CONDICOES_PSICOLOGICAS.CONDICOES_PSICOLOGICAS_CONTRA_MEDIDA3,
+        respostasForm5_natureza_humana.VISUAL.VISUAL_1,
+        respostasForm5_natureza_humana.VISUAL.VISUAL_CONTRA_MEDIDA1,
+        respostasForm5_natureza_humana.VISUAL.VISUAL_2,
+        respostasForm5_natureza_humana.VISUAL.VISUAL_CONTRA_MEDIDA2,
+        respostasForm5_natureza_humana.VISUAL.VISUAL_3,
+        respostasForm5_natureza_humana.VISUAL.VISUAL_CONTRA_MEDIDA3,
+        respostasForm5_natureza_humana.VISUAL.VISUAL_4,
+        respostasForm5_natureza_humana.VISUAL.VISUAL_CONTRA_MEDIDA4,
+        respostasForm5_natureza_humana.ADIVINHACAO.ADIVINHACAO_1,
+        respostasForm5_natureza_humana.ADIVINHACAO.ADIVINHACAO_CONTRA_MEDIDA1,
+        respostasForm5_natureza_humana.ADIVINHACAO.ADIVINHACAO_2,
+        respostasForm5_natureza_humana.ADIVINHACAO.ADIVINHACAO_CONTRA_MEDIDA2,
+        respostasForm5_natureza_humana.ADIVINHACAO.ADIVINHACAO_3,
+        respostasForm5_natureza_humana.ADIVINHACAO.ADIVINHACAO_CONTRA_MEDIDA3
+      );
+
+     row.push(statusNatureza);
+     row.push(planoAcaoContramedida)
+     row.push(dataPlanodeAcao);
+     row.push(planodeAcao);
+     row.push("PENDENTE");
+     row.push(approuchPilarIndicador);
+     rowBasedash.push(perguntaNatureza)
+     rowBasedash.push(statusNatureza)
+     rowBasedash.push(planoAcaoContramedida)
+     rowBasedash.push(dataPlanodeAcao);
+     rowBasedash.push(planodeAcao);
+     rowBasedash.push("PENDENTE");
+     rowBasedash.push(approuchPilarIndicador);
+
+      var range = sheet.getRange(lastRow, 1, 1, 175); 
+      range.setValues([row]);
+
+      var rangeBasedash = sheetBasedash.getRange(lastRowBasedash, 1, 1, 40); 
+      rangeBasedash.setValues([rowBasedash]);
+
+      TWTTPEmailpendentes.enviarEmailNotificacaoTWTTP(respostasForm1.ENTREVISTADOR_NOME, respostasForm1.COLABORADOR_RE, respostasForm1.EMAIL_CRIADOR, statusEntrevista, respostasForm1.COD_FORMULARIO)
+
+}
+
+
+function enviarEmailReprovados(codigo, comentario, email, valor, emailUsuario) {
+   TWTTPEmailpendentes.enviarEmailTWTTPreprovadas(codigo, comentario, email, valor, emailUsuario)
+}
+
+

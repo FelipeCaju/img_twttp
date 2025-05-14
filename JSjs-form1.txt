@@ -1,0 +1,1095 @@
+<script>
+
+    carregarTodosDadosIndicadorApprouch()
+    gerarOptions()
+
+    function proximaPagina() {
+
+      console.log(document.getElementById("telaAtual").value)
+
+         if(document.getElementById("telaAtual").value == "form6_plano_de_acao"){
+            validarPlanodeAcao()                
+         }
+
+         if(document.getElementById("telaAtual").value == "form5_natureza_humana"){
+              validarRespostasForm5_natureza_humana()
+         }    
+    
+         if(document.getElementById("telaAtual").value == "form4_herca"){
+              validarRespostasForm4_analise_herca()
+         }
+
+         if(document.getElementById("telaAtual").value == "form3_falta_conhecimento"){
+              validarRespostasForm3_falta_conhecimento(0)
+         }
+
+         if(document.getElementById("telaAtual").value == "form2"){
+            validarRespostasForm2()
+         }
+         
+         if(document.getElementById("telaAtual").value == "form1"){
+            validarRespostasForm1()
+         }
+         if(document.getElementById("telaAtual").value == "form0_inicio"){
+            document.getElementById("meuFormulario_inico").style.display = 'none';
+            document.getElementById("meuFormulario1").style.display = 'block';
+            document.getElementById("btnFormVoltar").style.display = 'block';  
+            document.getElementById("btnFormProximo").style.display = 'block';   
+            document.getElementById("telaAtual").value = "form1"
+         }      
+    }
+
+    function fecharPlanoAcao() {
+
+            document.getElementById("meuFormulario_inico").style.display = 'none';
+            document.getElementById("meuFormulario_fechar_planodeacao").style.display = 'block';
+            document.getElementById("btnesquisaCodTWTTPplanoAcao").style.display = 'block';
+
+            
+    }
+
+    function limparTelaPlanoAcao(){
+            document.getElementById("codigo_pesquisa_twttp").value = ""
+            document.getElementById("form0_descricaoplanoacao").value = ""
+            document.getElementById("div_reprovado_planodeacao").style.display = 'none'; 
+            document.getElementById("comentarioreprova").value = ""  
+    }
+
+    function pesquisaCodTWTTPplanoAcao(){
+
+          var listaJson = <?!= listaTWTTPpendentes ?>;
+          var email = document.getElementById("form1_emailcriador").value
+          var achou = false
+
+          // Função para verificar se o email e o código estão presentes na lista
+          var encontrado = listaJson.some(function(item) {
+
+            if(item.emailCriador === email && item.codigoTwttp === document.getElementById("codigo_pesquisa_twttp").value){
+              document.getElementById("form0_descricaoplanoacao").value = item.planoAcao
+               if(item.comentarioReprova !== ""){
+                   document.getElementById("div_reprovado_planodeacao").style.display = 'block'; 
+                   document.getElementById("comentarioreprova").value = item.comentarioReprova
+               }
+               if(item.comentarioReprova === ""){
+                   document.getElementById("div_reprovado_planodeacao").style.display = 'none'; 
+                   document.getElementById("comentarioreprova").value = ""
+               }      
+              achou = true
+            }
+          });  
+
+          if(achou){
+                  document.getElementById("btnFormSalvarFechamento").disabled = false;              
+          }else{
+              Swal.fire({
+                  title: 'Codigo não encontrado, verifique se esta correto ou tente recarregar a pagina',
+                  icon: 'warning',
+                  showCloseButton: false,
+                  showCancelButton: false,
+                  showConfirmButton: true,
+              });
+          }
+    }
+
+
+
+    function voltaPaginaInicio(){
+              document.getElementById("meuFormulario_fechar_planodeacao").style.display = 'none';
+              document.getElementById("meuFormulario_inico").style.display = 'block';   
+    }
+
+
+    function voltaPagina(){
+
+         if(document.getElementById("telaAtual").value == "form1"){
+              
+              window.scrollTo(0, 0);
+              document.getElementById("meuFormulario_inico").style.display = 'block';
+              document.getElementById("meuFormulario1").style.display = 'none';
+              document.getElementById("meuFormulario2").style.display = 'none';
+              document.getElementById("meuFormulario_falta_conhecimento").style.display = 'none';
+              document.getElementById("meuFormulario_herca2").style.display = 'none';
+              document.getElementById("meuFormulario_natureza_humana").style.display = 'none';
+              document.getElementById("btnFormVoltar").style.display = 'none';
+              document.getElementById("btnFormProximo").style.display = 'none';   
+
+              document.getElementById("telaAtual").value = "form0_inicio"
+         }
+
+         if(document.getElementById("telaAtual").value == "form2"){
+              
+              window.scrollTo(0, 0);
+              document.getElementById("meuFormulario1").style.display = 'block';
+              document.getElementById("meuFormulario2").style.display = 'none';
+              document.getElementById("meuFormulario_falta_conhecimento").style.display = 'none';
+              document.getElementById("meuFormulario_herca2").style.display = 'none';
+              document.getElementById("meuFormulario_natureza_humana").style.display = 'none';
+              document.getElementById("btnFormVoltar").style.display = 'block';
+              document.getElementById("btnFormProximo").style.display = 'block';   
+
+              document.getElementById("telaAtual").value = "form1"
+         }
+
+         if(document.getElementById("telaAtual").value == "form3_falta_conhecimento"){
+              
+              window.scrollTo(0, 0);
+              document.getElementById("meuFormulario1").style.display = 'none';
+              document.getElementById("meuFormulario2").style.display = 'block';
+              document.getElementById("meuFormulario_falta_conhecimento").style.display = 'none';
+              document.getElementById("meuFormulario_herca2").style.display = 'none';
+              document.getElementById("meuFormulario_natureza_humana").style.display = 'none';
+              document.getElementById("btnFormVoltar").style.display = 'block';
+              document.getElementById("btnFormProximo").style.display = 'block';   
+              document.getElementById("btnFormProximo").textContent = "Proximo";
+
+              document.getElementById("telaAtual").value = "form2"
+         }    
+
+         if(document.getElementById("telaAtual").value == "form4_herca"){
+
+              window.scrollTo(0, 0);
+              document.getElementById("meuFormulario1").style.display = 'none';
+              document.getElementById("meuFormulario2").style.display = 'block';
+              document.getElementById("meuFormulario_falta_conhecimento").style.display = 'none';
+              document.getElementById("meuFormulario_herca2").style.display = 'none';
+              document.getElementById("meuFormulario_natureza_humana").style.display = 'none';
+              document.getElementById("btnFormVoltar").style.display = 'block';
+              document.getElementById("btnFormProximo").style.display = 'block';   
+
+              document.getElementById("telaAtual").value = "form2"
+         } 
+
+         if(document.getElementById("telaAtual").value == "form5_natureza_humana"){
+
+              window.scrollTo(0, 0);
+              document.getElementById("meuFormulario1").style.display = 'none';
+              document.getElementById("meuFormulario2").style.display = 'none';
+              document.getElementById("meuFormulario_falta_conhecimento").style.display = 'none';
+              document.getElementById("meuFormulario_herca2").style.display = 'block';
+              document.getElementById("meuFormulario_natureza_humana").style.display = 'none';
+              document.getElementById("btnFormVoltar").style.display = 'block';
+              document.getElementById("btnFormProximo").style.display = 'block';   
+              document.getElementById("btnFormProximo").textContent = "Proximo";
+
+              document.getElementById("telaAtual").value = "form4_herca"
+         } 
+
+         if(document.getElementById("telaAtual").value == "form6_plano_de_acao"){
+
+            if(document.getElementById("form2_status_entrevista").value == "TWTTP"){
+                document.getElementById("meuFormulario_natureza_humana").style.display = 'none';
+                document.getElementById("meuFormulario_falta_conhecimento").style.display = 'block';
+                document.getElementById("telaAtual").value = "form3_falta_conhecimento"
+            }else{
+                document.getElementById("meuFormulario_falta_conhecimento").style.display = 'none';
+                document.getElementById("meuFormulario_natureza_humana").style.display = 'block';
+                document.getElementById("telaAtual").value = "form5_natureza_humana"
+            }
+                window.scrollTo(0, 0);
+                document.getElementById("meuFormulario1").style.display = 'none';
+                document.getElementById("meuFormulario2").style.display = 'none';
+                document.getElementById("meuFormulario_herca2").style.display = 'none';              
+                document.getElementById("meuFormulario_plano_acao").style.display = 'none';
+                document.getElementById("btnFormVoltar").style.display = 'block';
+                document.getElementById("btnFormProximo").style.display = 'block';   
+                document.getElementById("btnFormProximo").textContent = "Proximo";
+          } 
+
+         document.getElementById("meuFormulario_plano_acao").style.display = 'none';
+    }
+
+
+    function irProximoFormulario2() {       
+
+              window.scrollTo(0, 0);
+              document.getElementById("meuFormulario1").style.display = 'none';
+              document.getElementById("meuFormulario2").style.display = 'block';
+              document.getElementById("meuFormulario_falta_conhecimento").style.display = 'none';
+              document.getElementById("meuFormulario_herca2").style.display = 'none';
+              document.getElementById("meuFormulario_natureza_humana").style.display = 'none';
+              document.getElementById("btnFormVoltar").style.display = 'block';
+              document.getElementById("btnFormProximo").style.display = 'block';   
+
+              document.getElementById("telaAtual").value = "form2"
+    }
+    
+
+    function irProximoFormulario3() {  // abre o form3
+
+              window.scrollTo(0, 0);
+              document.getElementById("meuFormulario1").style.display = 'none';
+              document.getElementById("meuFormulario2").style.display = 'none';
+              document.getElementById("meuFormulario_falta_conhecimento").style.display = 'block';
+              document.getElementById("meuFormulario_herca2").style.display = 'none';
+              document.getElementById("meuFormulario_natureza_humana").style.display = 'none';
+              document.getElementById("btnFormVoltar").style.display = 'block';
+              document.getElementById("btnFormProximo").style.display = 'block';   
+
+              document.getElementById("telaAtual").value = "form3_falta_conhecimento"
+
+              
+    }
+
+    function irProximoFormulario4() {  // abre o form4
+
+              window.scrollTo(0, 0);
+              document.getElementById("meuFormulario1").style.display = 'none';
+              document.getElementById("meuFormulario2").style.display = 'none';
+              document.getElementById("meuFormulario_falta_conhecimento").style.display = 'none';
+              document.getElementById("meuFormulario_herca2").style.display = 'block';
+              document.getElementById("meuFormulario_natureza_humana").style.display = 'none';
+              document.getElementById("btnFormVoltar").style.display = 'block';
+              document.getElementById("btnFormProximo").style.display = 'block';  
+              document.getElementById("telaAtual").value = "form4_herca"
+    }
+
+    var grupoLoopIni
+    var grupoLoopFim
+
+    function irProximoFormulario5() {
+
+      categoria_herca = 1
+
+      window.scrollTo(0, 0);
+      document.getElementById("meuFormulario1").style.display = 'none';
+      document.getElementById("meuFormulario2").style.display = 'none';
+      document.getElementById("meuFormulario_falta_conhecimento").style.display = 'none';
+      document.getElementById("meuFormulario_herca2").style.display = 'none';
+      document.getElementById("meuFormulario_natureza_humana").style.display = 'block';
+      document.getElementById("btnFormVoltar").style.display = 'block';
+      document.getElementById("btnFormProximo").style.display = 'block';  
+
+      document.getElementById("natureza_humana_secao_1").style.display = "none";
+      document.getElementById("natureza_humana_secao_2").style.display = "none";
+      document.getElementById("natureza_humana_secao_3").style.display = "none";
+      document.getElementById("natureza_humana_secao_4").style.display = "none";
+      document.getElementById("natureza_humana_secao_5").style.display = "none";
+      document.getElementById("natureza_humana_secao_6").style.display = "none";
+      document.getElementById("natureza_humana_secao_7").style.display = "none";
+      document.getElementById("natureza_humana_secao_8").style.display = "none"; 
+      document.getElementById("natureza_humana_secao_9").style.display = "none";
+      document.getElementById("natureza_humana_secao_10").style.display = "none";
+      document.getElementById("natureza_humana_secao_11").style.display = "none";
+      document.getElementById("natureza_humana_secao_12").style.display = "none";   
+
+      //limparRespostasForm5_natureza_humana() 
+
+      document.getElementById("telaAtual").value = "form5_natureza_humana"
+
+        if(grupoSelecionado == "processo"){
+
+          document.getElementById("natureza_humana_secao_1").style.display = "block";
+          document.getElementById("natureza_humana_secao_3").style.display = "block";
+          document.getElementById("natureza_humana_secao_5").style.display = "block";
+          document.getElementById("natureza_humana_secao_9").style.display = "block";
+          document.getElementById("natureza_humana_secao_11").style.display = "block";
+          grupoLoopIni = 1
+          grupoLoopFim = 4
+        }
+        if(grupoSelecionado == "procedimento"){
+          document.getElementById("natureza_humana_secao_1").style.display = "block";
+          document.getElementById("natureza_humana_secao_5").style.display = "block";
+          document.getElementById("natureza_humana_secao_8").style.display = "block";
+          grupoLoopIni = 5
+          grupoLoopFim = 6
+        }
+        if(grupoSelecionado == "ferramenta"){
+          document.getElementById("natureza_humana_secao_4").style.display = "block";
+          document.getElementById("natureza_humana_secao_6").style.display = "block";
+          grupoLoopIni = 7
+          grupoLoopFim = 9
+        }
+        if(grupoSelecionado == "ambiente"){
+          document.getElementById("natureza_humana_secao_2").style.display = "block";
+          document.getElementById("natureza_humana_secao_4").style.display = "block";
+          document.getElementById("natureza_humana_secao_9").style.display = "block";
+          grupoLoopIni = 10
+          grupoLoopFim = 13
+        }
+        if(grupoSelecionado == "atitude"){
+          document.getElementById("natureza_humana_secao_8").style.display = "block";
+          document.getElementById("natureza_humana_secao_12").style.display = "block";
+          grupoLoopIni = 14
+          grupoLoopFim = 17
+        }
+        if(grupoSelecionado == "desatencao"){
+          document.getElementById("natureza_humana_secao_6").style.display = "block";
+          document.getElementById("natureza_humana_secao_7").style.display = "block";
+          document.getElementById("natureza_humana_secao_10").style.display = "block";
+          grupoLoopIni = 18
+          grupoLoopFim = 20
+        }            
+    }
+
+    function irProximoFormulario6_PlanoAcao(){
+
+        window.scrollTo(0, 0);
+        document.getElementById("btnFormProximo").textContent = "Salvar";
+        document.getElementById("meuFormulario1").style.display = 'none';
+        document.getElementById("meuFormulario2").style.display = 'none';
+        document.getElementById("meuFormulario_falta_conhecimento").style.display = 'none';
+        document.getElementById("meuFormulario_herca2").style.display = 'none';
+        document.getElementById("meuFormulario_natureza_humana").style.display = 'none';
+        document.getElementById("meuFormulario_plano_acao").style.display = 'block';
+        document.getElementById("btnFormVoltar").style.display = 'block';
+        document.getElementById("btnFormProximo").style.display = 'block'; 
+        document.getElementById("btnFormInicio").style.display = 'none';  
+        document.getElementById("meuFormulario_fim").style.display = 'none';  
+        document.getElementById("telaAtual").value = "form6_plano_de_acao";           
+
+        resumoTwttp()  
+    }
+
+
+    function irProximoFormulario7_Fim(){
+
+        window.scrollTo(0, 0);
+        document.getElementById("meuFormulario1").style.display = 'none';
+        document.getElementById("meuFormulario2").style.display = 'none';
+        document.getElementById("meuFormulario_falta_conhecimento").style.display = 'none';
+        document.getElementById("meuFormulario_herca2").style.display = 'none';
+        document.getElementById("meuFormulario_natureza_humana").style.display = 'none';
+        document.getElementById("meuFormulario_plano_acao").style.display = 'none';
+        document.getElementById("meuFormulario_fechar_planodeacao").style.display = 'none';
+        document.getElementById("meuFormulario_fim").style.display = 'block'; 
+        document.getElementById("btnFormProximo").style.display = 'none'; 
+        document.getElementById("btnFormVoltar").style.display = 'none';
+        document.getElementById("btnFormInicio").style.display = 'none';  
+        document.getElementById("telaAtual").value = "form7_fim"        
+        document.getElementById("titulo_fim").textContent = "TWTTP CRIADA COM SUCESSO";   
+        document.getElementById("descricao_fim").textContent = "CODIGO DA TWTTP ENVIADO PARA SEU EMAIL";   
+
+    }
+
+    function reloadPage() {
+
+      document.getElementById('resp-spinner5').classList.remove("d-none");
+      document.getElementById('resp-spinner6').classList.remove("d-none");
+      document.getElementById('resp-spinner7').classList.remove("d-none");
+      window.open("https://script.google.com/a/macros/whirlpool.com/s/AKfycbyAPiBELG5dFLK_wNYHkGguiBbPTe-S-5xUI1CYLKA/dev", "_top")
+     // window.location.href = "https://script.google.com/a/macros/whirlpool.com/s/AKfycbyAPiBELG5dFLK_wNYHkGguiBbPTe-S-5xUI1CYLKA/dev";
+    }
+
+    function resumoTwttp(){
+
+      var statusEntrevista = document.getElementById("form2_status_entrevista").value
+      var perguntaFaltaConhecimento = document.getElementById('form3_pergunta_contra_medida_falta_conhecimento').value    
+      var statusContraMedidaFaltaConhecimento = document.getElementById('form3_status_contra_medida_falta_conhecimento').value
+      var perguntaHerca = document.getElementById('form4_pergunta_herca').value
+      var statusHerca = document.getElementById('form4_status_herca').value
+      var statusContraMedidaHerca = document.getElementById('form4_status_contra_medida_herca').value
+      var statusNatureza = document.getElementById('form5_status_natureza').value
+      var perguntaNatureza = document.getElementById('form5_pergunta_natureza').value
+    
+      
+      document.getElementById("resumoStatusEntrevista").textContent = "Sua entrevista resultou em uma análise: "+statusEntrevista.toUpperCase();
+
+          if(statusEntrevista == "TWTTP"){
+                document.getElementById("resumoPerguntaFaltaConhecimento").textContent = perguntaFaltaConhecimento.toUpperCase();
+                document.getElementById('resumoRespostaFaltaConhecimento').value = "Contramedida: "+statusContraMedidaFaltaConhecimento
+            
+                document.getElementById("planodeacao_grupo_faltaconhecimento").style.display = "block";
+                document.getElementById("planodeacao_grupo_herca").style.display = "none";
+             
+          }else{
+                document.getElementById("resumoHerca").textContent = statusHerca.toUpperCase(); 
+                document.getElementById("resumoPerguntaHerca").textContent = perguntaHerca.toUpperCase();          
+                document.getElementById("resumoContraMedidaHerca").value = "RESPOSTA: "+statusContraMedidaHerca.toUpperCase(); 
+
+                document.getElementById("resumoNaturezaHumana").textContent = statusNatureza.toUpperCase();
+                document.getElementById("resumoPerguntaNaturezaHumana").textContent = perguntaNatureza.toUpperCase();
+
+                document.getElementById("planodeacao_grupo_herca").style.display = "block";
+                document.getElementById("planodeacao_grupo_faltaconhecimento").style.display = "none";
+
+          }  
+    }
+
+
+    function salvarPlanoAcao(){             
+
+                var codigo_pesquisa_twttp = document.getElementById("codigo_pesquisa_twttp").value
+                var fechamento_planoacao_data = document.getElementById('fechamento_planoacao_data').value
+                var link_evidencia_planoacao = document.getElementById('link_evidencia_planoacao').value
+
+                // Converter a data do input para o formato de objeto Date
+                var inputDateObj = new Date(fechamento_planoacao_data);
+
+                // Obter a data atual
+                var currentDate = new Date();
+
+                // Comparar as datas
+                if (inputDateObj <= currentDate) {
+
+                  if(link_evidencia_planoacao!=""){
+
+                    document.getElementById('resp-spinner8').classList.remove("d-none");
+                    document.getElementById('resp-spinner9').classList.remove("d-none");
+                    document.getElementById('resp-spinner10').classList.remove("d-none");  
+                    document.getElementById("btnesquisaCodTWTTPplanoAcao").disabled = true;
+                    document.getElementById("btnFormSalvarFechamento").disabled = true;    
+
+                    google.script.run.withSuccessHandler(function() {
+                      
+                          document.getElementById('resp-spinner8').classList.add("d-none");
+                          document.getElementById('resp-spinner9').classList.add("d-none");
+                          document.getElementById('resp-spinner10').classList.add("d-none");
+                          document.getElementById("link_evidencia_planoacao").disabled = true;
+                          document.getElementById("fechamento_planoacao_data").disabled = true;             
+                          document.getElementById("meuFormulario_fechar_planodeacao").style.display = 'none';
+                          document.getElementById("meuFormulario_fim").style.display = 'block';  
+                          document.getElementById("telaAtual").value = "form7_fim"        
+                          document.getElementById("titulo_fim").textContent = "TWTTP FECHADA";   
+                          document.getElementById("descricao_fim").textContent = "OBRIGADO POR CONCLUIR O PLANO DE AÇÃO"; 
+                          
+                        }).salvarPlanoAcaoFechamentoNaPlanilha(codigo_pesquisa_twttp, fechamento_planoacao_data, link_evidencia_planoacao, pdcaData);
+                  }else{
+                        Swal.fire({
+                          title: 'Favor preencher a evidencia.',
+                          icon: 'warning',
+                          timer: 1600,
+                          showCloseButton: false,
+                          showCancelButton: false,
+                          showConfirmButton: false
+                      });
+                  }
+
+                }else{
+                      Swal.fire({
+                          title: 'Insira uma data valida.',
+                          icon: 'warning',
+                          timer: 1600,
+                          showCloseButton: false,
+                          showCancelButton: false,
+                          showConfirmButton: false
+                      });
+                }
+    }
+
+    function salvarDadosTWTTP(form4){
+
+          Swal.fire({
+            title: "Deseja conferir suas respostas antes ou posso salvar?",
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "SALVAR",
+            denyButtonText: `VOLTAR`
+          }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                if(form4==0){
+                   setarNaoParaTodosItens()
+                }
+                if(form4==1){
+                   validarRespostasForm3_falta_conhecimento(1)
+                }     
+                console.log(respostasForm1)
+                console.log(respostasForm2)
+                console.log(respostasForm3_falta_conhecimento)
+                console.log(respostasForm4_analise_herca)
+                console.log(respostasForm5_natureza_humana)
+
+                var statusEntrevista = document.getElementById("form2_status_entrevista").value
+                var statusContraMedidaFaltaConhecimento = document.getElementById('form3_status_contra_medida_falta_conhecimento').value
+                var perguntaFaltaConhecimento = document.getElementById('form3_pergunta_contra_medida_falta_conhecimento').value
+                var perguntaHerca = document.getElementById('form4_pergunta_herca').value
+                var statusHerca = document.getElementById('form4_status_herca').value
+                var statusContraMedidaHerca = document.getElementById('form4_status_contra_medida_herca').value
+                var perguntaNatureza = document.getElementById('form5_pergunta_natureza').value
+                var statusNatureza = document.getElementById('form5_status_natureza').value
+                var dataPlanodeAcao = document.getElementById("data_planoacao").value
+                var planodeAcao = document.getElementById("planodeacao").value
+                var planoAcaoContramedida = document.getElementById('plano_acao_contramedida').value
+              //var statusContraMedidaNatureza = document.getElementById('form5_status_contra_medida_natureza').value
+                var approuchPilarIndicador = document.getElementById('form1_approuch_indicador').value
+
+                // Converter a data do input para o formato de objeto Date
+                var inputDateObj = new Date(dataPlanodeAcao);
+
+                // Obter a data atual
+                var currentDate = new Date().toISOString().slice(0, 10); 
+
+                    // Comparar as datas
+                    if (dataPlanodeAcao >= currentDate) {
+
+                        document.getElementById("btnFormVoltar").disabled = true;
+                        document.getElementById("btnFormProximo").disabled = true;
+                        document.getElementById('resp-spinner5').classList.remove("d-none");
+                        document.getElementById('resp-spinner6').classList.remove("d-none");
+                        document.getElementById('resp-spinner7').classList.remove("d-none");                    
+
+                        google.script.run.withSuccessHandler(function() {
+
+                            document.getElementById('resp-spinner5').classList.add("d-none");
+                            document.getElementById('resp-spinner6').classList.add("d-none");
+                            document.getElementById('resp-spinner7').classList.add("d-none");
+
+                            irProximoFormulario7_Fim()
+                            
+                          }).salvarDadosNaPlanilha(respostasForm1, respostasForm2, statusEntrevista, respostasForm3_falta_conhecimento, statusContraMedidaFaltaConhecimento.toUpperCase(), perguntaFaltaConhecimento, respostasForm4_analise_herca, perguntaHerca, statusHerca.toUpperCase(), statusContraMedidaHerca.toUpperCase(), respostasForm5_natureza_humana, perguntaNatureza, statusNatureza.toUpperCase(), dataPlanodeAcao, planodeAcao, planoAcaoContramedida, approuchPilarIndicador);
+                   }
+                } else if (result.isDenied) {
+                }
+          }); 
+    }
+
+    function criarListaUnica() {
+
+      var listaPrincipal = combinarListas()
+      // Cria uma lista vazia para armazenar os elementos
+      var listaUnica = [];
+      
+      // Loop pelas listas na lista principal
+      for (var i = 0; i < listaPrincipal.length; i++) {
+        var lista = listaPrincipal[i];
+        
+        // Adiciona todos os elementos da lista atual na lista unica
+        listaUnica = listaUnica.concat(lista);
+      }
+      
+      // Retorna a lista unica
+      return listaUnica;
+    }
+
+
+    function combinarListas() {
+    
+      var listaConcatenada = [];
+      
+      // Concatena as listas individuais na listaConcatenada
+      //listaConcatenada = listaConcatenada.concat(respostasForm1);
+      //listaConcatenada = listaConcatenada.concat(respostasForm2);
+      listaConcatenada = listaConcatenada.concat(respostasForm3_falta_conhecimento);
+      listaConcatenada = listaConcatenada.concat(respostasForm4_analise_herca);
+      listaConcatenada = listaConcatenada.concat(respostasForm5_natureza_humana);
+        
+      return listaConcatenada;
+    }
+
+
+    // Função para preencher o select com base na unidade selecionada
+    function preencherSelect(unidade) {
+
+          if(unidade === "") {
+            document.getElementById("ocorrencia_linha_area").innerHTML = [];
+          }
+          if(unidade === "Rio Claro") {
+            document.getElementById("ocorrencia_linha_area").innerHTML =  <?!= optionsAreasRioClaro ?>;
+          }
+          if(unidade === "Joinville") {
+          document.getElementById("ocorrencia_linha_area").innerHTML =  <?!= optionsAreasJoinville ?>;
+          }
+          if(unidade === "Manaus") {
+          document.getElementById("ocorrencia_linha_area").innerHTML =  <?!= optionsAreasManaus ?>;
+          }   
+    }
+
+
+    function gerarIDAleatorio(pilar) {
+
+        if (pilar == "Joinville") {
+            planta =  "JLL"
+            idArea2 = obterIDArea('joinville', planta);
+
+        } else if (pilar == "Manaus") {
+            planta =   "MAO"     
+          idArea2 = obterIDArea('manaus', planta);
+
+        } else if (pilar == "Rio Claro") {
+            planta =   "RCL"
+            idArea2 = obterIDArea('rioclaro', planta);
+        }
+        preencherSelect(pilar);
+        document.getElementById('form1_codformulario').value = idArea2
+    }
+
+
+    // Objeto para armazenar os IDs gerados para cada área
+    var idsGerados = {
+        rioclaro: null,
+        joinville: null,
+        manaus: null
+    };
+
+
+// Função para obter o ID da área
+function obterIDArea(area, planta) {
+    // Se o ID já estiver definido para a área, retorne-o
+    if (idsGerados[area]) {
+        return idsGerados[area];
+    } else {
+        // Caso contrário, gere um novo ID e armazene-o para a área
+        var novoID = criarIDAleatorio(planta);
+        idsGerados[area] = novoID;
+        return novoID;
+    }
+}
+
+// Função para gerar um ID aleatório
+function criarIDAleatorio(planta) {
+    // Código para gerar o ID aleatório
+    gerarNumeros(4)
+    return 'TH-'+planta+'-' +gerarNumeros(4)+'-'+ Math.random().toString(36).substr(2, 8).toUpperCase();
+}
+
+// Função para gerar uma sequência aleatória de números
+function gerarNumeros(length) {
+    var result = '';
+    var numbers = '0123456789';
+    var numbersLength = numbers.length;
+    for (var i = 0; i < length; i++) {
+        result += numbers.charAt(Math.floor(Math.random() * numbersLength));
+    }
+    return result;
+}
+
+function carregarQRCAqualidade(pilar) { 
+
+  carregarIndicadores(pilar)
+
+  const checkboxRCA = document.getElementById('verificaFerramentaRCA');
+
+  if(pilar == "QC"){
+    document.getElementById("verificaFerramentaRCA").disabled = false;
+    document.getElementById("ocorrencia_qrca").value = "";
+    document.getElementById("numeroVerificaFerramentaRCA").textContent = "NUMERO QRCA: ";
+  ///  document.getElementById("ocorrencia_qrca").value = "QRCA";
+  //  document.getElementById("ocorrencia_qrca").style.backgroundColor = "#ffffff";
+  }else if(pilar == "SAF"){
+    document.getElementById("verificaFerramentaRCA").disabled = false;
+    document.getElementById("ocorrencia_qrca").value = "";
+    document.getElementById("numeroVerificaFerramentaRCA").textContent = "NUMERO SRCA: ";
+  //  document.getElementById("ocorrencia_qrca").value = "SRCA";
+  //  document.getElementById("ocorrencia_qrca").style.backgroundColor = "#ffffff";
+  }else if(pilar == "PM / AM"){
+    document.getElementById("verificaFerramentaRCA").disabled = false;
+    document.getElementById("ocorrencia_qrca").value = "";
+    document.getElementById("numeroVerificaFerramentaRCA").textContent = "NUMERO EWO: "; 
+
+    
+  //  document.getElementById("ocorrencia_qrca").value = "SRCA";
+  //  document.getElementById("ocorrencia_qrca").style.backgroundColor = "#ffffff";
+  }else{
+    document.getElementById("verificaFerramentaRCA").disabled = true;
+    document.getElementById("numeroVerificaFerramentaRCA").textContent = "NUMERO: ";
+  //  document.getElementById("ocorrencia_qrca").value = "nao";
+ //   document.getElementById("ocorrencia_qrca").style.backgroundColor = "#efefef"; 
+    checkboxRCA.checked = false; // Desmarcar o checkbox
+    checkboxRCA.disabled = true; // Desabilitar o checkbox
+    checkboxRCA.selectedIndex = 0;
+    document.getElementById("ocorrencia_qrca").disabled = true;
+    document.getElementById("ocorrencia_qrca").style.backgroundColor = "#efefef"; 
+    document.getElementById("ocorrencia_qrca").value = ""; 
+
+  }
+}
+
+  function verificarObrigatoriedadeRCA() {
+    const checkbox = document.getElementById('verificaFerramentaRCA');
+    const inputRE = document.getElementById('ocorrencia_qrca');
+
+    if (checkbox.checked) {
+    document.getElementById("ocorrencia_qrca").disabled = false;
+    document.getElementById("ocorrencia_qrca").style.backgroundColor = "#ffffff";
+    } else {
+    document.getElementById("ocorrencia_qrca").disabled = true;
+    document.getElementById("ocorrencia_qrca").style.backgroundColor = "#efefef"; 
+    document.getElementById("ocorrencia_qrca").value = ""; 
+    }
+  }
+
+
+
+carregarPerguntas()
+
+function carregarPerguntas() {
+
+  google.script.run.withSuccessHandler(function(html) {
+    document.getElementById('div_faltaConhecimento_perguntas').innerHTML = html;
+  }).gerarHtmlPerguntas_FaltaConhecimento();
+
+  google.script.run.withSuccessHandler(function(html) {
+    document.getElementById('div_herca_perguntas').innerHTML = html;
+  }).gerarHtmlPerguntas_Herca();
+
+}
+
+
+let todosDadosIndicadorApprouch = [];
+
+// Função para carregar todos os dados ao iniciar a página
+function carregarTodosDadosIndicadorApprouch() {
+  google.script.run.withSuccessHandler(function(dados) {
+    todosDadosIndicadorApprouch = dados; // Armazena todos os dados na variável global
+  }).getPilaresEIndicadores();
+}
+
+// Função para carregar os indicadores filtrados
+function carregarIndicadores(pilar) {
+
+  const nomesEspecificos = ["ENV", "SAF", "QC"];
+  
+  if (!nomesEspecificos.includes(pilar)) {
+    pilar = "Outros";
+  }
+
+  let indicadoresFiltrados = todosDadosIndicadorApprouch.filter(item => item.pilar === pilar);
+
+  let optionsHTML = "<option value='' disabled selected>Selecione</option>";
+  optionsHTML += indicadoresFiltrados.map(item => 
+  "<option value='" + item.indicador + "'>" + item.indicador + "</option>"
+  ).join("");
+  document.getElementById("ocorrencia_indicador").innerHTML = optionsHTML;
+}
+
+function selecionaApprouch(indicador){
+
+  const resultado = todosDadosIndicadorApprouch.find(item => item.indicador === indicador);
+  document.getElementById('form1_approuch_indicador').value = resultado.approuch
+
+}
+
+
+function verificarSelecionadoFaltaConhecimento(selectElement) {
+  const selectIds = [
+    'contra_medida_falta_conhecimento1',
+    'contra_medida_falta_conhecimento2',
+    'contra_medida_falta_conhecimento3',
+    'contra_medida_falta_conhecimento4',
+    'contra_medida_falta_conhecimento5'
+  ];
+
+  let selectedCount = 0; // Contador para contar quantos selects estão selecionados
+
+  // Contar quantos selects estão selecionados
+  selectIds.forEach(id => {
+    const select = document.getElementById(id);
+    if (select.value !== 'NÃO') {
+      selectedCount++;
+    }
+  });
+
+  // Verificar se mais de um select está selecionado
+  if (selectedCount > 1) {
+    // Exibe o alerta e reseta o select alterado
+    Swal.fire({
+        title: 'Você só pode selecionar uma opção.',
+        icon: 'warning',
+        timer: 1600,
+        showCloseButton: false,
+        showCancelButton: false,
+        showConfirmButton: false
+    });
+
+    // Reseta o select atual para o valor padrão
+        var contraMedidaSelect = document.getElementById(selectElement.id);
+        contraMedidaSelect.selectedIndex = 0;
+  }
+}
+
+function verificarSelecionadoHerca(selectElement) {
+
+
+  let grupo = grupos[grupoSelecionado];
+
+
+  if (grupo) {
+    let selectedCount = 0;
+    grupo.forEach(id => {
+      const select = document.getElementById(id);
+      if (select.value !== 'NÃO') {
+        selectedCount++;
+      }
+    });
+        // Verificar se mais de um select está selecionado
+        if (selectedCount > 1) {
+          // Exibe o alerta e reseta o select alterado
+          Swal.fire({
+              title: 'Você só pode selecionar uma opção.',
+              icon: 'warning',
+              timer: 1600,
+              showCloseButton: false,
+              showCancelButton: false,
+              showConfirmButton: false
+          });
+
+          // Reseta o select atual para o valor padrão
+              var contraMedidaSelect = document.getElementById(selectElement.id);
+              contraMedidaSelect.selectedIndex = 0;
+        }
+  } else {
+    console.log('Grupo não encontrado.');
+  }
+}
+
+
+function gerarOptions() {
+
+  let firstOption = '<option disabled selected value="">Selecione</option>';
+  document.getElementById("colaborador_tempo_posto").innerHTML = firstOption 
+
+  google.script.run.withSuccessHandler(function(opcoes) {
+
+    let optionsHTML = opcoes
+      .filter(d => d.trim() !== "")  // Remove opções vazias
+      .map(d => `<option>${d}</option>`)  // Cria as opções HTML
+      .join("");  // Junta todas as opções em uma única string
+
+    // Atualiza o conteúdo do select com as opções geradas
+    document.getElementById("colaborador_tempo_posto").innerHTML = firstOption + optionsHTML;
+  }).getOptionsFromSheet();  // Chama a função do lado do servidor
+}
+
+// Mapeia os grupos para números
+const grupoNumeracao = {
+  processo: 1,
+  procedimento: 2,
+  ferramenta: 3,
+  ambiente: 4,
+  atitude: 5,
+  desatencao: 6
+};
+
+  // Definindo grupos de select
+  const grupos = {
+    processo: ['contra_medida_processo1', 'contra_medida_processo2', 'contra_medida_processo3', 'contra_medida_processo4'],
+    procedimento: ['contra_medida_procedimento5', 'contra_medida_procedimento6'],
+    ferramenta: ['contra_medida_ferramenta7', 'contra_medida_ferramenta8', 'contra_medida_ferramenta9'],
+    ambiente: ['contra_medida_ambiente10', 'contra_medida_ambiente11', 'contra_medida_ambiente12', 'contra_medida_ambiente13'],
+    atitude: ['contra_medida_atitude14', 'contra_medida_atitude15', 'contra_medida_atitude16', 'contra_medida_atitude17'],
+    desatencao: ['contra_medida_desatencao18', 'contra_medida_desatencao19', 'contra_medida_desatencao20']
+  };
+
+
+// Lista para armazenar os números dos grupos selecionados
+let grupoSelecionado = ""
+
+
+function verificarSelecoes(select, idSelect) {
+
+  const grupoNome = Object.keys(grupos).find(grupo => grupos[grupo].includes(select.id));
+    
+    if (grupoSelecionado && grupoSelecionado !== grupoNome) {
+        Swal.fire({
+            title: 'Você só pode selecionar opções de um único grupo.',
+            icon: 'warning',
+            timer: 1600,
+            showCloseButton: false,
+            showCancelButton: false,
+            showConfirmButton: false
+        });
+
+        document.getElementById(select.id).value = "NÃO"
+        var contraMedidaSelect = document.getElementById(select.id);
+        contraMedidaSelect.disabled = true;
+        contraMedidaSelect.selectedIndex = 0;
+
+        // Limpar a seleção atual e desmarcar
+        select.value = 'NÃO';
+        return;
+    }
+
+    // Atualizar a seleção do grupo atual
+    grupoSelecionado = grupoNome;
+
+    // Verificar se ainda há seleções dentro do grupo
+    //const algumSelecionado = grupos[grupoSelecionado].some(id => document.getElementById(id).value !== 'NÃO');
+
+    if (grupoSelecionado && grupos[grupoSelecionado]) {
+        const algumSelecionado = grupos[grupoSelecionado].some(id => document.getElementById(id).value !== 'NÃO');
+        if (!algumSelecionado) {
+            grupoSelecionado = null;
+        }
+    }
+
+    // Desmarcar outros grupos
+    Object.keys(grupos).forEach(grupo => {
+        if (grupo !== grupoSelecionado) {
+            grupos[grupo].forEach(id => {
+                const select = document.getElementById(id);
+                if (select) {
+                    select.value = 'NÃO';
+                }
+            });
+        }
+    });
+
+      verificarSelecionadoHerca(select)
+}
+
+/*
+
+// Adicionar eventos para cada select
+Object.keys(grupos).forEach(grupo => {
+    grupos[grupo].forEach(selectId => {
+        const select = document.getElementById(selectId);
+        if (select) {
+            select.addEventListener('change', function() {
+                verificarSelecoes(this);
+            });
+        }
+    });
+});
+
+*/
+
+
+function habilitarSelect(inputId, selectId, grupoNome) {
+    var pergInput = document.getElementById(inputId);
+    var contraMedidaSelect = document.getElementById(selectId);
+
+        // Verifica se o valor do input não está vazio
+        if (document.getElementById(inputId).value.trim() !== '') {
+            // Habilita o select
+            contraMedidaSelect.disabled = false;
+        } else {     
+            // Desabilita o select se o valor estiver vazio
+            contraMedidaSelect.disabled = true;
+            contraMedidaSelect.selectedIndex = 0;
+
+            // Verificar se o grupo selecionado é válido antes de usar
+            if (grupoSelecionado && grupos[grupoSelecionado]) {
+                // Verificar se ainda há seleções dentro do grupo
+                const algumSelecionado = grupos[grupoSelecionado].some(id => document.getElementById(id).value !== 'NÃO');
+
+                if (!algumSelecionado) {
+                    grupoSelecionado = null;
+                }
+            }
+
+                // Desabilita o grupo se todos os selects estiverem desabilitados
+                const grupoSelects = grupos[grupoNome];
+
+                if(grupoSelects !=='' || grupoSelects !== null || grupoSelects !== undefined){
+                  const anyEnabled = Array.isArray(grupoSelects) && grupoSelects.some(selectId => {
+                      const selectElement = document.getElementById(selectId);
+                      return selectElement && selectElement.value !== 'NÃO' && !selectElement.disabled;
+                  });
+
+                  if (!anyEnabled && Array.isArray(grupoSelects)) {
+                      grupoSelects.forEach(selectId => {
+                          const selectElement = document.getElementById(selectId);
+                          if (selectElement) {
+                              selectElement.disabled = true;
+                          }
+                      });
+                  }
+               }
+        }
+}
+
+
+    const listaNaturezaHumana = [
+      "selecao",
+      "consciencia",
+      "atencao",
+      "ilusao",
+      "rja",
+      "paralisado",
+	    "esquecimento",
+	    "atalhos", 
+      "cond_fisicas",
+      "cond_psicologicas",
+      "visual",
+      "adivinhacao"
+    ];
+
+    // Segunda lista com os valores correspondentes
+    const listaNaturezaHumanaTratada = [
+      "SELEÇÃO",
+      "CONSCIÊNCIA",
+      "ATENÇÃO",
+      "ILUSÃO",
+      "RJA: RECONHECIMENTO, JULGAMENTO E AÇÃO",
+      "FICAR PARALISADO",
+      "ESQUECIMENTO",
+      "ATALHOS",
+      "CONDIÇÕES FÍSICAS",
+      "CONDIÇÕES PSICOLÓGICAS",
+      "DIREÇÃO VISUAL",
+      "ADIVINHAÇÃO"
+    ];
+
+var selectedValuePerguntaNaturezaHumana = "TODOS NÃO";
+
+function verificarSelectUnico(selectAtual) {
+  // Itera sobre os números das seções
+  var algumSelecionado = false; // Variável para controlar se há algum select selecionado
+
+  for (var i = 1; i <= 12; i++) {
+    // Gera o id da seção atual
+    var idSecao = "natureza_humana_secao_" + i;
+
+    // Seleciona o contêiner da seção específica
+    var secao = document.getElementById(idSecao);
+
+    // Verifica se a seção está visível
+    if (secao && secao.style.display !== "none") {
+      // Seleciona todos os selects da seção
+      var selects = secao.querySelectorAll('select');
+
+      var cont = 0;
+
+      // Verifica cada select na seção
+      for (let select of selects) {
+        cont++;
+
+        if (select.selectedIndex > 0) {
+          algumSelecionado = true; // Define como verdadeiro se algum select está selecionado
+
+          if (select !== selectAtual) {
+            // Se já encontrou um select selecionado, redefine o atual para "NÃO"
+            selectAtual.selectedIndex = 0;
+
+            Swal.fire({
+              title: 'Favor selecionar apenas a causa raiz principal.',
+              icon: 'warning',
+              timer: 3000,
+              showCloseButton: false,
+              showCancelButton: false,
+              showConfirmButton: false
+            });
+          }
+
+          var inputId = 'perg_' + secao.getAttribute('name') + cont;
+          var label = document.querySelector('label[for="' + inputId + '"]');
+          var labelText = label.textContent;
+
+          selectedValuePerguntaNaturezaHumana = labelText;
+          var index = listaNaturezaHumana.indexOf(secao.getAttribute('name'));
+          document.getElementById('form5_status_natureza').value = listaNaturezaHumanaTratada[index];
+          document.getElementById("form5_pergunta_natureza").value = selectedValuePerguntaNaturezaHumana;
+
+          break; // Interrompe o loop após encontrar um select selecionado
+        }
+      }
+
+      // Após verificar todos os selects da seção, verifica se nenhum foi selecionado
+      if (!algumSelecionado) {
+        selectedValuePerguntaNaturezaHumana = "TODOS NÃO";
+        console.log("Nenhum select selecionado na seção: " + idSecao);
+      }
+    }
+  }
+}
+
+
+
+function limparTodosOsCampos(){
+
+    limparRespostasForm1()
+    limparRespostasForm2()
+    limparRespostasForm3_falta_conhecimento()
+    limparRespostasForm4_analise_herca()
+    limparRespostasForm5_natureza_humana()
+    respostasForm1 = [];
+    respostasForm2 = [];
+    respostasForm3_falta_conhecimento = [];
+    respostasForm4_analise_herca = [];
+    respostasForm5_natureza_humana = [];
+
+
+}
+
+</script>

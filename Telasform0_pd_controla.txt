@@ -1,0 +1,229 @@
+<div style="display:none" id="meuFormulario_pd_controla">
+  <h3 class="mt-1 text-center" style="padding:5px">ANÁLISE DO PILAR</h3>
+  <div class="form-group row" style="background-color: #acedf3;">
+    <div class="col-md-12">
+      <div class="form-group" style="margin-bottom: 0px;">
+        <div class="form-group row" style="margin-bottom: 0px;">
+          <div class="col-md-12" style="margin-bottom: 30px;">
+            <div class="table-responsive" style="max-height: 230px;">
+              <table class="table table-bordered table-striped" style="margin-bottom: 0;">
+                <thead class="thead" style="background-color: aquamarine; position: sticky; top: 0; z-index: 1;">
+                  <tr style="background-color: aquamarine;">
+                    <th style="text-align: center;">CODIGO</th>
+                    <th style="text-align: center;">DATA</th>
+                    <th style="text-align: center;">INPUT</th>
+                    <th style="text-align: center;">PILAR</th>
+                    <th style="text-align: center;">ENTREVISTADOR</th>
+                    <th style="text-align: center;">TWTTP/HERCA</th>
+                    <th style="text-align: center;">AÇÃO</th>
+                    <th style="text-align: center;">CONTROLAR</th>
+                    <th style="text-align: center;">APROVAÇÃO</th>
+                  </tr>
+                </thead>
+                <tbody id="tabelaPendencias" >
+                  <!-- A tabela será preenchida dinamicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+            <!-- Modal de Aprovação -->
+            <div class="modal fade" id="aprovarModal" tabindex="-1" role="dialog" aria-labelledby="aprovarModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="aprovarModalLabel">Aprovação Pilar Responsavel</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <!-- Aqui você exibirá os dados da linha --> 
+                    <div class="form-group">
+                      <strong>Código:</strong> <span id="codigoLabel"></span>
+                    </div>
+                    <div class="form-group">
+                      <strong>Data:</strong> <span id="dataLabel"></span>
+                    </div>
+                    <div class="form-group">
+                      <strong>Input:</strong> <span id="inputLabel"></span>
+                    </div>
+                    <div class="form-group">
+                      <strong>Pilar:</strong> <span id="pilarLabel"></span>
+                    </div>
+                    <div class="form-group">
+                      <strong>Supervisor:</strong> <span id="supervisorLabel"></span>
+                    </div>
+                    <div class="form-group">
+                      <strong>TWTTP/HERCA:</strong> <span id="twttpLabel"></span>
+                    </div>
+
+                    <!-- Campo de comentário -->
+                    <div class="form-group">
+                      <label for="comentarioAprovacao">Comentário:</label>
+                      <textarea class="form-control" id="comentarioAprovacao" rows="3"></textarea>
+                    </div>
+
+                    <!-- Mensagem de erro -->
+                    <div class="alert alert-warning" id="mensagemErro" style="display: none;">
+                      Favor justificar a reprova.
+                    </div>
+                  </div>
+                  
+                  <div class="modal-footer d-flex align-items-center justify-content-between">
+                      <!-- Botão Corrigir à esquerda -->
+                      <div>
+                          <button id="btn_corrigir_controla" type="button" class="btn text-white" style="background-color: #2e92d5" onclick="reprovarPendencia(0)">
+                              Corrigir
+                          </button>
+                      </div>
+
+                      <!-- Spinners centralizados -->
+                      <div id="spinners-container_pd_controla" class="d-none">
+                          <span id="resp-spinner111" class="spinner-grow spinner-grow-sm text-danger" role="status" style="margin-left: 15px;"></span>
+                          <span id="resp-spinner222" class="spinner-grow spinner-grow-sm text-warning" role="status"></span>
+                          <span id="resp-spinner333" class="spinner-grow spinner-grow-sm text-info" role="status"></span>
+                      </div>
+
+                      <!-- Botões Aprovar e Reprovar à direita -->
+                      <div>
+                          <button id="btn_reprovar_controla" type="button" class="btn text-white" style="background-color: lightcoral" onclick="reprovarPendencia(1)">
+                              Reprovar
+                          </button>
+                          <button id="btn_aprovar_controla" type="button" class="btn text-white" style="background-color: #5ccd5c" onclick="aprovarPendencia()">
+                              Aprovar
+                          </button>
+                      </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          <div class="col-md-12">
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col-md-12" style="margin-bottom: 5px;">
+                <b><label for="form0_descricaoplanoacao_pdcontrola">DESCRIÇÃO DO PROBLEMA:</label></b>
+                <textarea type="text" class="form-control" id="form0_descricao_problema_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col-md-3" style="margin-bottom: 5px;">
+                <b><label for="linha_pdcontrola">LINHA:</label></b>
+                <input type="text" class="form-control" id="linha_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>
+              <div class="col-md-3" style="margin-bottom: 5px;">
+                <b><label for="posto_pdcontrola">POSTO:</label></b>
+                <input type="text" class="form-control" id="posto_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>
+              <div class="col-md-2" style="margin-bottom: 5px;">
+                <b><label for="sku_impactado_pdcontrola">SKU IMPACTADO:</label></b>
+                <input type="text" class="form-control" id="sku_impactado_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>
+              <div class="col-md-2" style="margin-bottom: 5px;">
+                <b><label for="num_rca_pdcontrola">Nº RCA:</label></b>
+                <input type="text" class="form-control" id="num_rca_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>      
+              <div class="col-md-2" style="margin-bottom: 5px;">
+                <b><label for="input_pdcontrola">INPUT:</label></b>
+                <input type="text" class="form-control" id="input_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>          
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="row" style="margin-bottom: 10px;">    
+              <div class="col-md-2" style="margin-bottom: 5px;">
+                <b><label for="pilar_impactado_pdcontrola">PILAR IMPACTADO:</label></b>
+                <input type="text" class="form-control" id="pilar_impactado_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>             
+              <div class="col-md-1" style="margin-bottom: 5px;">
+                <b><label for="turno_pdcontrola">TURNO:</label></b>
+                <input type="text" class="form-control" id="turno_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>
+              <div class="col-md-2" style="margin-bottom: 5px;">
+                <b><label for="hora_pdcontrola">HORA:</label></b>
+                <input type="text" class="form-control" id="hora_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>
+              <div class="col-md-2" style="margin-bottom: 5px;">
+                <b><label for="tempo_posto_pdcontrola">TEMPO POSTO:</label></b>
+                <input type="text" class="form-control" id="tempo_posto_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>     
+                <div class="col-md-2" style="margin-bottom: 5px;">
+                <b><label for="re_pdcontrola">RE:</label></b>
+                <input type="text" class="form-control" id="re_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div> 
+              <div class="col-md-3" style="margin-bottom: 5px;">
+                <b><label for="nome_pdcontrola">OPERADOR:</label></b>
+                <input type="text" class="form-control" id="nome_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>            
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col-md-2" style="margin-bottom: 5px;">
+                <b><label for="twttp_pdcontrola">TWTTP:</label></b>
+                <input type="text" class="form-control" id="twttp_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>
+              <div class="col-md-2" style="margin-bottom: 5px;">
+                <b><label for="herca_pdcontrola">HERCA:</label></b>
+                <input type="text" class="form-control" id="herca_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>
+              <div class="col-md-5" style="margin-bottom: 5px;">
+                <b><label for="natureza_pdcontrola">NATUREZA HUMANA:</label></b>
+                <input type="text" class="form-control" id="natureza_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>      
+              <div class="col-md-3" style="margin-bottom: 5px;">
+                <b><label for="contra_medida_pdcontrola">CONTRA MEDIDA:</label></b>
+                <input type="text" class="form-control" id="contra_medida_pdcontrola" autocomplete="off" style="text-transform: uppercase;" disabled>
+              </div>
+              <!--  <div class="col-md-2" style="margin-bottom: 5px;">
+                <b><label for="ocorrencia_data_pdcontrola">DATA PROGRAMADA:</label></b>
+                <input type="text" class="form-control" id="ocorrencia_data_pdcontrola" autocomplete="off" style="text-align: center;" disabled>
+              </div> -->
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col-md-12" style="margin-bottom: 5px;">
+                <b><label for="form0_descricaoplanoacao_pdcontrola">DESCRIÇÃO DO PLANO DE AÇÃO CADASTRADO:</label></b>
+                <textarea type="text" class="form-control" style="height: 73%; text-transform: uppercase;" id="form0_descricaoplanoacao_pdcontrola" autocomplete="off" disabled></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="row" style="margin-bottom: 10px;">
+              <div class="col-md-2" style="margin-bottom: 5px;">
+                <b><label for="ocorrencia_data_pdcontrola">DATA PROGRAMADA:</label></b>
+                <input type="text" class="form-control" id="ocorrencia_data_pdcontrola" autocomplete="off" style="text-align: center;" disabled>
+                <b><label for="conclusao_data_pdcontrola" style="margin-top: 8px;">DATA CONCLUSÃO:</label></b>
+                <input type="text" class="form-control" id="conclusao_data_pdcontrola" autocomplete="off" style="text-align: center;" disabled>
+                <input type="text" class="form-control" id="status_pdcontrola" value="STATUS" autocomplete="off"  style="margin-top: 8px; text-align: center; font-weight: bold;" disabled>
+              </div>
+              <div class="col-md-10" style="margin-bottom: 5px; max-height: 86%">
+                <b><label for="link_evidencia_pdcontrola">EVIDENCIA:</label></b>
+                <textarea type="text" class="form-control" style="height: 84%; text-transform: uppercase;" id="link_evidencia_pdcontrola" autocomplete="off" disabled></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center" style="margin-top: 15px; margin-bottom: 15px;">
+            <div class="d-flex align-items-center">
+              <button class="btn btn-info" id="btnFormPDcontrola_voltar" onclick="voltarPdcontrola()" style="margin-bottom:2%; width:120px; height:45px; font-size:20px;">VOLTAR</button>
+              <span id="resp-spinner8" class="spinner-grow spinner-grow-sm text-danger d-none" role="status" aria-hidden="true" style="margin-left: 15px;"></span>
+              <span id="resp-spinner9" class="spinner-grow spinner-grow-sm text-warning d-none" role="status" aria-hidden="true"></span>
+              <span id="resp-spinner10" class="spinner-grow spinner-grow-sm text-info d-none" role="status" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

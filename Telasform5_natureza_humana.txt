@@ -1,0 +1,708 @@
+   <div style="display:none" id="meuFormulario_natureza_humana">
+      <h3 class="mt-1 text-center" >NATUREZA HUMANA</h3>
+
+      <div class="form-group" style="background-color: #f5d3b7; display: none;"id="natureza_humana_secao_1" name="selecao">
+         <h6 class="mt-1 text-center" style="background-color: #fff9e8; padding: 6px;border-radius: 5px;">1 - SELEÇÃO</h6>
+          <div class="form-group row" style="background-color: #f5d3b7;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_1"  for="perg_selecao1">1.1 - A pessoa tem conversas desnecessárias durante sua tarefa?</label></b>
+                              <input type="text" class="form-control" id="perg_selecao1" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_selecao1"></label></b> -->
+                              <select class="custom-select" id="contra_medida_selecao1" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> --> 
+                  </div>   
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_2" for="perg_selecao2">1.2 - Existem barulhos que podem ocasionar distração (fone de ouvido, entre outros)?</label></b>
+                              <input type="text" class="form-control" id="perg_selecao2" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_selecao2"></label></b>-->
+                              <select class="custom-select" id="contra_medida_selecao2" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                 
+                      <!--  </div> -->
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_3" for="perg_selecao3">1.3 - Existem muitas informações e auxílios visuais no posto de trabalho?</label></b>
+                              <input type="text" class="form-control" id="perg_selecao3" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_selecao3"></label></b>-->
+                              <select class="custom-select" id="contra_medida_selecao3" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                  
+                      <!--  </div> -->
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_4"  for="perg_selecao4">1.4 - O operador está com muitas tarefas e se sente sobrecarregado?</label></b>
+                              <input type="text" class="form-control" id="perg_selecao4" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_selecao4"></label></b>-->
+                              <select class="custom-select" id="contra_medida_selecao4" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>                
+              </div>
+        </div>
+      </div>     
+
+      <div class="form-group" style="background-color: #f5b7b7; display: none;"id="natureza_humana_secao_2" name="consciencia">
+         <h6 class="mt-1 text-center" style="background-color: #ffe8e8; padding: 6px;border-radius: 5px;">2 - CONSCIÊNCIA</h6>
+          <div class="form-group row" style="background-color: #f5b7b7;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_5" for="perg_consciencia1">2.1 - A consciência (concentração e foco) estava baixa no momento da observação?</label></b>
+                              <input type="text" class="form-control" id="perg_consciencia1" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_consciencia1"></label></b>-->
+                              <select class="custom-select" id="contra_medida_consciencia1" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>   
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_6" for="perg_consciencia2">2.2 - Havia sinais de sonolência, euforia ou pânico?</label></b>
+                              <input type="text" class="form-control" id="perg_consciencia2" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_consciencia2"></label></b>-->
+                              <select class="custom-select" id="contra_medida_consciencia2" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                 
+                      <!--  </div> -->
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_7" for="perg_consciencia3">2.3 - O operador foi trocado de turno recentemente?</label></b>
+                              <input type="text" class="form-control" id="perg_consciencia3" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_consciencia3"></label></b>-->
+                              <select class="custom-select" id="contra_medida_consciencia3" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                  
+                      <!--  </div> -->
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_8" for="perg_consciencia4">2.4 - As condições do ambiente (ergonomia, temperatura, iluminação ou barulho) estão inadequadas para a tarefa? Se sim, descreva qual condição.</label></b>
+                              <input type="text" class="form-control" id="perg_consciencia4" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_consciencia4"></label></b>-->
+                              <select class="custom-select" id="contra_medida_consciencia4" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>                
+              </div>
+        </div>
+      </div>   
+
+      <div class="form-group" style="background-color: #ccf7cf; display: none;"id="natureza_humana_secao_3" name="atencao">
+         <h6 class="mt-1 text-center" style="background-color: #eaffeb; padding: 6px;border-radius: 5px;">3 - ATENÇÃO</h6>
+          <div class="form-group row" style="background-color: #ccf7cf;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_9" for="perg_atencao1">3.1 - Há sinais de cansaço do colaborador?</label></b>
+                              <input type="text" class="form-control" id="perg_atencao1" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_atencao1"></label></b>-->
+                              <select class="custom-select" id="contra_medida_atencao1" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>   
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_10" for="perg_atencao2">3.2 - Havia percorrido muito tempo após o último intervalo do operador?</label></b>
+                              <input type="text" class="form-control" id="perg_atencao2" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_atencao2"></label></b>-->
+                              <select class="custom-select" id="contra_medida_atencao2" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                 
+                      <!--  </div> -->
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_11" for="perg_atencao3">3.3 - O operador está trabalhando sem ser em seu turno normal ou estava em hora extra?</label></b>
+                              <input type="text" class="form-control" id="perg_atencao3" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_atencao3"></label></b>-->
+                              <select class="custom-select" id="contra_medida_atencao3" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                  
+                      </div> 
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_12" for="perg_atenca4">3.4 - Para atividades com alta necessidade de atenção (postos de controle ou nível de detalhe elevado), existe alguma ajuda/lembrete/rodízio especial para o operador?</label></b>
+                              <input type="text" class="form-control" id="perg_atencao4" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_atencao4"></label></b>-->
+                              <select class="custom-select" id="contra_medida_atencao4" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                     <!--  </div> -->
+                  </div>                
+              </div>
+        
+      </div>    
+
+      <div class="form-group" style="background-color: #b7f5ec; display: none;"id="natureza_humana_secao_4" name="ilusao">
+         <h6 class="mt-1 text-center" style="background-color: #e8ffff; padding: 6px;border-radius: 5px;">4 - ILUSÃO</h6>
+          <div class="form-group row" style="background-color: #b7f5ec;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_13" for="perg_ilusao1">4.1 - O operador interpretou mal as informações descritas na SOP / OPL / paramâtros de processo?</label></b>
+                              <input type="text" class="form-control" id="perg_ilusao1" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_ilusao1"></label></b>-->
+                              <select class="custom-select" id="contra_medida_ilusao1" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>   
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_14" for="perg_ilusao2">4.2 - Auxílio Visual, OPL e SOP não são claras, de tamanhos incorretos e instruções escritas ilegíveis?</label></b>
+                              <input type="text" class="form-control" id="perg_ilusao2" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_ilusao2"></label></b>-->
+                              <select class="custom-select" id="contra_medida_ilusao2" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                 
+                      <!--  </div> -->
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_15" for="perg_ilusao3">4.3 - As informações de áudio (como sirenes de start up) em máquinas diferentes possuem sons iguais?</label></b>
+                              <input type="text" class="form-control" id="perg_ilusao3" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_ilusao3"></label></b>-->
+                              <select class="custom-select" id="contra_medida_ilusao3" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                  
+                     <!--  </div> -->
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_16" for="perg_ilusao4">4.4 - Há produtos similares, carimbos ou identificações que são parecidas no posto de trabalho que possa confundir o operador?</label></b>
+                              <input type="text" class="form-control" id="perg_ilusao4" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_ilusao4"></label></b>-->
+                              <select class="custom-select" id="contra_medida_ilusao4" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                     <!--  </div> -->
+                  </div>  
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_17" for="perg_ilusao5">4.5 - O operador possui algum problema oftalmológico que possa visualmente atrapalhá-lo?</label></b>
+                              <input type="text" class="form-control" id="perg_ilusao5" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_ilusao5"></label></b>-->
+                              <select class="custom-select" id="contra_medida_ilusao5" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                     <!--  </div> -->
+                  </div>                             
+              </div>
+        </div>
+      </div>  
+
+      <div class="form-group" style="background-color: #b7e2f5; display: none;"id="natureza_humana_secao_5" name="rja">
+         <h6 class="mt-1 text-center" style="background-color: #e8f8ff; padding: 6px;border-radius: 5px;">5 - RJA: RECONHECIMENTO, JULGAMENTO E AÇÃO</h6>
+          <div class="form-group row" style="background-color: #b7e2f5;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_18" for="perg_rja1">5.1 - Ambiente de trabalho é ruim, falta 5S, muito barulho, iluminação ou temperatura inadequada? (RECONHECIMENTO)</label></b>
+                              <input type="text" class="form-control" id="perg_rja1" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_rja1"></label></b>-->
+                              <select class="custom-select" id="contra_medida_rja1" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>   
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_19" for="perg_rja2">5.2 - O nível de atenção do colaborador pode oscilar durante a excução da atividade?  (RECONHECIMENTO)</label></b>
+                              <input type="text" class="form-control" id="perg_rja2" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_rja2"></label></b>-->
+                              <select class="custom-select" id="contra_medida_rja2" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                 
+                      <!--  </div> -->
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_20" for="perg_rja3">5.3 - Há muitas tarefas para serem executadas e isso pode ocasionar algum esquecimento? (RECONHECIMENTO)</label></b>
+                              <input type="text" class="form-control" id="perg_rja3" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_rja3"></label></b>-->
+                              <select class="custom-select" id="contra_medida_rja3" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                  
+                      <!--  </div> -->
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_21" for="perg_rja4">5.4 - O colaborador está passando por algum problema e demonstra muitas preocupações? (JULGAMENTO)</label></b>
+                              <input type="text" class="form-control" id="perg_rja4" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_rja4"></label></b>-->
+                              <select class="custom-select" id="contra_medida_rja4" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>   
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_22" for="perg_rja5">5.5 - No momento do erro, o o colaborador optou por atencipar ou fazer mais rápido qualquer atividade? (JULGAMENTO)</label></b>
+                              <input type="text" class="form-control" id="perg_rja5" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_rja5"></label></b>-->
+                              <select class="custom-select" id="contra_medida_rja5" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div> 
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_23" for="perg_rja6">5.6 - O colaborador demonstra muita experiência na atividade que realiza? (AÇÃO)</label></b>
+                              <input type="text" class="form-control" id="perg_rja6" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_rja6"></label></b>-->
+                              <select class="custom-select" id="contra_medida_rja6" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>  
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_24" for="perg_rja7">5.7 - O colaborador possui muita habilidade (auto confiança) na atividade que realiza? (AÇÃO)</label></b>
+                              <input type="text" class="form-control" id="perg_rja7" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_rja7"></label></b>-->
+                              <select class="custom-select" id="contra_medida_rja7" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                     <!--  </div> -->
+                  </div>                                                        
+              </div>
+        </div>
+      </div>  
+
+      <div class="form-group" style="background-color: #b7c2f5; display: none;"id="natureza_humana_secao_6" name="paralisado">
+         <h6 class="mt-1 text-center" style="background-color: #e9e8ff; padding: 6px;border-radius: 5px;">6 - FICAR PARALISADO</h6>
+          <div class="form-group row" style="background-color: #b7c2f5;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_25" for="perg_paralisado1">6.1 - A área possui estímulos constantes (ruído, odor, fixação/repetição visual) que possam hipnotizar o operador?</label></b>
+                              <input type="text" class="form-control" id="perg_paralisado1" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_paralisado1"></label></b>-->
+                              <select class="custom-select" id="contra_medida_paralisado1" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                     <!--  </div> -->
+                  </div>                  
+              </div>
+        </div>
+      </div>    
+
+      <div class="form-group" style="background-color: #ccf7cf; display: none;"id="natureza_humana_secao_7" name="esquecimento">
+         <h6 class="mt-1 text-center" style="background-color: #eaffeb; padding: 6px;border-radius: 5px;">7 - ESQUECIMENTO</h6>
+          <div class="form-group row" style="background-color: #ccf7cf;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_26" for="perg_esquecimento1">7.1 - Recentemente houve mudanças nas tarefas realizadas no posto e isto impacou para o esquecimento de alguma atividade?</label></b>
+                              <input type="text" class="form-control" id="perg_esquecimento1" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_esquecimento1"></label></b>-->
+                              <select class="custom-select" id="contra_medida_esquecimento1" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>   
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_27" for="perg_esquecimento2">7.2 - Recentemente houve mudança no modelo produzido (nacional/exportação) e isto impacou para o esquecimento de alguma atividade?</label></b>
+                              <input type="text" class="form-control" id="perg_esquecimento2" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_esquecimento2"></label></b>-->
+                              <select class="custom-select" id="contra_medida_esquecimento2" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                 
+                      <!--  </div> -->
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_28" for="perg_esquecimento3">7.3 - Caso o operador esteja em rodízio, ele possui dificuldades de realizar a tarefa do novo ciclo?</label></b>
+                              <input type="text" class="form-control" id="perg_esquecimento3" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_esquecimento3"></label></b>-->
+                              <select class="custom-select" id="contra_medida_esquecimento3" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                  
+                      <!--  </div> -->
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_29" for="perg_esquecimento4">7.4 - O operador realiza a tarefa esporadicamente ou de forma acíclica?</label></b>
+                              <input type="text" class="form-control" id="perg_esquecimento4" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_esquecimento4"></label></b>-->
+                              <select class="custom-select" id="contra_medida_esquecimento4" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                     <!--  </div> -->
+                  </div>                
+              </div>
+        </div>
+      </div> 
+
+      <div class="form-group" style="background-color: #f7f4b6; display: none;"id="natureza_humana_secao_8" name="atalhos">
+         <h6 class="mt-1 text-center" style="background-color: #fffdea; padding: 6px;border-radius: 5px;">8 - ATALHOS</h6>
+          <div class="form-group row" style="background-color: #f7f4b6;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_30" for="perg_atalhos1">8.1 - As atividades da SOP são impraticáveis de serem executadas dentro do tempo definido?</label></b>
+                              <input type="text" class="form-control" id="perg_atalhos1" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_atalhos1"></label></b>-->
+                              <select class="custom-select" id="contra_medida_atalhos1" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>   
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_31" for="perg_atalhos2">8.2 - No momento do erro, o ambiente possuia pressão de tempo/entrega devido a problemas pontuais (Ex: Excesso de anomalia na máquina, troca de tipo não prevista, pressão por quebra de máquina, etc)</label></b>
+                              <input type="text" class="form-control" id="perg_atalhos2" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_atalhos2"></label></b>-->
+                              <select class="custom-select" id="contra_medida_atalhos2" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                 
+                     <!--  </div> -->
+                  </div>               
+              </div>
+        </div>
+      </div> 
+
+      <div class="form-group" style="background-color: #f7d7cc; display: none;"id="natureza_humana_secao_9" name="cond_fisicas">
+         <h6 class="mt-1 text-center" style="background-color: #ffefea; padding: 6px;border-radius: 5px;">9 - CONDIÇÕES FÍSICAS (entrevistador deve identificar)</h6>
+          <div class="form-group row" style="background-color: #f7d7cc;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_32" for="perg_cond_fisicas1">9.1 - O registro de frequência e saúde do operador possui condições que possam afetar as condições físicas e a tarefa?</label></b>
+                              <input type="text" class="form-control" id="perg_cond_fisicas1" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_cond_fisicas1"></label></b>-->
+                              <select class="custom-select" id="contra_medida_cond_fisicas1" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>   
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_33" for="perg_cond_fisicas2">9.2 - O operador sente que há alguma condição de saúde afetando-o ao executar esta tarefa? Ex:, deficiência física, gravidez, deficiência auditiva, deficiência visual, problemas musculares, asma, altura, idade.</label></b>
+                              <input type="text" class="form-control" id="perg_cond_fisicas2" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_cond_fisicas2"></label></b>-->
+                              <select class="custom-select" id="contra_medida_cond_fisicas2" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                 
+                      <!--  </div> -->
+                  </div>              
+              </div>
+        </div>
+      </div> 
+
+      <div class="form-group" style="background-color: #efbff3; display: none;"id="natureza_humana_secao_10" name="cond_psicologicas">
+         <h6 class="mt-1 text-center" style="background-color: #ffeaff; padding: 6px;border-radius: 5px;">10 - CONDIÇÕES PSICOLÓGICAS (entrevistador deve identificar)</h6>
+          <div class="form-group row" style="background-color: #efbff3;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_34" for="perg_cond_psicologicas1">10.1 - O registro de frequência e saúde do operador possui condições que possam afetar seu estado psicológico?</label></b>
+                              <input type="text" class="form-control" id="perg_cond_psicologicas1" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_cond_psicologicas1"></label></b>-->
+                              <select class="custom-select" id="contra_medida_cond_psicologicas1" style="background-color: #efefef"  onchange="verificarSelectUnico(this)">
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>   
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_35" for="perg_cond_psicologicas2">10.2 - O comportamento do operador está anormal? Há sinais de depressão, stress, irritação ou tédio?</label></b>
+                              <input type="text" class="form-control" id="perg_cond_psicologicas2" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_cond_psicologicas2"></label></b>-->
+                              <select class="custom-select" id="contra_medida_cond_psicologicas2" style="background-color: #efefef"   onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                 
+                      <!--  </div> -->
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_36" for="perg_cond_psicologicas3">10.3 - O operador está influênciado por uso de alcool ou drogas?</label></b>
+                              <input type="text" class="form-control" id="perg_cond_psicologicas3" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_cond_psicologicas3"></label></b>-->
+                              <select class="custom-select" id="contra_medida_cond_psicologicas3" style="background-color: #efefef"   onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                  
+                      <!--  </div> -->
+                  </div>                            
+              </div>
+        </div>
+      </div> 
+
+      <div class="form-group" style="background-color: #ccdcf7; display: none;"id="natureza_humana_secao_11" name="visual">
+         <h6 class="mt-1 text-center" style="background-color: #eaf5ff; padding: 6px;border-radius: 5px;">11 - DIREÇÃO VISUAL</h6>
+          <div class="form-group row" style="background-color: #ccdcf7;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_37" for="perg_visual1">11.1 - A pessoa está voltada para uma direção incorreta ao realizar a tarefa?</label></b>
+                              <input type="text" class="form-control" id="perg_visual1" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_visual1"></label></b>-->
+                              <select class="custom-select" id="contra_medida_visual1" style="background-color: #efefef"   onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>   
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_38" for="perg_visual2">11.2 - O operador realiza alguma atividade cega? Atividade sem conseguir ver o que está montando.</label></b>
+                              <input type="text" class="form-control" id="perg_visual2" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_visual2"></label></b>-->
+                              <select class="custom-select" id="contra_medida_visual2" style="background-color: #efefef"   onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                 
+                      </div> 
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_39" for="perg_visual3">11.3 - O layout do posto de trabalho é inadequado, a fim de impactar na direção visual?</label></b>
+                              <input type="text" class="form-control" id="perg_visual3" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_visual3"></label></b>-->
+                              <select class="custom-select" id="contra_medida_visual3" style="background-color: #efefef"   onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                  
+                      <!--  </div> -->
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_40" for="perg_visual4">11.4 - A altura do posto está inadequada para a altura da pessoa?</label></b>
+                              <input type="text" class="form-control" id="perg_visual4" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_visual4"></label></b>-->
+                              <select class="custom-select" id="contra_medida_visual4" style="background-color: #efefef"   onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                     <!--  </div> --> 
+                  </div>                
+              </div>
+        
+      </div> 
+
+      <div class="form-group" style="background-color: #f3f3b5; display: none;" id="natureza_humana_secao_12" name="adivinhacao">
+         <h6 class="mt-1 text-center" style="background-color: #fffdea; padding: 6px;border-radius: 5px;">12 - ADIVINHAÇÃO</h6>
+          <div class="form-group row" style="background-color: #f3f3b5;"> 
+               <div class="col-md-12">
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_41" for="perg_adivinhacao1">12.1 - O operador realizou a tarefa e utilizou a adivinhação sobre o que devia ser feito?</label></b>
+                              <input type="text" class="form-control" id="perg_adivinhacao1" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_adivinhacao1"></label></b>-->
+                              <select class="custom-select" id="contra_medida_adivinhacao1" style="background-color: #efefef"   onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>             
+                      <!--  </div> -->
+                  </div>   
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_42" for="perg_adivinhacao2">12.2 - O operador realizou a tarefa sem se basear nos parâmetros de processo/produto estabelecidos?</label></b>
+                              <input type="text" class="form-control" id="perg_adivinhacao2" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_adivinhacao2"></label></b>-->
+                              <select class="custom-select" id="contra_medida_adivinhacao2" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >  
+                              <!--    <option disabled selected value="NÃO">Selecione</option> --> 
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                 
+                      <!--  </div> --> 
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                      <div class="col-md-12">
+                              <b><label id="pegunta_natureza_humana_43" for="perg_adivinhacao3">12.3 - O operador realizou a tarefa sem ter sido instruído a realizar desvios?</label></b>
+                              <input type="text" class="form-control" id="perg_adivinhacao3" placeholder="Descreva o motivo" autocomplete="off"  value="NÃO"  hidden>
+                      </div>  
+                      <!--<div class="col-md-3"> -->
+                              <!--<b><label for="contra_medida_adivinhacao3"></label></b>-->
+                              <select class="custom-select" id="contra_medida_adivinhacao3" style="background-color: #efefef"  onchange="verificarSelectUnico(this)" >
+                               <!--    <option disabled selected value="NÃO">Selecione</option> -->
+                                <option value="NÃO">Não</option>
+                                <option value="SIM">Sim</option>
+                              </select>                  
+                    <!--  </div> -->
+                  </div>                            
+              </div>
+        </div>
+      </div>     
+      <input type="text" class="form-control" id="form5_pergunta_natureza" hidden>
+      <input type="text" class="form-control" id="form5_status_natureza" hidden>
+      
+  <!--    <input type="text" class="form-control" id="form5_status_contra_medida_natureza" hidden> -->
+</div>
+
+
+

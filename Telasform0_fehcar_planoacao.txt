@@ -1,0 +1,81 @@
+<div style="display:none" id="meuFormulario_fechar_planodeacao">
+  <h3 class="mt-1 text-center" style="padding:5px">FORMULARIO TWTTP</h3>
+      <div class="form-group row" style="background-color: #acedf3;">
+            <div class="col-md-12">
+                  <div class="form-group" style="margin-bottom: 0px;">
+                    <div class="form-group row" style="margin-bottom: 0px;">
+                        <h3 class="mt-1 text-center" style="padding:5px">FECHAR PLANO DE AÇÃO</h3>    
+                            <div class="col-md-12" >
+                                <div class="row" style="margin-bottom: 10px;">
+                                    <div class="col-md-3" style="margin-bottom: 5px;">
+                                                <b><label for="codigo_pesquisa_twttp">CODIGO:</label></b>
+                                                <input type="text" class="form-control" id="codigo_pesquisa_twttp" autocomplete="off" style="text-transform: uppercase;">         
+                                    </div>   
+                                    <div class="col-md-3">                    
+                                              <b><label for="btnesquisaCodTWTTPplanoAcao">PESQUISAR CODIGO:</label></b>
+                                              <button class="btn btn-info" id="btnesquisaCodTWTTPplanoAcao" onclick="pesquisaCodTWTTPplanoAcao()" style="margin-bottom:2%;width:100%;font-size:19px; display: block" >PESQUISAR</button>                                
+                                    </div>                                                 
+                                    <div class="col-md-3" style="margin-bottom: 5px;">
+                                                <b><label for="fechamento_planoacao_data">DATA FECHAMENTO:</label></b>
+                                                <input type="date" class="form-control" id="fechamento_planoacao_data" autocomplete="off" >
+                                    </div>  
+                                    <div class="col-md-3">                    
+                                              <b><label for="status_Fechamento">STATUS:</label></b>
+                                              <input type="text" class="form-control" id="status_Fechamento" value="CONCLUIDO" autocomplete="off" style="text-transform: uppercase;" disabled>                            
+                                    </div>                                                  
+                                </div>            
+                            </div>
+                            <div class="col-md-12" style="margin-bottom: 20px;" >
+                                <div class="row" >
+                                    <div class="col-md-3">
+                                            <b><label for="link_evidencia_planoacao">IMAGEM:</label></b>
+                                            <div class="uploadArea" data-quadro="PLAN">📸 Cole ou arraste 1 evidencia aqui.</div>                                           
+                                    </div>  
+                                    <div class="col-md-9">
+                                            <div class="image-preview" id="preview-PLAN"></div>         
+                                    </div>             
+                               </div>    
+                            </div>     
+                            <div class="col-md-12" >
+                                <div class="row" style="margin-bottom: 10px;">  
+                                    <div class="col-md-12" style="margin-bottom: 5px;">
+                                                <b><label for="link_evidencia_planoacao">DESCREVA A EVIDENCIA OU COLE O LINK DA MESMA:</label></b>
+                                                <textarea type="text" class="form-control" id="link_evidencia_planoacao" autocomplete="off" style="text-transform: uppercase;"></textarea>         
+                                    </div>             
+                               </div>    
+                            </div> 
+                            <div class="col-md-12" id="div_reprovado_planodeacao" style="display:none">
+                                <div class="row" style="margin-bottom: 10px;">
+                                    <div class="col-md-12" style="margin-bottom: 5px;">
+                                                <b><label for="comentarioreprova">REPROVADO:</label></b>
+                                                <input type="text" class="form-control" id="comentarioreprova" autocomplete="off" style="text-transform: uppercase;" disabled>         
+                                    </div>             
+                               </div>    
+                            </div>                                
+                            <h4 class="mt-1 text-center" >DESCRIÇÃO DO PLANO DE AÇÃO CADASTRADO</h4>
+                            
+                              <div class="form-group row">
+                                <textarea type="text" class="form-control" id="form0_descricaoplanoacao"  style="text-transform: uppercase;" autocomplete="off" disabled></textarea>
+                              </div>
+                            
+                        <div class="d-flex justify-content-center" style="margin-top: 15px;margin-bottom: 15px;">              
+                          <div class="d-flex align-items-center">
+                            <button class="btn btn-info" id="btnFormSalvarFechamento_voltar" onclick="voltaPaginaInicio()" style="margin-bottom:2%;width:120px;height:45px;font-size:20px;" >VOLTAR</button>                    
+                            <button class="btn btn-info" id="btnFormSalvarFechamento" onclick="salvarPlanoAcao()" style="margin-bottom:2%;width:120px;height:45px;font-size:20px;" disabled>SALVAR</button>  
+                            <span id="resp-spinner8" class="spinner-grow spinner-grow-sm text-danger d-none" role="status" aria-hidden="true" style="margin-left: 15px;"></span>
+                            <span id="resp-spinner9" class="spinner-grow spinner-grow-sm text-warning d-none" role="status" aria-hidden="true"></span>
+                            <span id="resp-spinner10" class="spinner-grow spinner-grow-sm text-info d-none" role="status" aria-hidden="true"></span>                                  
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+            </div>
+      </div> 
+</div>
+                  <!-- Modal -->
+                  <div id="imageModal" class="modal">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <div class="modal-content">
+                      <img id="modalImage" src="">
+                    </div>
+                  </div>

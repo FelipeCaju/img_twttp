@@ -1,0 +1,96 @@
+<script>   
+   
+    function editarTWTTPreprova(){
+
+                var codigo_pesquisa_twttp_editar = document.getElementById("codigo_pesquisa_twttp_editar").value
+                var plano_acao_contramedida_editar = document.getElementById('plano_acao_contramedida_editar').value
+                var link_evidencia_planoacao_editar = document.getElementById('link_evidencia_planoacao_editar').value
+                var descricaoplanoacao_editar = document.getElementById('descricaoplanoacao_editar').value
+           
+                  if (link_evidencia_planoacao_editar.trim() === "" || plano_acao_contramedida_editar.trim() === "" || descricaoplanoacao_editar.trim() === "") {
+                       
+                        Swal.fire({
+                          title: 'Favor preencher todos os campos',
+                          icon: 'warning',
+                          timer: 1600,
+                          showCloseButton: false,
+                          showCancelButton: false,
+                          showConfirmButton: false
+                      });
+                  }else{
+                    
+                    document.getElementById('resp-spinner8').classList.remove("d-none");
+                    document.getElementById('resp-spinner9').classList.remove("d-none");
+                    document.getElementById('resp-spinner10').classList.remove("d-none");  
+                    document.getElementById("btnesquisaCodTWTTPplanoAcao").disabled = true;
+                    document.getElementById("btnFormSalvarFechamento").disabled = true;    
+
+                    google.script.run.withSuccessHandler(function() {
+                      
+                          document.getElementById('resp-spinner8').classList.add("d-none");
+                          document.getElementById('resp-spinner9').classList.add("d-none");
+                          document.getElementById('resp-spinner10').classList.add("d-none");
+
+                            Swal.fire({
+                                title: 'Evidencia salva com Sucesso',
+                                icon: 'success',
+                                timer: 1500,
+                                showCloseButton: false,
+                                showCancelButton: false,
+                                showConfirmButton: false
+                            })
+                          
+                        }).editarTWTTPreprovada(codigo_pesquisa_twttp_editar, plano_acao_contramedida_editar, link_evidencia_planoacao_editar, descricaoplanoacao_editar);
+  
+                  }
+    }
+
+
+    function pesquisaCodTWTTPplanoAcaoReprovada(){
+
+          var listaJson = <?!= listaTWTTPreprovadas ?>;
+          var email = document.getElementById("form1_emailcriador").value
+          var achou = false
+
+          // Função para verificar se o email e o código estão presentes na lista
+          var encontrado = listaJson.some(function(item) {
+
+            if(item.emailCriador === email && item.codigoTwttp === document.getElementById("codigo_pesquisa_twttp_editar").value){
+              document.getElementById("descricaoplanoacao_editar").value = item.planoAcao
+              document.getElementById("link_evidencia_planoacao_editar").value = item.evidencia
+              document.getElementById("status_Fechamento_editar").value = item.status
+
+              var select = document.getElementById('plano_acao_contramedida_editar');
+              select.innerHTML = '<option disabled selected value="">Selecione</option>';
+              select.innerHTML += item.colunasSim;
+
+               if(item.comentarioReprova !== ""){             
+                   document.getElementById("comentarioreprova_editar").value = item.comentarioReprova
+               }
+               if(item.comentarioReprova === ""){ 
+                   document.getElementById("comentarioreprova_editar").value = ""
+               }  
+
+               document.getElementById("plano_acao_contramedida_editar").value = item.contramedida     
+               achou = true
+            }
+          });  
+
+          if(achou){
+                  document.getElementById("btnFormEditarTWTTPreprova").disabled = false;      
+          }else{
+              Swal.fire({
+                  title: 'Codigo não encontrado.',
+                  icon: 'warning',
+                  timer: 1600,
+                  showCloseButton: false,
+                  showCancelButton: false,
+                  showConfirmButton: false
+              });
+          }
+    }
+
+
+
+
+</script>    

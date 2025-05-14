@@ -1,0 +1,68 @@
+   <div style="display:none" id="meuFormulario_plano_acao">
+      <h3 class="mt-1 text-center" style="padding:5px">RESUMO DA TWTTP</h3>
+          <div class="form-group row" style="background-color: #b97d7d;">
+                <div class="col-md-12">
+                  <div class="form-group row" style="background-color: #f5b7b7; margin-bottom: 30px;">              
+                        <h4 class="mt-1" id="resumoStatusEntrevista" style="padding:5px">Resumo da sua analise TWTTP:"</h4>                                           
+                  </div> 
+                </div> 
+                <div style="display:none; background-color: #ffffff; margin-bottom: 15px;" id="planodeacao_grupo_faltaconhecimento">
+                      <h4 class="mt-1 text-center" style="background-color: bisque;">FALTA DE CONHECIMENTO</h4>         
+                      <div class="form-group row" style="background-color: #ffffff;"> 
+                          <div class="col-md-12">
+                                  <div class="col-md-12" style="margin-bottom: 5px;">
+                                          <b><label id="resumoPerguntaFaltaConhecimento" for="resumoPerguntaFaltaConhecimento"></label></b>
+                                          <input type="text" class="form-control" id="resumoRespostaFaltaConhecimento" value="NÃO" autocomplete="off" style="text-transform: uppercase;" disabled>
+                                  </div>                                
+                          </div>
+                      </div>
+                </div>
+                <div style="display:none; background-color: #ffffff; margin-bottom: 15px;" id="planodeacao_grupo_herca">
+                      <h4 class="mt-1 text-center" style="background-color: bisque;" >ANÁLISE HERCA</h4>   
+                          <div class="col-md-12">
+                                  <div class="col-md-12" style="margin-bottom: 5px;">
+                                          <b><label id="resumoHerca" for="resumoHerca" style="font-size: 22px;"></label></b><br>
+                                          <b><label id="resumoPerguntaHerca" for="resumoHerca"></label></b>                                  
+                                          <input type="text" class="form-control" id="resumoContraMedidaHerca" value="NÃO" autocomplete="off" style="text-transform: uppercase;" disabled>
+                                  </div>                                
+                          </div><br>
+                      <h4 class="mt-1 text-center" style="background-color: bisque;" >NATUREZA HUMANA</h4>   
+
+                          <div class="col-md-12" style="margin-bottom: 20px;">
+                                  <div class="col-md-12" style="margin-bottom: 5px;">
+                                          <b><label id="resumoNaturezaHumana" for="resumoNaturezaHumana" style="font-size: 22px;"></label></b><br>
+                                          <b><label id="resumoPerguntaNaturezaHumana" for="resumoNaturezaHumana"></label></b>
+                                          <input type="text" class="form-control" id="resumoContraMedidaHerca2" value="RESPOSTA: SIM" autocomplete="off" style="text-transform: uppercase;" disabled>
+                                  </div>                                
+                          </div>
+                </div>
+                  <h4 class="mt-1 text-center" style="background-color: #f5b7b7;">PLANO DE AÇÃO</h4>          
+                <div class="col-md-2" style="margin-bottom: 5px;">
+                          <b><label for="plano_acao_contramedida">CONTRAMEDIDA:</label></b>
+                            <select class="custom-select" id="plano_acao_contramedida" >
+                              <option disabled selected value="">Selecione</option>
+                            </select>                        
+                </div> 
+                <div class="col-md-10" style="margin-bottom: 5px;">
+                    <b><label for="planodeacao">PLANO DE AÇÃO:</label></b>
+                        <div class="form-group row">
+                          <textarea type="text" class="form-control" id="planodeacao" placeholder="Descreva o plano de ação" autocomplete="off" ></textarea>
+                        </div>
+                </div> 
+                <div class="form-group row" style="margin-bottom: 10px; background-color: bisque; margin-top: 10px;"> 
+                      <div class="col-md-2">                     
+                      </div>        
+                      <div class="col-md-5">              
+                          <h4 class="mt-1 text-center" style="padding:5px">Preencha uma data para execução da ação</h4>       
+                      </div>         
+                      <div class="col-md-2" style="margin-top: 6px;">                   
+                          <input type="date" class="form-control text-left" id="data_planoacao" autocomplete="off" >   
+                      </div>         
+                      <div class="col-md-3">                     
+                      </div>                                       
+                </div>                                                                                         
+           </div>       
+   </div>
+
+
+ 
